@@ -1,0 +1,727 @@
+[
+  {
+    "_id":{
+      "$oid":"69ea84907fb45a9e9d90aec8"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"672f38fd1be9200f59dcc99e"
+    },
+    "order_id":{
+      "$oid":"69cc24f22cf888f74a281bf0"
+    },
+    "complaint_title":"Test",
+    "complaint_description":"Test ",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-04-24T09:28:58.411Z"
+    },
+    "updated_at":{
+      "$date":"2026-04-24T03:58:58.424Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"69ead51e72f2f90b864d6b4e"
+    },
+    "store_id":{
+      "$oid":"68d571ffcb5c525159576a48"
+    },
+    "customer_id":{
+      "$oid":"696b5fe5ff7df4471a5bbfb5"
+    },
+    "order_id":{
+      "$oid":"69ea0685491c4621c0debac3"
+    },
+    "complaint_title":"Shirt is missing ",
+    "complaint_description":"checking ",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-04-24T17:55:36.385Z"
+    },
+    "updated_at":{
+      "$date":"2026-04-24T12:25:36.397Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"69ec70bfd4282b21f067c369"
+    },
+    "store_id":{
+      "$oid":"69b4f4a19d15e6568972a721"
+    },
+    "customer_id":{
+      "$oid":"69db323b65a5f15ab037ea9f"
+    },
+    "order_id":{
+      "$oid":"69db35a865a5f15ab0385d4d"
+    },
+    "complaint_title":"Stain occurred during ironing ",
+    "complaint_description":"Customer raised complaint  during the ironing stains occured ",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-04-25T07:43:59.422Z"
+    },
+    "updated_at":{
+      "$date":"2026-04-25T07:43:59.422Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"69f4bdf7fcc39c90e868e372"
+    },
+    "store_id":{
+      "$oid":"69b4f4a19d15e6568972a721"
+    },
+    "customer_id":{
+      "$oid":"69eb188972f2f90b86535e38"
+    },
+    "order_id":{
+      "$oid":"69eb1a2e72f2f90b86546f6c"
+    },
+    "complaint_title":"ironing is not proper",
+    "complaint_description":"gsr to fabco shifted",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-05-01T14:51:35.119Z"
+    },
+    "updated_at":{
+      "$date":"2026-05-01T14:51:35.119Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"69f5cdd6fcc39c90e8731446"
+    },
+    "store_id":{
+      "$oid":"67fe3d7b31ed10338f2c498d"
+    },
+    "customer_id":{
+      "$oid":"696d9bdeff7df4471a632f6a"
+    },
+    "order_id":{
+      "$oid":"69eef08fd4282b21f08a0d0b"
+    },
+    "complaint_title":"Stains not removed from cloth",
+    "complaint_description":"During washing, the stains were not removed.",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-05-02T10:11:34.528Z"
+    },
+    "updated_at":{
+      "$date":"2026-05-02T10:11:34.528Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"69fd6cfd4eb1fd59c7d5c4f7"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"68453729bb907bed273c1e28"
+    },
+    "order_id":{
+      "$oid":"69faf50cfcc39c90e8aad040"
+    },
+    "complaint_title":"Stains not removed from cloth",
+    "complaint_description":"Stains not removed from cloth",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-05-08T04:56:29.324Z"
+    },
+    "updated_at":{
+      "$date":"2026-05-08T04:56:29.324Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"69fed6a34eb1fd59c7e1375e"
+    },
+    "store_id":{
+      "$oid":"689b3d207b9ba1b19757c78a"
+    },
+    "customer_id":{
+      "$oid":"69e8ec43fff56fdf10738355"
+    },
+    "order_id":{
+      "$oid":"69fb4319fcc39c90e8afeada"
+    },
+    "complaint_title":"Stain occurred during ironing ",
+    "complaint_description":"Stain occurred during ironing ",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-05-09T06:39:31.619Z"
+    },
+    "updated_at":{
+      "$date":"2026-05-09T06:39:31.619Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a2811905396dbc5db82e9f8"
+    },
+    "store_id":{
+      "$oid":"69805a47fc13dbb6be3e868a"
+    },
+    "customer_id":{
+      "$oid":"68ac8cf011285bb3e8fa6a1b"
+    },
+    "order_id":{
+      "$oid":"6a2625ee5396dbc5db6d3275"
+    },
+    "complaint_title":"Stains not removed from cloth",
+    "complaint_description":"returning to store ",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-06-09T13:13:52.198Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-09T13:13:52.198Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a2ccdf5344f1ddcccda57b9"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"68cf86cfdf5cdf1b44f77b7e"
+    },
+    "order_id":{
+      "$oid":"6a20339a794cfb39a50deffb"
+    },
+    "complaint_title":"Ironing marks",
+    "complaint_description":"Customer raised complaint regarding ironing stains",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-06-13T03:26:45.496Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-13T03:26:45.496Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a2e5120344f1ddcccecc862"
+    },
+    "store_id":{
+      "$oid":"689b3d207b9ba1b19757c78a"
+    },
+    "customer_id":{
+      "$oid":"696b82a1ff7df4471a5c9f49"
+    },
+    "order_id":{
+      "$oid":"6a1189e31fe48dfdb8dae7c3"
+    },
+    "complaint_title":"Stain occurred during ironing ",
+    "complaint_description":"The stain occurred during ironing. The garment was returned to GSR for stain removal, but the stain is still not removed. It has now been sent to White Tiger for further treatment.",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-06-14T06:58:40.036Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-14T06:58:40.036Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a30fe99344f1ddccc06acca"
+    },
+    "store_id":{
+      "$oid":"68983c867b9ba1b1974abe37"
+    },
+    "customer_id":{
+      "$oid":"6a002b5f4eb1fd59c7f22ff7"
+    },
+    "order_id":{
+      "$oid":"6a2d72d4344f1ddccce538e4"
+    },
+    "complaint_title":"Clothes Not Ironed Properly",
+    "complaint_description":"Multiple garments still have visible wrinkles and do not meet the expected ironing quality!",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-06-16T07:43:21.854Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-16T07:43:21.854Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a3366be96e67cee2fbed1fd"
+    },
+    "store_id":{
+      "$oid":"69805a47fc13dbb6be3e868a"
+    },
+    "customer_id":{
+      "$oid":"692c01f753f10e7ffaea00ee"
+    },
+    "order_id":{
+      "$oid":"6a327674344f1ddccc13b673"
+    },
+    "complaint_title":"One Cloth Missed During Washing",
+    "complaint_description":"The store missed washing one shirt in the order and only ironed it.",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-06-18T03:32:14.829Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-18T03:32:14.829Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a3ca2ee082cda0d9ef86d42"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"6a3135c2344f1ddccc08f1b9"
+    },
+    "order_id":{
+      "$oid":"6a3137b0344f1ddccc0907d9"
+    },
+    "complaint_title":"Wash & Iron Service Not Done Properly",
+    "complaint_description":"Customer placed a Wash & Iron order, but the clothes were delivered as Wash & Fold. Customer is also dissatisfied with the washing quality!",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-06-25T03:39:26.772Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-25T03:39:26.772Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a5e2dbd1b222aba8a3760d7"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"69f24859fcc39c90e84d2380"
+    },
+    "order_id":{
+      "$oid":"6a5501301b222aba8ae74473"
+    },
+    "complaint_title":"DC not done properly ",
+    "complaint_description":"Given back to store for DC, Clothes Exchange, Iroing & DC, Given on 20\/7",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-07-20T14:16:29.375Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-20T14:16:29.375Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a85c7b81d7521daf7801140"
+    },
+    "store_id":{
+      "$oid":"69805a47fc13dbb6be3e868a"
+    },
+    "customer_id":{
+      "$oid":"696b250dff7df4471a5a78fe"
+    },
+    "order_id":{
+      "$oid":"6a7e86c26499935b164a8fc8"
+    },
+    "complaint_title":"shirt missing",
+    "complaint_description":"details : Bewakoof, black colour, small size, full sleeve crew neck",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-31T16:13:36.194Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-31T10:43:36.208Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a85c8611d7521daf780187a"
+    },
+    "store_id":{
+      "$oid":"692995fd17bfbcb40e819e79"
+    },
+    "customer_id":{
+      "$oid":"699fd334db7fe5e345dafaee"
+    },
+    "order_id":{
+      "$oid":"6a6760dcdded16010db6850b"
+    },
+    "complaint_title":"Shirts stains present during ironing",
+    "complaint_description":"customer raised complaint that, after ironing the shirts were stained.( 2 t-shirts)",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-29T20:26:33.637Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-29T14:56:33.639Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a85c8c81d7521daf7801c33"
+    },
+    "store_id":{
+      "$oid":"68ea40c000eff7f08fa77d6b"
+    },
+    "customer_id":{
+      "$oid":"6a5449691b222aba8adbdf76"
+    },
+    "order_id":{
+      "$oid":"6a544aad1b222aba8adbee3b"
+    },
+    "complaint_title":"shirt missing",
+    "complaint_description":"Shirt- beige colour was missing and given refund of \u20b91600 \n",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-19T20:47:34.023Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-19T15:17:34.034Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a85ca501d7521daf7803385"
+    },
+    "store_id":{
+      "$oid":"6a356b11d6f559f5024a061d"
+    },
+    "customer_id":{
+      "$oid":"6a3caa75082cda0d9ef8f161"
+    },
+    "order_id":{
+      "$oid":"6a6ebb871e06ed06805a214b"
+    },
+    "complaint_title":"Burnt dress",
+    "complaint_description":"the kurta was burnt",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-31T16:13:58.392Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-31T10:43:58.404Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a870bc41d7521daf78c3d4a"
+    },
+    "store_id":{
+      "$oid":"68983c867b9ba1b1974abe37"
+    },
+    "customer_id":{
+      "$oid":"6a44a1021b222aba8a491f7a"
+    },
+    "order_id":{
+      "$oid":"6a8404af4d1cade77d075348"
+    },
+    "complaint_title":"white shirt and pant stain",
+    "complaint_description":"customer got his order with some stains on white shirt and pant ",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-29T20:25:14.844Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-29T14:55:14.846Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a87d4a61d7521daf7909ba6"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"68453729bb907bed273c1e28"
+    },
+    "order_id":{
+      "$oid":"6a82dade83bd5aa4d347aa68"
+    },
+    "complaint_title":"pillow cover ",
+    "complaint_description":"Her pillow cover was missing",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-21T10:02:10.291Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-21T04:32:10.302Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a8ee22aed28cd6d6d550d8c"
+    },
+    "store_id":{
+      "$oid":"69e2708eb2db82e06055a809"
+    },
+    "customer_id":{
+      "$oid":"6a370302082cda0d9ec3eafc"
+    },
+    "order_id":{
+      "$oid":"6a8c9a881d7521daf7d8946e"
+    },
+    "complaint_title":"shirt missing",
+    "complaint_description":"Customer has raised the complaint saying, his 3 shirts are missing                                  1 white polo tshirt\n1 white round neck tshirt\n1 plain brown round neck tshirt",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-29T20:24:51.431Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-29T14:54:51.433Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a8fab0bed28cd6d6d579d0f"
+    },
+    "store_id":{
+      "$oid":"69d87a6d65a5f15ab01a7bd1"
+    },
+    "customer_id":{
+      "$oid":"68c6d9fc727804e2a9cd0eaf"
+    },
+    "order_id":{
+      "$oid":"6a8952e71d7521daf7a19e64"
+    },
+    "complaint_title":"shoe is not cleaned",
+    "complaint_description":"customer raised complaint saying that, the shoes are not clean and the stains are still there",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-08-31T08:34:41.961Z"
+    },
+    "updated_at":{
+      "$date":"2026-08-31T03:04:41.966Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a92f29ded28cd6d6d7ba941"
+    },
+    "store_id":{
+      "$oid":"6968c6b4ff7df4471a555683"
+    },
+    "customer_id":{
+      "$oid":"69e1d5feb2db82e0604b701d"
+    },
+    "order_id":{
+      "$oid":"6a8f03cfed28cd6d6d56718f"
+    },
+    "complaint_title":"Footwear stained and shimmer finish is gone",
+    "complaint_description":"The customer has raised a complaint stating that the footwear\u2019s shimmer finish has been lost and now appears matte. \n\nThe customer has also reported staining on the silver strap of the footwear.",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-09-03T20:21:32.750Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-03T14:51:32.765Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a94efa5ed28cd6d6d92abed"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"69c909cfdfb2a3cee28b3a70"
+    },
+    "order_id":{
+      "$oid":"6a8a93401d7521daf7b6d6b5"
+    },
+    "complaint_title":"shoe damage",
+    "complaint_description":"customer raised complaint that her shoes soles are come out of the shoes and torned",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-09-03T20:22:14.714Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-03T14:52:14.726Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a97b96e05152e755e4b83b9"
+    },
+    "store_id":{
+      "$oid":"66eb50b1296ce098b8598606"
+    },
+    "customer_id":{
+      "$oid":"6a9011deed28cd6d6d5cb7d2"
+    },
+    "order_id":{
+      "$oid":"6a90133bed28cd6d6d5cc6b0"
+    },
+    "complaint_title":"jeans shorts ",
+    "complaint_description":"Customer raised the complaint saying, his jeans shorts is missing",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-09-02T05:51:42.102Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-02T05:51:42.102Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6aaa9e30d23653d72c6605df"
+    },
+    "store_id":{
+      "$oid":"67fe3d7b31ed10338f2c498d"
+    },
+    "customer_id":{
+      "$oid":"68bc325d73c9d2e2f08ad416"
+    },
+    "order_id":{
+      "$oid":"6aa51e03d23653d72ce81020"
+    },
+    "complaint_title":"smell and not properly packed",
+    "complaint_description":"Customer raised a complaint:                             Yesterday's order was folded very badly, i don't know why.\nEven the clothes smell same everytime, I don't know whether they are using detergent at all or not. \nCan you please make sure that this doesn't happen",
+    "complaint_status":"Resolution Complete",
+    "resolved":true,
+    "created_at":{
+      "$date":"2026-09-16T19:19:36.277Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-16T13:49:36.292Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6aaa9f9cd23653d72c663388"
+    },
+    "store_id":{
+      "$oid":"699d97c8db7fe5e345cf7d25"
+    },
+    "customer_id":{
+      "$oid":"6a0420f64eb1fd59c7232b85"
+    },
+    "order_id":{
+      "$oid":"6aa56d02d23653d72cef2d22"
+    },
+    "complaint_title":"clothes did not wash properly",
+    "complaint_description":"Customer raised the complaint saying her clothes weren't washed properly and was having smell, did not feel like the clothes are washed",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-09-16T13:54:36.419Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-16T13:54:36.419Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6aaa9fedd23653d72c6637bc"
+    },
+    "store_id":{
+      "$oid":"68445c10bb907bed273aad65"
+    },
+    "customer_id":{
+      "$oid":"6a6b56821e06ed06803df77b"
+    },
+    "order_id":{
+      "$oid":"6aa67307d23653d72cfec39a"
+    },
+    "complaint_title":"Clothes was not properly washed",
+    "complaint_description":" All the clothes were delivered without any packing, just open. They are dirty and delivery boy placed them on the floor",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-09-16T13:55:57.576Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-16T13:55:57.576Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6aaf7721d23653d72caaa263"
+    },
+    "store_id":{
+      "$oid":"6a8005346499935b16593e1c"
+    },
+    "customer_id":{
+      "$oid":"6a9bdc0fa32605cbd398cdab"
+    },
+    "order_id":{
+      "$oid":"6aab9cf1d23653d72c6f40b9"
+    },
+    "complaint_title":"Black stains on clothes",
+    "complaint_description":"customer raised that the lehengas were delivered with black stains",
+    "complaint_status":"On Resolution",
+    "resolved":false,
+    "created_at":{
+      "$date":"2026-09-20T06:03:13.417Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-20T06:03:13.417Z"
+    },
+    "__v":0
+  }
+]

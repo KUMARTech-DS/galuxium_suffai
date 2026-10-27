@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuffAI · Store POS</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="./retail.js"></script>
+  <link rel="stylesheet" href="./retail.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .scan { display: flex; gap: 8px; align-items: center; }
+    .scan .picker { flex: 1; }
+    .scan .in { font-size: 15px; padding: .7rem .9rem; margin: 0; }
+    .cart td .name { font-weight: 600; }
+    .cart td .meta { font-size: 11px; color: var(--muted); }
+    .cart .in.sm { width: 64px; text-align: right; }
+    .cart .x { color: var(--muted); width: 26px; height: 26px; border-radius: 8px; }
+    .cart .x:hover { background: #FBEDEA; color: var(--bad); }
+    .sum { width: 100%; font-size: 13px; border-collapse: collapse; }
+    .sum td { padding: 4px 0; }
+    .sum td.r { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+    .grand { display: flex; align-items: baseline; justify-content: space-between; padding: 12px 0 4px; margin-top: 6px; border-top: 1px solid var(--line); }
+    .grand span { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    .grand b { font: 700 28px 'IBM Plex Mono', monospace; color: var(--wine); }
+    .pay { display: grid; grid-template-columns: 70px 1fr 54px; gap: 6px 8px; align-items: center; margin-top: 8px; }
+    .pay label { font-weight: 600; font-size: 12.5px; }
+    .pay .ref { grid-column: 2 / 4; margin-top: -2px; }
+    .due { display: flex; justify-content: space-between; margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: var(--raised); font-weight: 600; }
+    .due.ok { background: #E9F3E8; color: var(--ok); }
+    .due.bad { background: #FBEDEA; color: var(--bad); }
+    .due b { font-family: 'IBM Plex Mono', monospace; }
+    .qerr { color: var(--bad); font-size: 12px; margin-top: 8px; }
+    .kbd { font: 600 10px 'IBM Plex Mono', monospace; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 4px; color: var(--muted); }
+    .storebar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+    .storebar .in { width: auto; min-width: 220px; margin: 0; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-in">
+      <div class="hero-row">
+        <div class="hero-title">
+          <div class="eyebrow">Store POS</div>
+          <h1>Billing</h1>
+          <p class="hero-sub">GST tax invoices, returns as credit notes and the end-of-day report. Payments are recorded here, not processed.</p>
+        </div>
+        <div class="hero-meta" data-rt-context></div>
+      </div>
+      <nav class="subnav" id="nav" aria-label="Store POS sections">
+        <button type="button" data-sec="sale"><i class="fa-solid fa-cash-register"></i>New sale</button>
+        <button type="button" data-sec="invoices"><i class="fa-solid fa-receipt"></i>Invoices</button>
+        <button type="button" data-sec="returns"><i class="fa-solid fa-rotate-left"></i>Returns</button>
+        <button type="button" data-sec="close"><i class="fa-solid fa-calendar-check"></i>Day close</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" data-rt-main>
+    <div class="notice" data-rt-setup hidden><i class="fa-solid fa-circle-exclamation"></i>
+      <div>Billing needs the brand’s legal name and GSTIN. A brand admin can add them in <b>Warehouse › Settings</b>.</div></div>
+    <div class="storebar" id="storeBar" hidden>
+      <label class="f" for="store">Billing at</label>
+      <select class="in" id="store"></select>
+      <span class="hint" id="storeHint"></span>
+    </div>
+    <div class="notice info" id="noStores" hidden><i class="fa-solid fa-store"></i>
+      <div>No stores yet. Add a store under <b>Warehouse › Locations</b>, then come back to bill.</div></div>
+
+    <!-- New sale -->
+    <section data-sec="sale" hidden>
+      <div class="cols side">
+        <div>
+          <div class="card">
+            <div class="card-h"><h2>Cart</h2><span class="sub">Scan a barcode or search, <span class="kbd">F2</span> jumps here</span>
+              <div class="end"><button type="button" class="btn sm danger" id="clearCart"><i class="fa-solid fa-trash"></i>Clear</button></div></div>
+            <div class="scan"><div><input class="in" id="scan" placeholder="Barcode, SKU, style or name" aria-label="Scan or search items"></div></div>
+            <div class="tbl-wrap" style="margin-top:12px">
+              <table class="tbl cart">
+                <thead><tr><th>Item</th><th class="r">MRP</th><th class="r">Qty</th><th class="r">Disc %</th><th class="r">GST</th><th class="r">Amount</th><th></th></tr></thead>
+                <tbody id="cartBody"></tbody>
+              </table>
+              <div class="empty" id="cartEmpty">Cart is empty. Scan the first item.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h2>Customer</h2><span class="sub">Optional. A GSTIN makes it a B2B invoice; another state’s GSTIN bills IGST.</span></div>
+            <div class="fields">
+              <label class="f">Name / business name<input class="in" id="custName" maxlength="80" autocomplete="off"></label>
+              <label class="f">Mobile<input class="in" id="custPhone" inputmode="tel" maxlength="14" autocomplete="off" placeholder="10 digits"></label>
+              <label class="f">GSTIN (B2B)<input class="in mono" id="custGstin" maxlength="15" autocomplete="off" placeholder="29ABCDE1234F1Z5"></label>
+              <label class="f">Campaign<select class="in" id="campaign"><option value="">No campaign</option></select></label>
+            </div>
+            <p class="hint">The mobile number is stored with the bill for look-ups and shown masked everywhere else.</p>
+          </div>
+        </div>
+        <aside>
+          <div class="card">
+            <div class="card-h"><h2>Bill</h2><span class="sub" id="placeNote"></span></div>
+            <table class="sum"><tbody id="sumBody"></tbody></table>
+            <div class="grand"><span>Total</span><b id="grandTotal">₹0.00</b></div>
+            <div class="qerr" id="quoteErr" hidden></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h2>Payment</h2><span class="sub">Recorded only</span></div>
+            <div class="pay" id="payRows"></div>
+            <div class="due" id="dueBox"><span id="dueLabel">To collect</span><b id="dueAmt">₹0.00</b></div>
+            <button type="button" class="btn primary lg" id="completeSale" style="width:100%;margin-top:12px" disabled>
+              <i class="fa-solid fa-check"></i>Complete sale</button>
+            <p class="hint">Change is given from cash. Card, UPI and wallet can’t exceed the bill. <span class="kbd">Ctrl</span>+<span class="kbd">Enter</span> completes the sale.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Invoices -->
+    <section data-sec="invoices" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f grow">Search<input class="in" id="invQ" placeholder="Invoice no., customer name or last 4+ digits of mobile"></label>
+          <label class="f">Type<select class="in" id="invKind"><option value="">All</option><option value="invoice">Invoices</option><option value="credit_note">Credit notes</option></select></label>
+          <label class="f">From<input class="in" type="date" id="invFrom"></label>
+          <label class="f">To<input class="in" type="date" id="invTo"></label>
+          <button type="button" class="btn primary" id="invGo"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Number</th><th>Date</th><th>Type</th><th>Store</th><th>Customer</th><th class="r">Units</th><th class="r">Total</th><th>Billed by</th></tr></thead>
+            <tbody id="invBody"></tbody>
+          </table>
+          <div class="empty" id="invEmpty" hidden>No bills match.</div>
+        </div>
+        <div class="pager" id="invPager"></div>
+      </div>
+    </section>
+
+    <!-- Returns -->
+    <section data-sec="returns" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f grow">Invoice number<input class="in mono" id="retNo" placeholder="e.g. BLR012627-000123" autocomplete="off"></label>
+          <button type="button" class="btn primary" id="retFind"><i class="fa-solid fa-magnifying-glass"></i>Find invoice</button>
+        </div>
+        <p class="hint">Returns are taken at the store that billed the item, within the brand’s return window. Each return creates a credit note.</p>
+      </div>
+      <div id="retPanel"></div>
+    </section>
+
+    <!-- Day close -->
+    <section data-sec="close" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f">Business date<input class="in" type="date" id="dayDate"></label>
+          <button type="button" class="btn primary" id="dayGo"><i class="fa-solid fa-rotate"></i>Load</button>
+          <button type="button" class="btn" id="dayPrint" disabled><i class="fa-solid fa-print"></i>Print Z report</button>
+          <span class="label-actual" style="margin-left:auto">Actual (POS)</span>
+        </div>
+      </div>
+      <div id="dayPanel"></div>
+    </section>
+  </main>
+
+  <div id="printArea"></div>
+
+  <script>
+  (function () {
+    const R = window.Retail;
+    const $ = R.$, esc = R.esc;
+    const STORE_KEY = 'suffai_pos_store';
+    const MODES = [['cash', 'Cash'], ['card', 'Card'], ['upi', 'UPI'], ['wallet', 'Wallet']];
+    const st = { stores: [], store: null, cart: [], quote: null, quoteKey: '', quoteSeq: 0, clientRef: R.uuid(),
+                 invPage: 1, ret: null, retRef: R.uuid(), day: null };
+
+    /* ---------- Stores ---------- */
+    async function loadStores() {
+      if (R.me.location) {
+        st.stores = [R.me.location];
+      } else {
+        const data = await R.api('/locations', { params: { kind: 'store' } });
+        st.stores = data.locations || [];
+      }
+      if (!st.stores.length) {
+        $('#noStores').hidden = false;
+        R.$$('section[data-sec]').forEach((s) => s.remove());
+        $('#nav').hidden = true;
+        return false;
+      }
+      const saved = (() => { try { return localStorage.getItem(STORE_KEY); } catch (_) { return null; } })();
+      st.store = st.stores.find((s) => s.location_id === saved) || st.stores[0];
+      if (!R.me.location) {
+        $('#storeBar').hidden = false;
+        R.options($('#store'), st.stores, (s) => s.location_id, (s) => s.code + ' · ' + s.name + (s.city ? ' (' + s.city + ')' : ''));
+        $('#store').value = st.store.location_id;
+        $('#store').addEventListener('change', () => {
+          st.store = st.stores.find((s) => s.location_id === $('#store').value);
+          try { localStorage.setItem(STORE_KEY, st.store.location_id); } catch (_) { /* not remembered */ }
+          storeChanged();
+        });
+      }
+      storeHint();
+      return true;
+    }
+    function storeHint() {
+      const s = st.store;
+      $('#storeHint').textContent = s ? (s.state || s.state_code) + (s.gstin ? ' · GSTIN ' + s.gstin : ' · no store GSTIN yet') : '';
+    }
+    function storeChanged() {
+      storeHint();
+      loadCampaigns();
+      requote();
+      if (!$('section[data-sec="invoices"]').hidden) loadInvoices(1);
+      if (!$('section[data-sec="close"]').hidden) loadDay();
+      $('#retPanel').innerHTML = '';
+      st.ret = null;
+    }
+
+    /* ---------- Cart + quote ---------- */
+    function addItem(r) {
+      if (!r.on_sale) { R.toast(r.sku + ' is inactive and can’t be sold.', 'bad'); return; }
+      const line = st.cart.find((c) => c.variant_id === r.variant_id);
+      if (line) line.qty = Math.min(999, line.qty + 1);
+      else st.cart.push({ variant_id: r.variant_id, sku: r.sku, name: r.name, color: r.color, size: r.size, mrp: r.mrp, qty: 1, disc: '',
+                          avail: r.available });
+      renderCart();
+      requote();
+    }
+    const cartKey = () => JSON.stringify([st.store && st.store.location_id, gstinForQuote(), $('#custName').value.trim(),
+      st.cart.map((c) => [c.variant_id, c.qty, c.disc])]);
+    function gstinForQuote() {
+      const g = $('#custGstin').value.trim().toUpperCase();
+      return g.length === 15 ? g : '';
+    }
+    function renderCart() {
+      const q = st.quote && st.quoteKey === cartKey() ? st.quote : null;
+      $('#cartEmpty').hidden = st.cart.length > 0;
+      $('#cartBody').innerHTML = st.cart.map((c, i) => {
+        const ql = q ? q.lines[i] : null;
+        const short = ql && ql.available < c.qty;
+        const left = ql ? ql.available : c.avail;
+        const last = !short && left !== undefined && left !== null && left <= 2;
+        return '<tr data-i="' + i + '"><td><div class="name">' + R.swatch(c.color) + esc(c.name) + '</div><div class="meta mono">' + esc(c.sku) + ' · ' + esc(c.color) + ' / ' + esc(c.size) +
+          (short ? ' · <span class="badge warn">' + R.num(ql.available) + ' in stock</span>' : '') +
+          (last ? ' · <span class="badge gold" title="Stock Pilot will flag a restock if it keeps selling">Last ' + R.num(left) + ' in store</span>' : '') + '</div></td>' +
+          '<td class="r num-cell">' + R.rupees(c.mrp) + '</td>' +
+          '<td class="r"><input class="in sm" data-f="qty" type="number" min="1" max="999" value="' + c.qty + '" aria-label="Quantity"></td>' +
+          '<td class="r"><input class="in sm" data-f="disc" type="number" min="0" max="100" step="0.5" value="' + esc(c.disc) + '" placeholder="0" aria-label="Discount percent"></td>' +
+          '<td class="r num-cell">' + (ql ? R.rate(ql.gst_rate_bp) : '…') + '</td>' +
+          '<td class="r num-cell"><b>' + (ql ? R.money(ql.total_paise) : '…') + '</b></td>' +
+          '<td><button type="button" class="x" data-f="rm" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button></td></tr>';
+      }).join('');
+      renderTotals(q);
+    }
+    $('#cartBody').addEventListener('change', (e) => {
+      const tr = e.target.closest('tr'); if (!tr) return;
+      const c = st.cart[+tr.dataset.i]; const f = e.target.dataset.f;
+      if (f === 'qty') { const n = parseInt(e.target.value, 10); c.qty = Math.max(1, Math.min(999, isNaN(n) ? 1 : n)); }
+      if (f === 'disc') { const d = parseFloat(e.target.value); c.disc = isNaN(d) || d <= 0 ? '' : String(Math.min(100, d)); }
+      renderCart(); requote();
+    });
+    $('#cartBody').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-f="rm"]'); if (!b) return;
+      st.cart.splice(+b.closest('tr').dataset.i, 1);
+      renderCart(); requote();
+    });
+    $('#clearCart').addEventListener('click', async () => {
+      if (st.cart.length && await R.confirm('Clear the cart?', 'All items and payments on this bill will be removed.', 'Clear')) resetSale();
+    });
+
+    const requote = R.debounce(async function () {
+      const key = cartKey();
+      if (!st.cart.length || !st.store) { st.quote = null; st.quoteKey = key; $('#quoteErr').hidden = true; renderCart(); return; }
+      const my = ++st.quoteSeq;
+      const g = gstinForQuote();
+      try {
+        const q = await R.api('/pos/quote', { body: {
+          location_id: st.store.location_id,
+          lines: st.cart.map((c) => ({ variant_id: c.variant_id, qty: c.qty, discount_pct: c.disc || 0 })),
+          customer: g ? { gstin: g, name: $('#custName').value.trim() } : {} } });
+        if (my !== st.quoteSeq) return;
+        st.quote = q; st.quoteKey = key;
+        $('#quoteErr').hidden = true;
+      } catch (e) {
+        if (my !== st.quoteSeq) return;
+        st.quote = null; st.quoteKey = '';
+        $('#quoteErr').textContent = e.message; $('#quoteErr').hidden = false;
+      }
+      renderCart();
+    }, 200);
+
+    function renderTotals(q) {
+      const t = q ? q.totals : null;
+      const row = (k, v) => '<tr><td>' + k + '</td><td class="r">' + v + '</td></tr>';
+      const m = (k) => t ? R.money(t[k]) : '—';
+      $('#sumBody').innerHTML = row('Items', t ? R.num(t.units) : st.cart.reduce((a, c) => a + c.qty, 0)) +
+        row('Gross (MRP)', m('gross_paise')) + row('Discount', t ? '−' + R.money(t.discount_paise) : '—') +
+        row('Taxable value', m('taxable_paise')) +
+        (q && q.inter_state ? row('IGST', m('igst_paise')) : row('CGST', m('cgst_paise')) + row('SGST', m('sgst_paise'))) +
+        row('Round-off', m('round_off_paise'));
+      $('#grandTotal').textContent = t ? R.money(t.total_paise) : (st.cart.length ? '…' : R.money(0));
+      $('#placeNote').textContent = q ? (q.inter_state ? 'Inter-state · IGST' : 'Intra-state · CGST + SGST') : '';
+      renderDue();
+    }
+
+    /* ---------- Payments ---------- */
+    $('#payRows').innerHTML = MODES.map(([m, label]) =>
+      '<label for="pay-' + m + '">' + label + '</label><input class="in sm" id="pay-' + m + '" data-mode="' + m + '" inputmode="decimal" placeholder="0.00">' +
+      '<button type="button" class="btn sm" data-fill="' + m + '" title="Put the balance here">Fill</button>' +
+      (m === 'cash' ? '' : '<input class="in sm ref" id="ref-' + m + '" maxlength="60" placeholder="' + label + ' reference (optional)">')).join('');
+    $('#payRows').addEventListener('input', renderDue);
+    $('#payRows').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-fill]'); if (!b || !currentTotal()) return;
+      const inp = $('#pay-' + b.dataset.fill);
+      const others = tendered() - (R.toPaise(inp.value) || 0);
+      inp.value = (Math.max(0, currentTotal() - others) / 100).toFixed(2);
+      renderDue();
+      inp.focus();
+    });
+    function currentTotal() {
+      return st.quote && st.quoteKey === cartKey() ? st.quote.totals.total_paise : 0;
+    }
+    function tendered() {
+      return MODES.reduce((a, [m]) => a + (R.toPaise($('#pay-' + m).value) || 0), 0);
+    }
+    function paymentsOrError() {
+      const out = [];
+      for (const [m, label] of MODES) {
+        const raw = $('#pay-' + m).value.trim();
+        if (!raw) continue;
+        const p = R.toPaise(raw);
+        if (p === null) return label + ' amount isn’t a valid rupee amount.';
+        if (!p) continue;
+        const ref = m === 'cash' ? '' : $('#ref-' + m).value.trim();
+        out.push({ mode: m, amount: (p / 100).toFixed(2), reference: ref || undefined });
+      }
+      return out;
+    }
+    function renderDue() {
+      const total = currentTotal(), paid = tendered(), box = $('#dueBox');
+      const ready = total > 0 && st.cart.length > 0;
+      box.className = 'due';
+      if (!ready) { $('#dueLabel').textContent = 'To collect'; $('#dueAmt').textContent = R.money(0); }
+      else if (paid < total) { box.classList.add('bad'); $('#dueLabel').textContent = 'Balance due'; $('#dueAmt').textContent = R.money(total - paid); }
+      else { box.classList.add('ok'); $('#dueLabel').textContent = paid > total ? 'Change to return' : 'Fully paid'; $('#dueAmt').textContent = R.money(paid - total); }
+      $('#completeSale').disabled = !ready || paid < total;
+    }
+
+    async function completeSale() {
+      const btn = $('#completeSale');
+      if (btn.disabled) return;
+      const pays = paymentsOrError();
+      if (typeof pays === 'string') { R.toast(pays, 'bad'); return; }
+      const g = $('#custGstin').value.trim();
+      const inv = await R.busy(btn, () => R.api('/pos/sales', { body: {
+        location_id: st.store.location_id, client_ref: st.clientRef,
+        lines: st.cart.map((c) => ({ variant_id: c.variant_id, qty: c.qty, discount_pct: c.disc || 0 })),
+        customer: { name: $('#custName').value.trim(), phone: $('#custPhone').value.trim(), gstin: g },
+        campaign_id: $('#campaign').value || undefined, payments: pays } }));
+      if (!inv) return;
+      if (inv.duplicate) R.toast('This sale was already saved. Showing its invoice.', 'ok');
+      else R.toast('Invoice ' + inv.invoice_number + ' saved.', 'ok');
+      resetSale();
+      showDoc(inv);
+    }
+    $('#completeSale').addEventListener('click', completeSale);
+
+    function resetSale() {
+      st.cart = []; st.quote = null; st.quoteKey = ''; st.clientRef = R.uuid();
+      ['#custName', '#custPhone', '#custGstin'].forEach((s) => { $(s).value = ''; });
+      $('#campaign').value = '';
+      R.$$('#payRows input').forEach((i) => { i.value = ''; });
+      $('#quoteErr').hidden = true;
+      renderCart();
+      $('#scan').focus();
+    }
+    ['#custGstin', '#custName'].forEach((s) => $(s).addEventListener('input', () => { renderCart(); requote(); }));
+
+    async function loadCampaigns() {
+      const sel = $('#campaign');
+      sel.innerHTML = '<option value="">No campaign</option>';
+      if (!st.store) return;
+      try {
+        const data = await R.api('/pos/campaigns', { params: { location_id: st.store.location_id } });
+        (data.campaigns || []).forEach((c) => {
+          const o = document.createElement('option');
+          o.value = c.campaign_id;
+          o.textContent = (c.targets_store ? '★ ' : '') + c.name + (c.end_date ? ' (till ' + R.day(c.end_date) + ')' : '');
+          sel.appendChild(o);
+        });
+      } catch (_) { /* tagging a bill is optional */ }
+    }
+
+    /* ---------- Documents ---------- */
+    function showDoc(inv) {
+      const actions = [{ label: '<i class="fa-solid fa-print"></i>Print', kind: 'primary', onClick: () => { R.print(R.invoiceHtml(inv)); return false; } }];
+      const today = R.todayIST();
+      const canReturn = inv.kind === 'invoice' && R.can('pos.sell') && today <= inv.return_until &&
+        (inv.lines || []).some((l) => l.returnable_qty > 0);
+      if (canReturn) actions.push({ label: '<i class="fa-solid fa-rotate-left"></i>Return items', onClick: () => { nav.show('returns'); openReturn(inv.invoice_number); } });
+      actions.push({ label: 'Close' });
+      const cns = (inv.credit_notes || []).length
+        ? '<div class="notice info" style="margin-top:12px"><i class="fa-solid fa-rotate-left"></i><div>Credit notes: ' +
+          inv.credit_notes.map((c) => '<a class="link" data-cn="' + esc(c.invoice_id) + '">' + esc(c.invoice_number) + '</a> (' + R.money(c.total_paise) + ')').join(', ') + '</div></div>' : '';
+      const m = R.modal({ title: (inv.kind === 'credit_note' ? 'Credit note ' : 'Invoice ') + inv.invoice_number, wide: true,
+                          html: R.invoiceHtml(inv) + cns, actions });
+      R.$$('[data-cn]', m.el).forEach((a) => a.addEventListener('click', () => { m.close(); openDoc(a.dataset.cn); }));
+    }
+    async function openDoc(id) {
+      try { showDoc(await R.api('/pos/invoices/' + encodeURIComponent(id))); } catch (e) { R.fail(e); }
+    }
+
+    /* ---------- Invoices ---------- */
+    async function loadInvoices(page) {
+      st.invPage = page || 1;
+      try {
+        const data = await R.api('/pos/invoices', { params: {
+          location_id: st.store.location_id, q: $('#invQ').value.trim(), kind: $('#invKind').value,
+          date_from: $('#invFrom').value, date_to: $('#invTo').value, page: st.invPage, size: 50 } });
+        const rows = data.invoices || [];
+        $('#invEmpty').hidden = rows.length > 0;
+        $('#invBody').innerHTML = rows.map((r) => '<tr class="click" data-id="' + esc(r.invoice_id) + '">' +
+          '<td class="mono">' + esc(r.invoice_number) + '</td><td>' + R.day(r.business_date) + '</td>' +
+          '<td>' + (r.kind === 'credit_note' ? '<span class="badge warn">Credit note</span>' : '<span class="badge">Invoice</span>') +
+          (r.campaign_id ? ' <span class="badge gold" title="Tagged to a campaign"><i class="fa-solid fa-bullhorn"></i></span>' : '') + '</td>' +
+          '<td class="mono">' + esc(r.store_code) + '</td><td>' + esc(r.customer_name || '') + (r.customer_phone ? ' <span class="mono" style="color:var(--muted)">' + esc(r.customer_phone) + '</span>' : '') + '</td>' +
+          '<td class="r">' + R.num(r.units) + '</td><td class="r num-cell">' + (r.kind === 'credit_note' ? '−' : '') + R.money(r.total_paise) + '</td>' +
+          '<td>' + esc(r.created_by) + '</td></tr>').join('');
+        R.pager($('#invPager'), data, loadInvoices);
+      } catch (e) { R.fail(e); }
+    }
+    $('#invBody').addEventListener('click', (e) => { const tr = e.target.closest('tr[data-id]'); if (tr) openDoc(tr.dataset.id); });
+    $('#invGo').addEventListener('click', () => loadInvoices(1));
+    $('#invQ').addEventListener('keydown', (e) => { if (e.key === 'Enter') loadInvoices(1); });
+
+    /* ---------- Returns ---------- */
+    async function openReturn(number) {
+      const no = String(number || $('#retNo').value).trim().toUpperCase();
+      if (!no) { R.toast('Enter the invoice number from the bill.', 'bad'); return; }
+      $('#retNo').value = no;
+      try {
+        const inv = await R.api('/pos/invoices/by-number/' + encodeURIComponent(no));
+        if (inv.kind !== 'invoice') { R.toast(no + ' is a credit note. Enter the sale invoice number.', 'bad'); return; }
+        st.ret = inv; st.retRef = R.uuid();
+        renderReturn();
+      } catch (e) { R.fail(e); }
+    }
+    function renderReturn() {
+      const inv = st.ret, panel = $('#retPanel');
+      const expired = R.todayIST() > inv.return_until;
+      const otherStore = st.store && inv.location_id !== st.store.location_id;
+      const left = inv.lines.filter((l) => l.returnable_qty > 0);
+      const blocked = expired ? 'The return window for this invoice ended on ' + R.day(inv.return_until) + '.'
+        : otherStore ? 'This invoice was billed at ' + inv.seller.store_name + ' (' + inv.seller.store_code + '). Returns are taken at that store.'
+        : !left.length ? 'Everything on this invoice has already been returned.'
+        : !R.can('pos.sell') ? 'This login can view bills but not take returns.' : '';
+      const firstMode = inv.payments && inv.payments[0] ? inv.payments[0].mode : 'cash';
+      panel.innerHTML = '<div class="card"><div class="card-h"><h2>Invoice <span class="mono">' + esc(inv.invoice_number) + '</span></h2>' +
+        '<span class="sub">' + R.day(inv.business_date) + ' · ' + R.money(inv.total_paise) + (inv.customer_name ? ' · ' + esc(inv.customer_name) : '') + '</span>' +
+        '<div class="end"><span class="badge ' + (expired ? 'bad' : 'ok') + '">Returns until ' + R.day(inv.return_until) + '</span>' +
+        '<button type="button" class="btn sm" id="retView"><i class="fa-solid fa-receipt"></i>View invoice</button></div></div>' +
+        (blocked ? '<div class="notice"><i class="fa-solid fa-circle-info"></i><div>' + esc(blocked) + '</div></div>' : '') +
+        '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th class="r">Sold</th><th class="r">Returned</th><th class="r">Paid per unit</th><th class="r">Return qty</th><th>Damaged</th></tr></thead><tbody>' +
+        inv.lines.map((l) => '<tr data-no="' + l.line_no + '"><td><b>' + esc(l.description) + '</b><div class="hint mono" style="margin:0">' + esc(l.sku) + ' · ' + esc(l.color) + ' / ' + esc(l.size) + '</div></td>' +
+          '<td class="r">' + l.qty + '</td><td class="r">' + l.returned_qty + '</td><td class="r num-cell">' + R.money(Math.round(l.total_paise / l.qty)) + '</td>' +
+          '<td class="r"><input class="in sm qty" type="number" min="0" max="' + l.returnable_qty + '" value="0" data-q' + (blocked || !l.returnable_qty ? ' disabled' : '') + ' aria-label="Return quantity"></td>' +
+          '<td><label class="check"><input type="checkbox" data-d' + (blocked || !l.returnable_qty ? ' disabled' : '') + '>Damaged</label></td></tr>').join('') +
+        '</tbody></table></div>' +
+        (blocked ? '' : '<div class="fields" style="margin-top:12px">' +
+          '<label class="f">Reason<select class="in" id="retReason"><option>Size / fit</option><option>Defective</option><option>Changed mind</option><option>Wrong item</option><option>Other</option></select></label>' +
+          '<label class="f">Note<input class="in" id="retNote" maxlength="120" placeholder="Optional"></label>' +
+          '<label class="f">Refund by<select class="in" id="retMode">' + MODES.map(([m, label]) => '<option value="' + m + '"' + (m === firstMode ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></label></div>' +
+          '<div class="due" style="margin-top:12px"><span>Estimated refund</span><b id="retEst">₹0.00</b></div>' +
+          '<p class="hint">Good units go back to sellable stock; damaged units go to the DMG bin. The credit note shows the exact refund, including GST reversed.</p>' +
+          '<div style="display:flex;justify-content:flex-end;margin-top:10px"><button type="button" class="btn primary" id="retSave"><i class="fa-solid fa-file-invoice"></i>Create credit note</button></div>') +
+        '</div>';
+      $('#retView').addEventListener('click', () => showDoc(inv));
+      panel.oninput = blocked ? null : estimate;
+      if (blocked) return;
+      $('#retSave').addEventListener('click', saveReturn);
+    }
+    function returnLines() {
+      return R.$$('#retPanel tr[data-no]').map((tr) => {
+        const q = parseInt($('[data-q]', tr).value, 10) || 0;
+        return { line_no: +tr.dataset.no, qty: q, damaged: $('[data-d]', tr).checked };
+      }).filter((l) => l.qty > 0);
+    }
+    function estimate() {
+      const est = returnLines().reduce((a, l) => {
+        const o = st.ret.lines.find((x) => x.line_no === l.line_no);
+        return a + Math.round(o.total_paise * l.qty / o.qty);
+      }, 0);
+      const el = $('#retEst'); if (el) el.textContent = '≈ ' + R.money(Math.round(est / 100) * 100);
+    }
+    async function saveReturn() {
+      const lines = returnLines();
+      if (!lines.length) { R.toast('Enter how many of each item are coming back.', 'bad'); return; }
+      const bad = lines.find((l) => l.qty > st.ret.lines.find((x) => x.line_no === l.line_no).returnable_qty);
+      if (bad) { R.toast('Line ' + bad.line_no + ': that’s more than is left to return.', 'bad'); return; }
+      const note = $('#retNote').value.trim();
+      const cn = await R.busy($('#retSave'), () => R.api('/pos/invoices/' + encodeURIComponent(st.ret.invoice_id) + '/returns', { body: {
+        lines, reason: $('#retReason').value + (note ? ': ' + note : ''), refund_mode: $('#retMode').value, client_ref: st.retRef } }));
+      if (!cn) return;
+      R.toast('Credit note ' + cn.invoice_number + ' saved. Refund ' + R.money(cn.total_paise) + '.', 'ok');
+      showDoc(cn);
+      openReturn(st.ret.invoice_number);
+    }
+    $('#retFind').addEventListener('click', () => openReturn());
+    $('#retNo').addEventListener('keydown', (e) => { if (e.key === 'Enter') openReturn(); });
+
+    /* ---------- Day close ---------- */
+    async function loadDay() {
+      const day = $('#dayDate').value || R.todayIST();
+      $('#dayDate').value = day;
+      try {
+        st.day = await R.api('/pos/day-report', { params: { location_id: st.store.location_id, day } });
+        renderDay();
+      } catch (e) { R.fail(e); }
+    }
+    function dayTables(d) {
+      const rows = (arr, f) => arr.map(f).join('') || '<tr><td colspan="9" class="empty">None</td></tr>';
+      const pay = '<table class="tbl"><thead><tr><th>Mode</th><th class="r">Collected</th><th class="r">Refunded</th><th class="r">Net</th></tr></thead><tbody>' +
+        MODES.map(([m, label]) => { const p = d.payments[m]; return '<tr><td>' + label + '</td><td class="r">' + R.money(p.collected_paise) + '</td><td class="r">' + R.money(p.refunded_paise) + '</td><td class="r"><b>' + R.money(p.net_paise) + '</b></td></tr>'; }).join('') + '</tbody></table>';
+      const tax = '<table class="tbl"><thead><tr><th>GST rate</th><th class="r">Taxable</th><th class="r">CGST</th><th class="r">SGST</th><th class="r">IGST</th></tr></thead><tbody>' +
+        rows(d.tax_by_rate, (t) => '<tr><td>' + R.rate(t.gst_rate_bp) + '</td><td class="r">' + R.money(t.taxable_paise) + '</td><td class="r">' + R.money(t.cgst_paise) + '</td><td class="r">' + R.money(t.sgst_paise) + '</td><td class="r">' + R.money(t.igst_paise) + '</td></tr>') + '</tbody></table>';
+      const cash = '<table class="tbl"><thead><tr><th>Cashier</th><th class="r">Bills</th><th class="r">Net</th></tr></thead><tbody>' +
+        rows(d.cashiers, (c) => '<tr><td>' + esc(c.cashier) + '</td><td class="r">' + c.invoices + '</td><td class="r">' + R.money(c.net_paise) + '</td></tr>') + '</tbody></table>';
+      const top = '<table class="tbl"><thead><tr><th>SKU</th><th>Item</th><th class="r">Net units</th></tr></thead><tbody>' +
+        rows(d.top_items, (t) => '<tr><td class="mono">' + esc(t.sku) + '</td><td>' + esc(t.description) + '</td><td class="r">' + t.units + '</td></tr>') + '</tbody></table>';
+      return { pay, tax, cash, top };
+    }
+    function renderDay() {
+      const d = st.day, t = dayTables(d);
+      $('#dayPrint').disabled = false;
+      const range = (s) => s.count ? esc(s.first) + (s.count > 1 ? ' – ' + esc(s.last) : '') : 'none';
+      $('#dayPanel').innerHTML = '<div class="tiles" style="margin-bottom:14px">' +
+        '<div class="tile"><i class="ic fa-solid fa-receipt"></i><span>Bills</span><b>' + R.num(d.sales.count) + '</b><small>' + range(d.sales) + '</small></div>' +
+        '<div class="tile ok"><i class="ic fa-solid fa-indian-rupee-sign"></i><span>Net sales</span><b>' + R.money(d.net_sales_paise) + '</b><small>' + R.count(d.net_units, 'unit') + ' net</small></div>' +
+        '<div class="tile' + (d.returns.count ? ' warn' : '') + '"><i class="ic fa-solid fa-rotate-left"></i><span>Returns</span><b>' + R.money(d.returns.total_paise) + '</b><small>' + R.num(d.returns.count) + ' credit notes · ' + range(d.returns) + '</small></div>' +
+        '<div class="tile"><i class="ic fa-solid fa-money-bill-wave"></i><span>Expected cash</span><b>' + R.money(d.expected_cash_paise) + '</b><small>Cash collected less cash refunds</small></div>' +
+        '<div class="tile"><i class="ic fa-solid fa-landmark"></i><span>GST collected</span><b>' + R.money(d.sales.cgst_paise + d.sales.sgst_paise + d.sales.igst_paise - d.returns.cgst_paise - d.returns.sgst_paise - d.returns.igst_paise) + '</b><small>Net of credit notes</small></div></div>' +
+        '<div class="cols"><div class="card"><div class="card-h"><h2>Payments by mode</h2></div><div class="tbl-wrap">' + t.pay + '</div></div>' +
+        '<div class="card" style="margin-top:0"><div class="card-h"><h2>Tax by rate</h2><span class="sub">Net of returns</span></div><div class="tbl-wrap">' + t.tax + '</div></div></div>' +
+        '<div class="cols" style="margin-top:14px"><div class="card"><div class="card-h"><h2>Cashiers</h2></div><div class="tbl-wrap">' + t.cash + '</div></div>' +
+        '<div class="card" style="margin-top:0"><div class="card-h"><h2>Top items</h2></div><div class="tbl-wrap">' + t.top + '</div></div></div>';
+    }
+    function dayDoc() {
+      const d = st.day, t = dayTables(d);
+      const strip = (h) => h.replace(/class="tbl"/g, '');
+      return '<div class="doc"><h2>Day close (Z report)</h2><div class="dhead"><div><b>' + esc(d.store.name) + '</b> (' + esc(d.store.code) + ')<br>' + esc(R.me.brand_name) +
+        '</div><div style="text-align:right">Business date: <b>' + R.day(d.date) + '</b><br>Printed ' + R.dateTime(new Date().toISOString()) + ' by ' + esc(R.me.username) + '</div></div>' +
+        '<table><tbody><tr><td>Invoices</td><td class="r">' + d.sales.count + ' (' + (d.sales.first ? esc(d.sales.first) + ' – ' + esc(d.sales.last) : 'none') + ')</td></tr>' +
+        '<tr><td>Sales total</td><td class="r">' + R.money(d.sales.total_paise) + '</td></tr>' +
+        '<tr><td>Credit notes</td><td class="r">' + d.returns.count + ' · ' + R.money(d.returns.total_paise) + '</td></tr>' +
+        '<tr><td><b>Net sales</b></td><td class="r"><b>' + R.money(d.net_sales_paise) + '</b></td></tr>' +
+        '<tr><td><b>Expected cash in drawer</b></td><td class="r"><b>' + R.money(d.expected_cash_paise) + '</b></td></tr></tbody></table>' +
+        '<h3 style="margin-top:8px;font-size:12px">Payments</h3>' + strip(t.pay) + '<h3 style="font-size:12px">Tax by rate</h3>' + strip(t.tax) +
+        '<h3 style="font-size:12px">Cashiers</h3>' + strip(t.cash) +
+        '<div class="foot">Counted cash: ________________ &nbsp; Difference: ________________ &nbsp; Signature: ________________</div></div>';
+    }
+    $('#dayGo').addEventListener('click', loadDay);
+    $('#dayPrint').addEventListener('click', () => { if (st.day) R.print(dayDoc()); });
+
+    /* ---------- Keyboard ---------- */
+    document.addEventListener('keydown', (e) => {
+      if (document.querySelector('.rt-modal')) return;
+      if (e.key === 'F2') { e.preventDefault(); nav.show('sale'); $('#scan').focus(); }
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !$('section[data-sec="sale"]').hidden) { e.preventDefault(); completeSale(); }
+    });
+
+    let nav = null;
+    R.boot('pos', async () => {
+      try {
+        if (!(await loadStores())) return;
+      } catch (e) { R.fail(e); return; }
+      if (!R.can('pos.sell')) R.$$('button[data-sec="sale"], button[data-sec="returns"]').forEach((b) => { b.hidden = true; });
+      R.skuPicker($('#scan'), { location: () => st.store && st.store.location_id, onPick: addItem });
+      $('#dayDate').value = R.todayIST();
+      $('#invFrom').value = R.addDays(R.todayIST(), -6);
+      $('#invTo').value = R.todayIST();
+      loadCampaigns();
+      renderCart();
+      nav = R.sections($('#nav'), (sec) => {
+        if (sec === 'invoices') loadInvoices(st.invPage);
+        if (sec === 'close') loadDay();
+        if (sec === 'sale') setTimeout(() => $('#scan').focus(), 0);
+      });
+      nav.start();
+    });
+  })();
+  </script>
+</body>
+</html>

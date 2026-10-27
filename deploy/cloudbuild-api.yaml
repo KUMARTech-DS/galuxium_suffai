@@ -1,0 +1,19 @@
+# gcloud builds submit --config=deploy/cloudbuild-api.yaml .
+substitutions:
+  _REGION: asia-south1
+  _IMAGE: suffai-api
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/${_IMAGE}:latest
+      - -f
+      - Dockerfile.api
+      - .
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/${_IMAGE}:latest
+
+timeout: 1200s

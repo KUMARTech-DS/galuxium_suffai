@@ -1,0 +1,5602 @@
+[
+  {
+    "_id":{
+      "$oid":"66db42e62b15e90df3095bd3"
+    },
+    "name":"Shirt Silk\/Designer",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:17:20.947Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:17:21.474Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901041150-ChatGPT_Image_Mar_19,_2026,_11_46_26_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db49116ce03afb32dd2396"
+    },
+    "name":"Top Wear",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:12:07.981Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:12:08.614Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773900728166-shirt_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db49b36ce03afb32dd23cf"
+    },
+    "name":"Bottom Wear",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:12:23.048Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:12:23.544Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773900743267-jeans_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db49f06ce03afb32dd2403"
+    },
+    "name":"Blazer\/Jacket",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:12:38.876Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:12:39.608Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773900759130-blazer_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db4a236ce03afb32dd2449"
+    },
+    "name":"Bottom Wear",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:12:54.527Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:12:55.287Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773900774778-jean_women.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db4ad86ce03afb32dd24d3"
+    },
+    "name":"Top Wear",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:13:11.946Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:13:12.485Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773900792208-top_women.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db4b1c6ce03afb32dd2530"
+    },
+    "name":"Saree\/Lehenga",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:13:38.671Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:13:39.203Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773900818921-saari_light.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db4b506ce03afb32dd257a"
+    },
+    "name":"Blazer\/Jacket",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:13:52.457Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:13:53.035Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773900832698-blazer_women.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e16c5f6e0ba1d6ea5a5eed"
+    },
+    "name":"Pillow Cover",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:16:56.714Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:16:57.298Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901016893-ChatGPT_Image_Mar_19,_2026,_11_45_46_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e16c7d6e0ba1d6ea5a5f0c"
+    },
+    "name":"Curtain Thin",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:19:00.619Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:19:01.226Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901140827-ChatGPT_Image_Mar_19,_2026,_11_47_38_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e16c8c6e0ba1d6ea5a5f1a"
+    },
+    "name":"Towel",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:20:11.300Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:20:11.929Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901211536-ChatGPT_Image_Mar_19,_2026,_11_48_09_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e16ca76e0ba1d6ea5a5f28"
+    },
+    "name":"Sofa Cover",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:20:42.152Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:20:42.719Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901242336-ChatGPT_Image_Mar_19,_2026,_11_49_27_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e176e76e0ba1d6ea5a5f5d"
+    },
+    "name":"Shawl",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:22:47.740Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:22:48.847Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901368400-ChatGPT_Image_Mar_19,_2026,_11_50_59_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e984d3da9620140a8575a0"
+    },
+    "name":"Tshirt",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:21:00.445Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:21:00.997Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901260647-tshirt_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e984f0da9620140a8575b8"
+    },
+    "name":"Trousers\/Pants Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:22:08.414Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:22:08.942Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901328634-formal_trouser_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e984feda9620140a8575c4"
+    },
+    "name":"Trousers\/Pants Silk",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:26:46.230Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:26:46.789Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901606423-ChatGPT_Image_Mar_19,_2026,_11_55_37_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9850bda9620140a8575d0"
+    },
+    "name":"Tie",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:22:31.990Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:22:32.482Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901352205-tie_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9851bda9620140a8575dc"
+    },
+    "name":"Casual Jacket Half",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:25:01.471Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:25:02.061Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901501681-casual_jacket_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98531da9620140a8575fa"
+    },
+    "name":"Casual Jacket Full",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:23:26.716Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:23:27.162Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901406923-casual_jacket_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98541da9620140a857606"
+    },
+    "name":"Casual Jacket Leather",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:23:42.238Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:23:42.721Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901422447-leather_jacket_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98562da9620140a857612"
+    },
+    "name":"Ethnic Jacket Top ",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:25:33.454Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:25:34.238Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901533694-sherwani_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9856fda9620140a85761e"
+    },
+    "name":"Sherwani Top",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:27:17.839Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:27:18.463Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901638084-sherwani.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98ebfda9620140a85765e"
+    },
+    "name":"Shorts",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:27:34.497Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:27:35.158Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901654703-short_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98edbda9620140a85766a"
+    },
+    "name":"Blazer\/Suit 1 Piece",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:28:07.494Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:28:08.334Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901687768-blazer_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98eecda9620140a857676"
+    },
+    "name":"Blazer\/Suit 2 Piece",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:28:46.440Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:28:46.990Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901726669-2piece_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98f03da9620140a857682"
+    },
+    "name":"Kurta Silk",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:29:37.911Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:29:38.343Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901778108-ChatGPT_Image_Mar_19,_2026,_11_58_41_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98f38da9620140a8576a8"
+    },
+    "name":"Jeans",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:29:19.476Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:29:20.465Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901759724-jean_women.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e98f47da9620140a8576b4"
+    },
+    "name":"Blazer\/Suit 1 Piece",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:30:02.747Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:30:03.528Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901803200-blazer_women.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e99267da9620140a85770f"
+    },
+    "name":"Shorts",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:31:13.795Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:31:14.431Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901874008-ChatGPT_Image_Mar_19,_2026,_11_56_48_AM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e99273da9620140a85771b"
+    },
+    "name":"Top\/Tshirt",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:30:55.879Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:30:56.505Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901856083-top_women.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e99281da9620140a857727"
+    },
+    "name":" Saree Plain",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:32:08.894Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:32:10.317Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901929111-saare_plan.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e99290da9620140a857733"
+    },
+    "name":"Saree Designer",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:32:28.050Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:32:29.170Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773901948294-saari_light.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e992aada9620140a85774b"
+    },
+    "name":"Saree Silk",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:33:39.068Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:33:39.512Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902019287-saare_plan.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e992b6da9620140a857757"
+    },
+    "name":"Saree Designer Heavy",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:33:56.382Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:33:57.032Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902036656-sarre__heavy.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e992c2da9620140a857763"
+    },
+    "name":"Blouse Normal\/Cotton",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:34:18.986Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:34:19.643Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902059200-blouse.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e99882da9620140a8577b6"
+    },
+    "name":"Blouse Heavy Work",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:34:43.622Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:34:44.482Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902083954-ChatGPT_Image_Mar_19,_2026,_12_02_24_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e99893da9620140a8577c2"
+    },
+    "name":"Petticoat\/Shapewear",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:36:14.772Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:36:15.426Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902174972-ChatGPT_Image_Mar_19,_2026,_12_05_01_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e998acda9620140a8577da"
+    },
+    "name":"Frock",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:37:54.670Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:37:55.344Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902274869-ChatGPT_Image_Mar_19,_2026,_12_06_34_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e998ceda9620140a8577f2"
+    },
+    "name":"Kameez\/Kurti Heavy Work",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:37:21.045Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:37:21.606Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902241294-ChatGPT_Image_Mar_19,_2026,_12_05_53_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e998dcda9620140a8577fe"
+    },
+    "name":"Kameez\/Kurti Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:40:04.151Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:40:04.878Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902404378-ChatGPT_Image_Mar_19,_2026,_12_08_02_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9bf86296ce098b8597b7b"
+    },
+    "name":"Skirt Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:40:53.733Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:40:54.350Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902453956-ChatGPT_Image_Mar_19,_2026,_12_09_36_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9c063296ce098b8597bc6"
+    },
+    "name":"Skirt Silk\/Designer",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-19T06:41:30.656Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-19T06:41:31.262Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1773902490913-ChatGPT_Image_Mar_19,_2026,_12_10_00_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9c07f296ce098b8597bde"
+    },
+    "name":"Lehenga Cotton",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:22:29.809Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:22:31.032Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261350031-ChatGPT_Image_Mar_23,_2026,_03_51_53_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9c08a296ce098b8597bea"
+    },
+    "name":"Lehenga High Work",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:23:20.054Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:23:20.766Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261400303-ChatGPT_Image_Mar_23,_2026,_03_52_34_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66e9c0c3296ce098b8597c1a"
+    },
+    "name":"Lehenga\/Ghaagra Silk",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:24:13.943Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:24:14.662Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261454193-ChatGPT_Image_Mar_23,_2026,_03_53_27_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8e05d6c1aae15ce009af"
+    },
+    "name":"Shirt Silk\/Designer",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:25:20.399Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:25:20.989Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261520596-ChatGPT_Image_Mar_23,_2026,_03_54_16_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fa900fd6c1aae15ce00b15"
+    },
+    "name":"Quilt Single Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:26:17.207Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:26:17.702Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261577411-ChatGPT_Image_Mar_23,_2026,_03_55_47_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fecf57d6c1aae15ce03b34"
+    },
+    "name":"Shirt Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:25:45.454Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:25:45.923Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261545630-shirt_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fecf69d6c1aae15ce03b40"
+    },
+    "name":"Shirt Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:28:43.377Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:28:43.875Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261723569-ChatGPT_Image_Mar_23,_2026,_03_58_18_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fed13ed6c1aae15ce03bae"
+    },
+    "name":"Kurta Normal\/Cotton",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:30:29.744Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:30:30.223Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261829939-ChatGPT_Image_Mar_23,_2026,_04_00_00_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fee5edd6c1aae15ce03dce"
+    },
+    "name":"Blazer\/Suit 3 Piece",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:29:59.300Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:29:59.855Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261799546-3piece_men.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fee5f5d6c1aae15ce03dda"
+    },
+    "name":"Blazer\/Suit 3 Piece",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T11:39:49.841Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T11:39:51.877Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745667591\/CommodityImages\/hixjre5rumuhb6tcuzz1.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee602d6c1aae15ce03de6"
+    },
+    "name":"Pathani Suit Top",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:28:18.762Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:28:19.200Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261698955-ChatGPT_Image_Mar_23,_2026,_03_57_38_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fee6c4d6c1aae15ce03e03"
+    },
+    "name":"Blazer\/Suit 2 Piece",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T11:44:15.968Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T11:44:17.968Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745667857\/CommodityImages\/xlzfah6akcbypuut7zeu.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee6f0d6c1aae15ce03e12"
+    },
+    "name":"Leggings",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-03-23T10:30:51.181Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-23T10:30:51.659Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1774261851374-ChatGPT_Image_Mar_23,_2026,_03_59_35_PM.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fee700d6c1aae15ce03e1e"
+    },
+    "name":"Pants",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T11:46:23.707Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T11:46:25.803Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745667985\/CommodityImages\/urd45b7gfr9ry1sado0n.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee70fd6c1aae15ce03e2a"
+    },
+    "name":"Pyjama (Normal)",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T11:50:42.068Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T11:50:43.916Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745668243\/CommodityImages\/tcfn7f7xzjlgevemabst.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee719d6c1aae15ce03e36"
+    },
+    "name":"Pyjama (Silk)",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T11:46:53.700Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T11:46:55.562Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745668015\/CommodityImages\/qpatfuj7uw0fq9iphub6.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee86bd6c1aae15ce03f0b"
+    },
+    "name":"Salwaar Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T11:51:48.258Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T11:51:50.306Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745668309\/CommodityImages\/ofwngx20fpckh34kg0xy.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee875d6c1aae15ce03f17"
+    },
+    "name":"Salwaar Slik",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T11:55:34.294Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T11:55:36.427Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745668535\/CommodityImages\/la5k3mkgrmven0dvg0ko.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee88ed6c1aae15ce03f29"
+    },
+    "name":"Dupatta Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:00:45.987Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:00:48.205Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745668847\/CommodityImages\/h3n7tukogw3rokl0mtfk.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee89cd6c1aae15ce03f35"
+    },
+    "name":"Dupatta Silk",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:03:37.144Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:03:39.318Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669018\/CommodityImages\/qb3tye0pmfdx4dduvwrj.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee8cdd6c1aae15ce03f83"
+    },
+    "name":"Dupatta Heavy Work",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-15T17:58:19.631Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-15T17:58:21.738Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729015101\/CommodityImages\/nypv1o1ag0l8kq6bl2mq.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee9b8d6c1aae15ce03fc6"
+    },
+    "name":"Tracksuit Jacket",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:05:52.082Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:05:54.166Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669153\/CommodityImages\/jjpzuwta8ovtmirozgwb.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fee9c2d6c1aae15ce03fd2"
+    },
+    "name":"Tracksuit Jacket",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:06:26.448Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:06:28.486Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669188\/CommodityImages\/m5t5ra9qtxnpoghmk3qb.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feea5fd6c1aae15ce04026"
+    },
+    "name":"Lehenga Low Work",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T10:02:31.979Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T10:02:34.531Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745661753\/CommodityImages\/ilgekekgmki5t14ujurl.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66feeb17d6c1aae15ce0407c"
+    },
+    "name":"Gown Medium Work",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:08:10.136Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:08:11.721Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669291\/CommodityImages\/png4ulagd8lqivgwnhse.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feeb23d6c1aae15ce04088"
+    },
+    "name":"Gown Heavy Work",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:12:39.876Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:12:42.367Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669561\/CommodityImages\/zevs2dni7bhahoyrplki.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feeb30d6c1aae15ce04094"
+    },
+    "name":"Wedding Gown Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:12:02.027Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:12:03.795Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669523\/CommodityImages\/cmm3lhsx83q127jlym9y.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feeb3ed6c1aae15ce040a0"
+    },
+    "name":"Wedding Gown Heavy",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:10:37.314Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:10:39.635Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669439\/CommodityImages\/oj06lv0tytq4794vixua.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feeb5ed6c1aae15ce040af"
+    },
+    "name":"Maxi",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:15:41.152Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:15:42.916Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669742\/CommodityImages\/wqlqja2qacukbxu75ad9.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feeb74d6c1aae15ce040c6"
+    },
+    "name":"Jumpsuit",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-26T12:18:08.326Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T12:18:10.174Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745669889\/CommodityImages\/my8tcwkyhgfy5fvrhkpn.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feec69d6c1aae15ce0410b"
+    },
+    "name":"Bedsheet Single Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T05:56:13.745Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T05:56:15.388Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745819775\/CommodityImages\/epu5tgbm5yzwnjr2tir9.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feec7ad6c1aae15ce0411a"
+    },
+    "name":"Bedsheet Double\/Queen Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T05:56:41.564Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T05:56:43.318Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745819802\/CommodityImages\/bwfnzzoq2ltrwnjdpi1p.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feece0d6c1aae15ce04176"
+    },
+    "name":"Bedsheet King Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T05:57:39.312Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T05:57:41.011Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745819860\/CommodityImages\/m7jeje8zv1pctib6hm3r.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feed9cd6c1aae15ce041ab"
+    },
+    "name":"Quilt Double\/Queen Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:06:39.725Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:06:41.633Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820401\/CommodityImages\/xfyfq2foxngspc3gv0ej.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feeda9d6c1aae15ce041b7"
+    },
+    "name":"Quilt King Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:07:07.036Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:07:09.101Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820428\/CommodityImages\/e457bvbi40xgcahteofi.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feedd6d6c1aae15ce041cc"
+    },
+    "name":"Blanket Single Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:10:45.328Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:10:47.123Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820646\/CommodityImages\/f0h60uwimutegryy7si7.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feede2d6c1aae15ce041d8"
+    },
+    "name":"Blanket Double\/Queen Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:11:06.758Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:11:08.808Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820668\/CommodityImages\/idjsdpji2ezzu7bcpuf8.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feedefd6c1aae15ce041e4"
+    },
+    "name":"Blanket King Size",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:12:28.790Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:12:30.630Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820750\/CommodityImages\/e4mq0xoddzmxt2bj3mbp.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feef2ed6c1aae15ce04286"
+    },
+    "name":"Window Curtain",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:13:12.942Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:13:14.996Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820794\/CommodityImages\/ec9h6qz2uiflkgiq4lie.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66feef38d6c1aae15ce04292"
+    },
+    "name":"Door Curtain",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:13:46.862Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:13:48.603Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820828\/CommodityImages\/pputtdptvb3xfkkpaqgs.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670015aad6c1aae15ce047a0"
+    },
+    "name":"Kids Topwear",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:19:53.439Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:19:55.472Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765372794\/CommodityImages\/tpr63fmxhvpom0htubpw.webp"
+  },
+  {
+    "_id":{
+      "$oid":"670015ccd6c1aae15ce047c4"
+    },
+    "name":"Kids Bottomwear",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:20:17.408Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:20:19.278Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765372818\/CommodityImages\/xksumf9p2lcqhyxf6p6l.webp"
+  },
+  {
+    "_id":{
+      "$oid":"670015d7d6c1aae15ce047d0"
+    },
+    "name":"Kids Bottomwear",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-15T18:24:30.873Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-15T18:24:32.313Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729016671\/CommodityImages\/qoyppe5gpeewnvsdvxjq.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670015e7d6c1aae15ce047df"
+    },
+    "name":"Kids Topwear",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-15T18:24:45.314Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-15T18:24:46.526Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729016686\/CommodityImages\/nazhh7bqj5hn8g07hkd2.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670015f5d6c1aae15ce04814"
+    },
+    "name":"Kids Woollenwear Top",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-15T18:25:00.031Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-15T18:25:01.540Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729016700\/CommodityImages\/yrl8wuf7dfc98h1unjak.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67001617d6c1aae15ce04838"
+    },
+    "name":"Kids Woollenwear Bottom",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-15T18:26:11.303Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-15T18:26:13.331Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729016772\/CommodityImages\/l7nkkkq9hes5x09i41wl.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67001621d6c1aae15ce04844"
+    },
+    "name":"Kids Jacket",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-15T18:26:26.670Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-15T18:26:28.095Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729016787\/CommodityImages\/atofwytohdb7dhz6vig3.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67001665d6c1aae15ce04874"
+    },
+    "name":"Boots",
+    "weight":0,
+    "service_name":"Shoe Clean",
+    "menu":"Shoes",
+    "service_id":{
+      "$oid":"66d5f20904b428598cd1af43"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:06:09.990Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:06:12.162Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993171\/CommodityImages\/fq4dchykgwl2bqcm4cd9.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6700167bd6c1aae15ce0488d"
+    },
+    "name":"Normal Shoes",
+    "weight":0,
+    "service_name":"Shoe Clean",
+    "menu":"Shoes",
+    "service_id":{
+      "$oid":"66d5f20904b428598cd1af43"
+    },
+    "created_at":{
+      "$date":"2024-10-24T14:13:44.628Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-24T14:13:45.967Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729779225\/CommodityImages\/afajjl1nc9jawccy781j.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67001688d6c1aae15ce04899"
+    },
+    "name":"Leather Shoes",
+    "weight":0,
+    "service_name":"Shoe Clean",
+    "menu":"Shoes",
+    "service_id":{
+      "$oid":"66d5f20904b428598cd1af43"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:06:31.859Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:06:34.373Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993193\/CommodityImages\/yt6di22zm3viesqa5vbh.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67001694d6c1aae15ce048a5"
+    },
+    "name":"Sports Shoes",
+    "weight":0,
+    "service_name":"Shoe Clean",
+    "menu":"Shoes",
+    "service_id":{
+      "$oid":"66d5f20904b428598cd1af43"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:13:58.689Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:14:00.843Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993640\/CommodityImages\/mz60dyhgm58lboqtcwnt.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67002e44d6c1aae15ce0662c"
+    },
+    "name":"Small Bag",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-24T14:08:49.590Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-24T14:08:51.722Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729778931\/CommodityImages\/pjvoqbclzjkyqmsnsb3j.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67002e72d6c1aae15ce06638"
+    },
+    "name":"Medium Bag",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-24T14:09:12.686Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-24T14:09:14.276Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729778953\/CommodityImages\/aa6vaou97al9oe6tis9w.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67002e88d6c1aae15ce06644"
+    },
+    "name":"Large Bag",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-24T14:09:59.415Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-24T14:10:00.708Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729779000\/CommodityImages\/pjo0ght19vfbwhwjxqsd.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67002f32d6c1aae15ce066fa"
+    },
+    "name":"Woollen Innerwear Top",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:37:08.031Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:37:10.166Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745825829\/CommodityImages\/d2k1i3abfodczavjxil0.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67002f46d6c1aae15ce06712"
+    },
+    "name":"Woollen Innerwear Bottom",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:38:21.334Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:38:23.444Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745825902\/CommodityImages\/lv2b0vyrenarrlahp87n.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670041ded6c1aae15ce072e0"
+    },
+    "name":"Long Coat",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:13:39.706Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:13:41.772Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745824421\/CommodityImages\/ysw1v8ltxv22fdfogpd5.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6700420ed6c1aae15ce0730c"
+    },
+    "name":"Quilted Jacket",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:07:10.468Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:07:12.240Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993231\/CommodityImages\/eqeltvprhyh7qg5tufk0.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670042dbd6c1aae15ce073ad"
+    },
+    "name":"Woollen Coat Half",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:45:08.977Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:45:11.700Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745826310\/CommodityImages\/wejse59coxrpodqpcbu0.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67004320d6c1aae15ce07452"
+    },
+    "name":"Woollen Coat Full",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:19:08.779Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:19:10.879Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993950\/CommodityImages\/s0mpgg5j3zwo9opqryqh.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670043b3d6c1aae15ce07483"
+    },
+    "name":"Shawl",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:02:36.339Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:02:38.592Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745823758\/CommodityImages\/pfyozg1haomailihzen1.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670043f4d6c1aae15ce074ba"
+    },
+    "name":"Cardigan\/Shrug",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:19:28.835Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:19:31.177Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745824770\/CommodityImages\/zwuoe1br0zdkhhazaywb.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67004417d6c1aae15ce074ed"
+    },
+    "name":"Scarf\/Muffler",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:22:48.686Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:22:50.795Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745824970\/CommodityImages\/ga25eqhzag4esz9cawc8.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6700442ad6c1aae15ce074f9"
+    },
+    "name":"Windcheater",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-16T05:21:38.576Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-16T05:21:40.130Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729056099\/CommodityImages\/b4f2c6a1yg6dsqoravao.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67004454d6c1aae15ce07508"
+    },
+    "name":"Sweater",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:26:38.367Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:26:40.675Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745825200\/CommodityImages\/vgya6seajh8wewqiddrj.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67004531d6c1aae15ce07520"
+    },
+    "name":"Door Mat",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:09:33.173Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:09:35.407Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993374\/CommodityImages\/nvvcslbmhtbq3udhujrx.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6700465ed6c1aae15ce07574"
+    },
+    "name":"Sweatshirt\/Hoodie",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:30:34.302Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:30:36.583Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745825435\/CommodityImages\/x4kdizsyqjofytnbq7at.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6700470bd6c1aae15ce07590"
+    },
+    "name":"Woollen Gloves",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:16:07.413Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:16:09.359Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993768\/CommodityImages\/ttf5nq5qoectayjt6iv6.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670048acd6c1aae15ce0759f"
+    },
+    "name":"Woollen Cap\/Hat",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:34:05.554Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:34:08.039Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745825647\/CommodityImages\/ejeu28hoxsklqyrgs9hi.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670048fcd6c1aae15ce075ab"
+    },
+    "name":"Normal Cap\/Hat",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:11:43.247Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:11:45.155Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745824304\/CommodityImages\/jgqvnqekxghel8s24ext.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67004942d6c1aae15ce075bd"
+    },
+    "name":"Socks Cotton",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:48:17.101Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:48:19.502Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745822899\/CommodityImages\/uxks7yr06tutbi7c7oq7.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6700498ed6c1aae15ce075c9"
+    },
+    "name":"Socks Woollen",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:48:40.317Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:48:43.136Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745822922\/CommodityImages\/sh62x8wnrpvx8c2c6lyy.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67004a27d6c1aae15ce075d8"
+    },
+    "name":"Bath Towel",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-03-10T08:26:11.233Z"
+    },
+    "updated_at":{
+      "$date":"2025-03-10T08:26:12.940Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1741595172\/CommodityImages\/mc1zjorbq8s6uchyktxv.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67004a40d6c1aae15ce075e4"
+    },
+    "name":"Hand Towel",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-16T05:35:19.225Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-16T05:35:20.778Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729056920\/CommodityImages\/p4l9ivyffwbx5jtyzj6o.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67004ab3d6c1aae15ce075f3"
+    },
+    "name":"Small Table Cloth",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-16T05:35:42.397Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-16T05:35:43.970Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729056943\/CommodityImages\/aaskkzxphcsiuxsm5kim.avif"
+  },
+  {
+    "_id":{
+      "$oid":"67004ac2d6c1aae15ce075ff"
+    },
+    "name":"Big Table Cloth",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-16T05:35:59.120Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-16T05:36:00.710Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729056960\/CommodityImages\/ojvbsbv2oim1s17kumtp.avif"
+  },
+  {
+    "_id":{
+      "$oid":"67006022d6c1aae15ce07638"
+    },
+    "name":"Handkerchief Cotton",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-10-24T14:22:42.581Z"
+    },
+    "updated_at":{
+      "$date":"2024-10-24T14:22:44.205Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1729779763\/CommodityImages\/hbjt1dhyvdkbnfivejrj.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67006050d6c1aae15ce07647"
+    },
+    "name":"Handkerchief Silk",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:08:48.778Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:08:50.784Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745824130\/CommodityImages\/slhqbjkz3rf0eizx2lcs.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67006142d6c1aae15ce07685"
+    },
+    "name":"Handkerchief",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:23:22.777Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:23:24.831Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373004\/CommodityImages\/xw1kq3alv6k3pcvcx3kb.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6712a62422a455950bdfe9c0"
+    },
+    "name":"Car Cover",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:43:49.768Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:43:51.658Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745822631\/CommodityImages\/gkfuzmkgo9ecknlpmaaw.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6717feee0de7e52d185cfd6f"
+    },
+    "name":"Trousers\/Pants Normal",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T05:52:09.316Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T05:52:11.283Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745819530\/CommodityImages\/w8bqmkddhvtvzga1aaqi.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6717ff7e0de7e52d185cfd9a"
+    },
+    "name":"Trousers\/Pants Silk",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:30:54.553Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:30:56.576Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745821855\/CommodityImages\/gqhaofhi6h8mw3bqwchn.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671813a80de7e52d185cfe1c"
+    },
+    "name":"Casual Jacket Leather",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T05:46:17.579Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T05:46:20.008Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745819179\/CommodityImages\/gmrlz5sgf8qcr1w9lwrz.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671814160de7e52d185cfe2b"
+    },
+    "name":"Casual Jacket",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T05:48:04.050Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T05:48:06.526Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745819286\/CommodityImages\/pfjyut3vi5igxa5q1v2x.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671814670de7e52d185cfe55"
+    },
+    "name":"Kids Jacket",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:24:16.383Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:24:18.777Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373058\/CommodityImages\/ti7ank27kn5stvcscvcs.webp"
+  },
+  {
+    "_id":{
+      "$oid":"671818480de7e52d185cff29"
+    },
+    "name":"Jeans",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-02-20T13:13:49.246Z"
+    },
+    "updated_at":{
+      "$date":"2026-02-20T13:13:51.069Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1771593230\/CommodityImages\/d9z48uqxtd9vvh0oxead.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67181e510de7e52d185d01ac"
+    },
+    "name":"Dhoti\/Lungi",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:04:39.622Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:04:41.855Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993081\/CommodityImages\/clf66oxy4ohfkj6cklpm.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67181ec30de7e52d185d01de"
+    },
+    "name":"Dress- One Piece",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-11-08T07:38:20.328Z"
+    },
+    "updated_at":{
+      "$date":"2024-11-08T07:38:22.286Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1731051501\/CommodityImages\/f4rzgvdhgnuy0dptxcbr.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6718939c0de7e52d185d02ab"
+    },
+    "name":"Comforter Single",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:27:20.208Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:27:22Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745821641\/CommodityImages\/e70poyj5qc6czkokcywc.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671893a80de7e52d185d02b7"
+    },
+    "name":"Comforter Double",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:27:40.007Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:27:41.824Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745821661\/CommodityImages\/rxvhnbjcakjm4yiwh6ik.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6718944c0de7e52d185d02c9"
+    },
+    "name":"Bed Cover",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2024-11-08T07:42:04.096Z"
+    },
+    "updated_at":{
+      "$date":"2024-11-08T07:42:06.100Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1731051725\/CommodityImages\/shhkhe6dx9kwlo4nrwdr.avif"
+  },
+  {
+    "_id":{
+      "$oid":"671895c50de7e52d185d030a"
+    },
+    "name":"Pillow Cover",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:15:09.833Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:15:12.059Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745820911\/CommodityImages\/zlav2l49qq6mvpcpifld.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671896560de7e52d185d0338"
+    },
+    "name":"Cushion Cover",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:33:42.613Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:33:44.879Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745822024\/CommodityImages\/j7dkr8iwklz3jcexmnoo.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6718993b0de7e52d185d04bf"
+    },
+    "name":"Bath Robe",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:27:36.008Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:27:38.043Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373257\/CommodityImages\/nq0901ne9aa4ekdxka3e.webp"
+  },
+  {
+    "_id":{
+      "$oid":"671899480de7e52d185d04cb"
+    },
+    "name":"Bath Robe",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T06:53:44.731Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T06:53:46.684Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745823226\/CommodityImages\/t1ko02j9i1wewb3cnp76.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671899940de7e52d185d086d"
+    },
+    "name":"Apron",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-28T07:00:21.101Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-28T07:00:23.641Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745823622\/CommodityImages\/uvebgvu5arcwk9wnfprs.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671899c80de7e52d185d0888"
+    },
+    "name":"Apron",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:28:04.907Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:28:06.618Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373286\/CommodityImages\/tylp0swrrve2uozz5lmz.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67189a010de7e52d185d08ae"
+    },
+    "name":"Leather Gloves",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:19:29.283Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:19:31.438Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993970\/CommodityImages\/vt5vqjw4z5nv8dywornn.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67189ab50de7e52d185d0cd9"
+    },
+    "name":"Socks",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:32:58.652Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:32:59.842Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373579\/CommodityImages\/tsikqxde1fxsgiyihveu.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b1f00de7e52d185dadf0"
+    },
+    "name":"Sweater",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:33:22.132Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:33:23.847Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373603\/CommodityImages\/yynskgcijhdwgr17ehqq.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b2470de7e52d185dae27"
+    },
+    "name":"Sweatshirt\/Hoodie",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:33:47.456Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:33:49.120Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373628\/CommodityImages\/uosd4ib9jynwfx7qd48p.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b2b80de7e52d185dae51"
+    },
+    "name":"Kids Woollenwear Top",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:34:16.187Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:34:18.336Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373657\/CommodityImages\/hqsgj8ewqqfdki68drlp.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b2ce0de7e52d185dae69"
+    },
+    "name":"Kids Woollenwear Bottom",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:36:21.652Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:36:22.878Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373782\/CommodityImages\/wluk5ptmtt48gwskhjsf.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b3840de7e52d185daeac"
+    },
+    "name":"Heels",
+    "weight":0,
+    "service_name":"Shoe Clean",
+    "menu":"Shoes",
+    "service_id":{
+      "$oid":"66d5f20904b428598cd1af43"
+    },
+    "created_at":{
+      "$date":"2025-04-30T06:10:08.030Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-30T06:10:10.123Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745993409\/CommodityImages\/grsbwzg4xgc8fkme5aqo.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6718b3cf0de7e52d185daed3"
+    },
+    "name":"Scarf\/Muffler",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:36:01.720Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:36:03.265Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373762\/CommodityImages\/wz0wivab5gor2gmc1p6r.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67195fb70de7e52d185dbf37"
+    },
+    "name":"Undergarment",
+    "weight":0,
+    "service_name":"Ironing",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2025-12-10T13:35:12.987Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-10T13:35:14.258Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765373713\/CommodityImages\/mxw0aholhsoax5r4ppx8.webp"
+  },
+  {
+    "_id":{
+      "$oid":"679d129771b5939b427b298e"
+    },
+    "name":"Bedsheet Wash-Single",
+    "weight":900,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-06-08T19:44:55.638Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-08T19:44:56.013Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1780947895794-beds_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"679d133471b5939b427b29a0"
+    },
+    "name":"Bedsheet Wash-Double",
+    "weight":1300,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-06-08T19:44:24.855Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-08T19:44:25.294Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1780947865015-beds_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"679d136d71b5939b427b29a8"
+    },
+    "name":"Bedsheet Wash-King",
+    "weight":1800,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-06-08T19:45:18.419Z"
+    },
+    "updated_at":{
+      "$date":"2026-06-08T19:45:18.839Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1780947918614-beds_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"67c3fb2a09907191b89189d9"
+    },
+    "name":"Sofa Cover",
+    "weight":700,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2025-03-02T06:31:06.145Z"
+    },
+    "updated_at":{
+      "$date":"2025-03-02T06:31:06.145Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1740897065\/CommodityImages\/j8agmyu0qeddgdp5xfc0.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67001610d6c1aae15ce0482c"
+    },
+    "name":"Kids Woollenwear Bottom",
+    "weight":400,
+    "service_name":"Wash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:32:49.796Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:32:51.485Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765427570\/CommodityImages\/py24szcbfwnaa0x6a5dx.webp"
+  },
+  {
+    "_id":{
+      "$oid":"671568155d4fdc8774e05868"
+    },
+    "name":"Towel",
+    "weight":350,
+    "service_name":"Wash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:33:48.022Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:33:49.425Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765427628\/CommodityImages\/jnlzz44wakmpnbtp5bru.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db46406ce03afb32dd22c9"
+    },
+    "name":"Socks",
+    "weight":20,
+    "service_name":"Wash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:34:32.845Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:34:34.303Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765427673\/CommodityImages\/iexqeop4ipxmqo9drujb.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66feeec7d6c1aae15ce04234"
+    },
+    "name":"Big Table Cloth",
+    "weight":500,
+    "service_name":"Wash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:56:53.400Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:56:55.553Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429015\/CommodityImages\/sqm8eba5hrudqtqbpstz.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671899710de7e52d185d0849"
+    },
+    "name":"Apron",
+    "weight":300,
+    "service_name":"Wash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:34:58.974Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:35:00.715Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765427700\/CommodityImages\/qvin7qds8mxgbmqldn8i.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db4568dca5d45ce9cb905a"
+    },
+    "name":"Pillow Cover",
+    "weight":100,
+    "service_name":"Wash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:36:50.391Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:36:53.441Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765427812\/CommodityImages\/ynmxmdrlbq0v0hkkqwjn.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66db46676ce03afb32dd22e2"
+    },
+    "name":"Handkerchief",
+    "weight":1,
+    "service_name":"Wash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:38:32.969Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:38:35.008Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765427914\/CommodityImages\/ielqksggdt4opiuthmsu.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db45be6ce03afb32dd224f"
+    },
+    "name":"Small Table Cloth",
+    "weight":170,
+    "service_name":"Wash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:57:38.497Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:57:40.922Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429060\/CommodityImages\/g7jgo7dgbya8y6mak5vx.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"670015bad6c1aae15ce047ac"
+    },
+    "name":"Kids Bottomwear",
+    "weight":200,
+    "service_name":"Wash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:39:28.654Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:39:30.449Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765427969\/CommodityImages\/psz8cw1aty8cgemy5a69.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b21a0de7e52d185dae0f"
+    },
+    "name":"Sweatshirt\/Hoodie",
+    "weight":600,
+    "service_name":"Wash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:40:47.941Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:40:49.484Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428049\/CommodityImages\/l0xvs7yr5aetayfdkcoq.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67116bc6fac7c2d4fb13dc6b"
+    },
+    "name":"Sweater",
+    "weight":800,
+    "service_name":"Wash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:41:27.905Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:41:29.483Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428089\/CommodityImages\/rpitohsz8igubvt1spqx.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6700162fd6c1aae15ce04850"
+    },
+    "name":"Kids Jacket",
+    "weight":600,
+    "service_name":"Wash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:43:04.960Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:43:07.162Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428186\/CommodityImages\/cwk4e79go4qpifzzf1uh.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db46536ce03afb32dd22d6"
+    },
+    "name":"Undergarment",
+    "weight":60,
+    "service_name":"Wash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:43:35.322Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:43:36.805Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428216\/CommodityImages\/clsn091genrop6r2xir8.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67001596d6c1aae15ce04788"
+    },
+    "name":"Kids Topwear",
+    "weight":200,
+    "service_name":"Wash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:44:29.102Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:44:31.023Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428270\/CommodityImages\/i9h5dwikm9tqi9vrmhrj.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67001601d6c1aae15ce04820"
+    },
+    "name":"Kids Woollenwear Top",
+    "weight":400,
+    "service_name":"Wash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:45:12.081Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:45:13.881Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428312\/CommodityImages\/tbivm5rw7uhifvlum1gl.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718991f0de7e52d185d04a7"
+    },
+    "name":"Bath Robe",
+    "weight":1,
+    "service_name":"Wash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:45:39.407Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:45:41.770Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428341\/CommodityImages\/xuvwfge0wya8ffdmvcfz.webp"
+  },
+  {
+    "_id":{
+      "$oid":"670b62a59270fcce92ae9952"
+    },
+    "name":"Shawl",
+    "weight":1,
+    "service_name":"Wash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:46:38.487Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:46:40.890Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428400\/CommodityImages\/osrdj1nmq3z0y0exwykt.png"
+  },
+  {
+    "_id":{
+      "$oid":"6718b3b90de7e52d185daebb"
+    },
+    "name":"Scarf\/Muffler",
+    "weight":1,
+    "service_name":"Wash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:47:31.606Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:47:33.558Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428452\/CommodityImages\/ueib3coqfpnmlxxayp7x.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8ff6d6c1aae15ce00b09"
+    },
+    "name":"Towel",
+    "weight":350,
+    "service_name":"Wash & Iron",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:47:59.401Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:48:00.653Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428480\/CommodityImages\/boftnshknns12yikgrvk.webp"
+  },
+  {
+    "_id":{
+      "$oid":"670015c4d6c1aae15ce047b8"
+    },
+    "name":"Kids Bottomwear",
+    "weight":200,
+    "service_name":"Wash & Iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:04:29.743Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:04:31.672Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429471\/CommodityImages\/wx36phpgadnjtpa7znor.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b2c50de7e52d185dae5d"
+    },
+    "name":"Kids Woollenwear Bottom",
+    "weight":400,
+    "service_name":"Wash & Iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:04:59.097Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:05:00.413Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429500\/CommodityImages\/tgs6mo7c0wcyb4ejflqz.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718145a0de7e52d185cfe46"
+    },
+    "name":"Kids Jacket",
+    "weight":600,
+    "service_name":"Wash & Iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:05:26.363Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:05:28.455Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429527\/CommodityImages\/quyxgxnp8fktyn8egrrh.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8fd8d6c1aae15ce00af1"
+    },
+    "name":"Pillow Cover",
+    "weight":100,
+    "service_name":"Wash & Iron",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:05:48.050Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:05:50.328Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429549\/CommodityImages\/tg1or9zqicdfi1lr7akx.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"67006129d6c1aae15ce07679"
+    },
+    "name":"Handkerchief",
+    "weight":1,
+    "service_name":"Wash & Iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:06:10.283Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:06:13.910Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429572\/CommodityImages\/dzgghrzt5ukiuwqq2gz4.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fa9048d6c1aae15ce00b2d"
+    },
+    "name":"Shawl",
+    "weight":1,
+    "service_name":"Wash & Iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:06:36.565Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:06:39.511Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429598\/CommodityImages\/sfo3o1or8vmppoqpcera.png"
+  },
+  {
+    "_id":{
+      "$oid":"6718992f0de7e52d185d04b3"
+    },
+    "name":"Bath Robe",
+    "weight":1,
+    "service_name":"Wash & Iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:07:01.393Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:07:03.285Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429622\/CommodityImages\/pnjmu3xt9o444mxd2hbk.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b2a80de7e52d185dae42"
+    },
+    "name":"Kids Woollenwear Top",
+    "weight":400,
+    "service_name":"Wash & Iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:07:29.386Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:07:30.912Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429650\/CommodityImages\/jza9jxqm7w1omercpqx5.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b3c50de7e52d185daec7"
+    },
+    "name":"Scarf\/Muffler",
+    "weight":1,
+    "service_name":"Wash & Iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:07:53.862Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:07:55.108Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429674\/CommodityImages\/pkfdzpgrff6llifecpqs.webp"
+  },
+  {
+    "_id":{
+      "$oid":"670015a1d6c1aae15ce04794"
+    },
+    "name":"Kids Topwear",
+    "weight":200,
+    "service_name":"Wash & Iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:08:17.968Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:08:19.710Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429699\/CommodityImages\/e2ozp5stnsczkm9qjlyg.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67195fd30de7e52d185dbf46"
+    },
+    "name":"Undergarment",
+    "weight":60,
+    "service_name":"Wash & Iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:08:43.561Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:08:44.864Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429724\/CommodityImages\/knjiikxppe1qoflinep0.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b2280de7e52d185dae1b"
+    },
+    "name":"Sweatshirt\/Hoodie",
+    "weight":600,
+    "service_name":"Wash & Iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:09:09.266Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:09:10.926Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429750\/CommodityImages\/ww4vfmemhs35leas9qyz.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718b1e30de7e52d185dade4"
+    },
+    "name":"Sweater",
+    "weight":800,
+    "service_name":"Wash & Iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:09:38.442Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:09:39.837Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429779\/CommodityImages\/svilyidcagxvdwdnuxc4.webp"
+  },
+  {
+    "_id":{
+      "$oid":"67189aaa0de7e52d185d0ccd"
+    },
+    "name":"Socks",
+    "weight":20,
+    "service_name":"Wash & Iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:09:59.742Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:10:01.638Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429800\/CommodityImages\/wnyisrq8j8kvupgh3e7l.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6718997e0de7e52d185d0855"
+    },
+    "name":"Apron",
+    "weight":1,
+    "service_name":"Wash & Iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:10:21.882Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:10:23.558Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429823\/CommodityImages\/vkf3yaavpr8naprivysn.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66d5fc3d3e31268106aad6a7"
+    },
+    "name":"Bottom Wear",
+    "weight":550,
+    "service_name":"Wash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:51:17.920Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:51:19.616Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428679\/CommodityImages\/eceuddngqnnzj9ogxjcw.png"
+  },
+  {
+    "_id":{
+      "$oid":"66f80ad80e3ac242ea1f7893"
+    },
+    "name":"Bottom Wear",
+    "weight":550,
+    "service_name":"Wash & Iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:11:06.154Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:11:08.003Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429867\/CommodityImages\/yfp0agtgveaafdi5ts5s.png"
+  },
+  {
+    "_id":{
+      "$oid":"66db4443b26da2df47943706"
+    },
+    "name":"Bottom Wear",
+    "weight":425,
+    "service_name":"Wash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:52:42.263Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:52:43.872Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428763\/CommodityImages\/fs5mm9lns2arg7dr5hah.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8f3cd6c1aae15ce00a7b"
+    },
+    "name":"Bottom Wear",
+    "weight":425,
+    "service_name":"Wash & Iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:11:38.502Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:11:40.246Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429899\/CommodityImages\/rhaotyliphndcmaul7y6.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db40039aee5add0d8a1057"
+    },
+    "name":"Top Wear",
+    "weight":260,
+    "service_name":"Wash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:53:48.669Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:53:50.784Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428830\/CommodityImages\/qyp32uabssbv8vx6mmum.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6717f9480de7e52d185cfc95"
+    },
+    "name":"Top Wear",
+    "weight":260,
+    "service_name":"Wash & Iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:12:35.339Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:12:37.780Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429956\/CommodityImages\/mvwab33cvx5hsz0mmwvk.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db431f2b15e90df3095bf0"
+    },
+    "name":"Top Wear",
+    "weight":250,
+    "service_name":"Wash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:54:53.606Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:54:55.829Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765428895\/CommodityImages\/kj6cqaek1sw7pcqbjunh.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8ee5d6c1aae15ce00a3f"
+    },
+    "name":"Top Wear",
+    "weight":250,
+    "service_name":"Wash & Iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:13:02.274Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:13:04.587Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429983\/CommodityImages\/pzffy3jxyta2uy3j0pez.webp"
+  },
+  {
+    "_id":{
+      "$oid":"66db41f02b15e90df3095b20"
+    },
+    "name":"Bottom Wear Half",
+    "weight":200,
+    "service_name":"Wash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:00:33.804Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:00:36.223Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429235\/CommodityImages\/ej8hwnhl9i07ydnayh2t.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66db43f0b26da2df47943696"
+    },
+    "name":"Bottom wear Half",
+    "weight":200,
+    "service_name":"Wash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:01:29.848Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:01:32.217Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429291\/CommodityImages\/cil9kqtv9nr8egl2x6mk.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8e59d6c1aae15ce009df"
+    },
+    "name":"Bottom wear Half",
+    "weight":200,
+    "service_name":"Wash & Iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:13:32.180Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:13:35.350Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765430014\/CommodityImages\/mrvt6pccnv7nntb8lteh.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8ed2d6c1aae15ce00a33"
+    },
+    "name":"Bottom Wear half",
+    "weight":200,
+    "service_name":"Wash & Iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:13:58.138Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:14:01.003Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765430039\/CommodityImages\/b97qecyiuohdsgxgrxkm.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66db42ca2b15e90df3095bc0"
+    },
+    "name":"Casual Jacket",
+    "weight":525,
+    "service_name":"Wash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T04:59:36.437Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T04:59:41.238Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429178\/CommodityImages\/gcooa0nmokc6ggzj9dxp.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"671813180de7e52d185cfdee"
+    },
+    "name":"Casual Jacket",
+    "weight":800,
+    "service_name":"Wash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:02:47.945Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:02:50.302Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765429369\/CommodityImages\/q42tglegtwdzbgcpjjhu.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"66fa8e7cd6c1aae15ce009f7"
+    },
+    "name":"Casual Jacket",
+    "weight":525,
+    "service_name":"Wash & Iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:14:36.154Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:14:38.238Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765430077\/CommodityImages\/xiedb9iog1v3xpv5iexz.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"6718132c0de7e52d185cfdfa"
+    },
+    "name":"Casual Jacket",
+    "weight":800,
+    "service_name":"Wash & Iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "created_at":{
+      "$date":"2025-12-11T05:14:56.804Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-11T05:14:58.853Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dzy6rdzk0\/image\/upload\/v1765430098\/CommodityImages\/jumy4enqgxeuqdbrk7aa.jpg"
+  },
+  {
+    "_id":{
+      "$oid":"68038ecfdc1212df6dda6ae7"
+    },
+    "name":"Iron-Single Size",
+    "weight":0,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2025-04-26T06:08:02.402Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T06:08:03.735Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745647683\/CommodityImages\/yrobrqpgzyxmqio7yjj9.webp"
+  },
+  {
+    "_id":{
+      "$oid":"68038efadc1212df6dda6b64"
+    },
+    "name":"Iron-Double Size",
+    "weight":0,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2025-04-26T06:08:46.118Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T06:08:52.971Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745647729\/CommodityImages\/lk4ag9asqdo6rqugawk6.webp"
+  },
+  {
+    "_id":{
+      "$oid":"68038f0fdc1212df6dda6b6c"
+    },
+    "name":"Iron-King Size",
+    "weight":0,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2025-04-26T06:09:06.247Z"
+    },
+    "updated_at":{
+      "$date":"2025-04-26T06:09:07.526Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/res.cloudinary.com\/dcuareox0\/image\/upload\/v1745647747\/CommodityImages\/nmcbgopkjjdeawyd8z7k.webp"
+  },
+  {
+    "_id":{
+      "$oid":"68038f3cdc1212df6dda6baf"
+    },
+    "name":"Wash&Iron-Single",
+    "weight":900,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-27T04:25:46.159Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-27T04:25:46.642Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1790483146313-1780947895794-beds_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"68038f55dc1212df6dda6bb7"
+    },
+    "name":"Wash&Iron-Double",
+    "weight":1200,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-27T04:26:10.614Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-27T04:26:11.038Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1790483170768-1780947895794-beds_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"68038f6adc1212df6dda6bbf"
+    },
+    "name":"Wash&Iron-King",
+    "weight":1300,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-27T04:26:22.194Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-27T04:26:22.603Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1790483182351-1780947895794-beds_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"692beda353f10e7ffae89a7c"
+    },
+    "name":"Blanket-Single Wash",
+    "weight":1000,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-01-21T06:33:23.846Z"
+    },
+    "updated_at":{
+      "$date":"2026-01-21T06:33:23.848Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"692bedbd53f10e7ffae89afe"
+    },
+    "name":"Blanket- Double Wash",
+    "weight":1500,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-03-05T12:06:11.365Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-05T12:06:11.375Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"692beddd53f10e7ffae89bea"
+    },
+    "name":"Blanket- King Wash",
+    "weight":2000,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-03-06T10:54:18.313Z"
+    },
+    "updated_at":{
+      "$date":"2026-03-06T10:54:18.323Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6975fe5bfc13dbb6be1a7ffb"
+    },
+    "name":"PULLOVER",
+    "weight":0,
+    "service_name":"Dry Clean",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "created_at":{
+      "$date":"2026-01-25T11:28:27.329Z"
+    },
+    "updated_at":{
+      "$date":"2026-01-25T11:28:27.329Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a1fb5e9d38c0f95db3aad67"
+    },
+    "name":"Iron- Curtain small ",
+    "weight":0,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-05T07:02:07.634Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-05T07:02:07.636Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a1fb5fdd38c0f95db3aad77"
+    },
+    "name":"Iron Curtain double ",
+    "weight":0,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-05T07:02:25.447Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-05T07:02:25.449Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6aefa51e06ed0680380055"
+    },
+    "name":"Bottom Wear",
+    "weight":550,
+    "service_name":"HandWash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:31:01.420Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:31:01.420Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6aefdc1e06ed068038038c"
+    },
+    "name":"Top Wear",
+    "weight":260,
+    "service_name":"HandWash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:31:56.638Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:31:56.638Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af0101e06ed068038068a"
+    },
+    "name":"Bottom Wear Half",
+    "weight":200,
+    "service_name":"HandWash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:32:48.663Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:32:48.663Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af0421e06ed068038069a"
+    },
+    "name":"Top wear",
+    "weight":250,
+    "service_name":"HandWash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:33:38.868Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:33:38.868Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af0731e06ed06803807d4"
+    },
+    "name":"Bottom Wear",
+    "weight":425,
+    "service_name":"HandWash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:34:27.747Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:34:27.747Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af0891e06ed06803807e2"
+    },
+    "name":"Bottom Wear Half",
+    "weight":200,
+    "service_name":"HandWash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:34:49.597Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:34:49.597Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af0dc1e06ed0680380bb8"
+    },
+    "name":"Casual Jacket",
+    "weight":525,
+    "service_name":"HandWash & Fold",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:36:12.013Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:36:12.013Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af0ed1e06ed0680380bc1"
+    },
+    "name":"Casual Jacket",
+    "weight":800,
+    "service_name":"HandWash & Fold",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:36:29.952Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:36:29.952Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af10c1e06ed0680380dcc"
+    },
+    "name":"Top wear",
+    "weight":260,
+    "service_name":"HandWash & iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:37:00.778Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:37:00.778Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af1211e06ed0680380e2c"
+    },
+    "name":"Top wear",
+    "weight":250,
+    "service_name":"HandWash & iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:37:21.897Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:37:21.897Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af1371e06ed06803810d6"
+    },
+    "name":"Bottom Wear",
+    "weight":200,
+    "service_name":"HandWash & iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:37:43.671Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:37:43.671Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af1431e06ed06803810f3"
+    },
+    "name":"Bottom Wear",
+    "weight":200,
+    "service_name":"HandWash & iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:37:55.062Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:37:55.062Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af16e1e06ed0680381363"
+    },
+    "name":"Bottom Wear Half",
+    "weight":200,
+    "service_name":"HandWash & iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:38:38.777Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:38:38.777Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af17a1e06ed068038136c"
+    },
+    "name":"Bottom Wear Half",
+    "weight":200,
+    "service_name":"HandWash & iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:38:50.415Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:38:50.415Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af1951e06ed06803815a6"
+    },
+    "name":"Casual Jacket",
+    "weight":252,
+    "service_name":"HandWash & iron",
+    "menu":"Men",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:39:17.407Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:39:17.407Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af1a01e06ed06803815af"
+    },
+    "name":"Casual Jacket",
+    "weight":800,
+    "service_name":"HandWash & iron",
+    "menu":"Women",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:39:28.747Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:39:28.747Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af3f91e06ed06803833eb"
+    },
+    "name":"Towel",
+    "weight":0,
+    "service_name":"HandWash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:49:29.737Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:49:29.737Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af4041e06ed06803833f4"
+    },
+    "name":"Towel",
+    "weight":0,
+    "service_name":"HandWash & iron",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:49:40.442Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:49:40.442Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af41c1e06ed0680383531"
+    },
+    "name":"Big Table Cloth",
+    "weight":500,
+    "service_name":"HandWash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:50:04.157Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:50:04.157Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af4351e06ed06803835fb"
+    },
+    "name":"Big Table Cloth",
+    "weight":500,
+    "service_name":"HandWash & iron",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:50:29.152Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:50:29.152Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af4511e06ed0680383669"
+    },
+    "name":"Pillow Cover",
+    "weight":100,
+    "service_name":"HandWash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:50:57.267Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:50:57.267Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af45e1e06ed0680383673"
+    },
+    "name":"Pillow Cover",
+    "weight":100,
+    "service_name":"HandWash & iron",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:51:10.317Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:51:10.317Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af47b1e06ed068038367d"
+    },
+    "name":"Small Table Cloth",
+    "weight":170,
+    "service_name":"HandWash & Fold",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:51:39.262Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:51:39.262Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af49e1e06ed0680383bf3"
+    },
+    "name":"Socks",
+    "weight":20,
+    "service_name":"HandWash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:52:14.117Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:52:14.117Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af4aa1e06ed0680383bfc"
+    },
+    "name":"Socks",
+    "weight":20,
+    "service_name":"HandWash & iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:52:26.131Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:52:26.131Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af4c11e06ed0680383cf0"
+    },
+    "name":"Apron",
+    "weight":300,
+    "service_name":"HandWash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:52:49.577Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:52:49.577Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af4ca1e06ed0680383dd2"
+    },
+    "name":"Apron",
+    "weight":300,
+    "service_name":"HandWash & iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:52:58.422Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:52:58.422Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af5d21e06ed068038540c"
+    },
+    "name":"Handkerchief",
+    "weight":5,
+    "service_name":"HandWash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:57:22.188Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:57:22.188Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af5dc1e06ed0680385887"
+    },
+    "name":"Handkerchief",
+    "weight":5,
+    "service_name":"HandWash & iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:57:32.795Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:57:32.795Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af5f21e06ed06803858cf"
+    },
+    "name":"Undergarment",
+    "weight":60,
+    "service_name":"HandWash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:57:54.478Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:57:54.478Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af5ff1e06ed06803858d8"
+    },
+    "name":"Undergarment",
+    "weight":60,
+    "service_name":"HandWash & iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T06:58:07.969Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:58:07.969Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af6981e06ed0680387b64"
+    },
+    "name":"Bath Robe",
+    "weight":5,
+    "service_name":"HandWash & Fold",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:00:40.083Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:00:40.083Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af6a21e06ed0680387b74"
+    },
+    "name":"Bath Robe",
+    "weight":5,
+    "service_name":"HandWash & iron",
+    "menu":"Accessories",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:00:50.983Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:00:50.983Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af6eb1e06ed0680387bdf"
+    },
+    "name":"Kids Topwear",
+    "weight":200,
+    "service_name":"HandWash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:02:03.331Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:02:03.331Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af6f71e06ed0680387bea"
+    },
+    "name":"Kids Topwear",
+    "weight":200,
+    "service_name":"HandWash & iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:02:15.267Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:02:15.267Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7251e06ed0680387bf6"
+    },
+    "name":"Kids Woollenwear Top",
+    "weight":400,
+    "service_name":"HandWash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:03:01.510Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:03:01.510Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7301e06ed0680387bff"
+    },
+    "name":"Kids Woollenwear Top",
+    "weight":400,
+    "service_name":"HandWash & iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:03:12.442Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:03:12.442Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7481e06ed0680387c1e"
+    },
+    "name":"Kids Jacket",
+    "weight":400,
+    "service_name":"HandWash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:03:36.147Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:03:36.147Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af75a1e06ed0680387c29"
+    },
+    "name":"Kids Jacket",
+    "weight":400,
+    "service_name":"HandWash & iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:03:54.337Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:03:54.337Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af76c1e06ed0680387c8f"
+    },
+    "name":"Kids Bottomwear",
+    "weight":200,
+    "service_name":"HandWash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:04:12.697Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:04:12.697Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7771e06ed0680387c9a"
+    },
+    "name":"Kids Bottomwear",
+    "weight":200,
+    "service_name":"HandWash & iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:04:23.102Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:04:23.102Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af78c1e06ed0680387d19"
+    },
+    "name":"Kids Woollenwear Bottom",
+    "weight":400,
+    "service_name":"HandWash & Fold",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:04:44.586Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:04:44.586Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7961e06ed0680387d2a"
+    },
+    "name":"Kids Woollenwear Bottom",
+    "weight":400,
+    "service_name":"HandWash & iron",
+    "menu":"Kids",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:04:54.053Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:04:54.053Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7bd1e06ed0680387dd5"
+    },
+    "name":"Sweatshirt\/Hoodie",
+    "weight":600,
+    "service_name":"HandWash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:05:33.841Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:05:33.841Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7c91e06ed068038807f"
+    },
+    "name":"Sweatshirt\/Hoodie",
+    "weight":600,
+    "service_name":"HandWash & iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:05:45.748Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:05:45.748Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7d61e06ed068038808a"
+    },
+    "name":"Sweatshirt\/Hoodie",
+    "weight":600,
+    "service_name":"HandWash & iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:05:58.406Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:05:58.406Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7ee1e06ed0680388094"
+    },
+    "name":"Sweater",
+    "weight":800,
+    "service_name":"HandWash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:06:22.767Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:06:22.767Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af7fd1e06ed068038809d"
+    },
+    "name":"Sweater",
+    "weight":800,
+    "service_name":"HandWash & iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:06:37.051Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:06:37.051Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af8151e06ed06803880a7"
+    },
+    "name":"Shawl",
+    "weight":10,
+    "service_name":"HandWash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:07:01.037Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:07:01.037Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af8221e06ed06803880b2"
+    },
+    "name":"Shawl",
+    "weight":10,
+    "service_name":"HandWash & iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:07:14.492Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:07:14.492Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af8371e06ed0680388100"
+    },
+    "name":"Scarf\/Muffler",
+    "weight":10,
+    "service_name":"HandWash & Fold",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:07:35.122Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:07:35.122Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a6af8401e06ed0680388109"
+    },
+    "name":"Scarf\/Muffler",
+    "weight":10,
+    "service_name":"HandWash & iron",
+    "menu":"Winter Wear",
+    "service_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "created_at":{
+      "$date":"2026-07-30T07:07:44.842Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T07:07:44.842Z"
+    },
+    "__v":0,
+    "image_url":null
+  },
+  {
+    "_id":{
+      "$oid":"6a9bbeeba32605cbd3956721"
+    },
+    "name":"Wash Curtain Small",
+    "weight":500,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-05T07:04:11.449Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-05T07:04:11.449Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1788591850542-curtain_small.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6a9bbf27a32605cbd3956763"
+    },
+    "name":"Wash Curtain Double",
+    "weight":800,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-05T07:05:11.681Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-05T07:05:11.681Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1788591911116-curtain_double.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6a9bbf4aa32605cbd39567a3"
+    },
+    "name":"W & I Curtain Small",
+    "weight":500,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-05T07:05:46.446Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-05T07:05:46.446Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1788591946142-curtain_small.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6a9bbf60a32605cbd39567ac"
+    },
+    "name":"W & I Curtain Double",
+    "weight":800,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-05T07:06:08.233Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-05T07:06:08.233Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1788591967895-curtain_double.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6a9bbfbaa32605cbd3956cc4"
+    },
+    "name":"Iron- Dhoti",
+    "weight":600,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-05T07:07:38.195Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-05T07:07:38.195Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1788592057864-dhoti.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6aa2b9cea32605cbd30e0581"
+    },
+    "name":"Curtain W&I Small",
+    "weight":600,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-10T14:08:14.399Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-10T14:08:14.399Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1789049293521-curtain_small.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6aa2b9eaa32605cbd30e09e6"
+    },
+    "name":"Curtain W&I Medium",
+    "weight":800,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-10T14:08:42.125Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-10T14:08:42.125Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1789049321615-curtain_double.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6aa2ba02a32605cbd30e0a14"
+    },
+    "name":"Curtain W&I large",
+    "weight":1100,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-10T14:09:06.603Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-10T14:09:06.603Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1789049346249-curtain_double.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6aa2ba1da32605cbd30e0d6f"
+    },
+    "name":"Curtain W&F Small",
+    "weight":600,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-10T14:09:33.684Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-10T14:09:33.684Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1789049373331-curtain_small.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6aa2ba3aa32605cbd30e0ff3"
+    },
+    "name":"Curtain W&F Medium",
+    "weight":800,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-10T14:10:02.698Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-10T14:10:02.698Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1789049402407-curtain_double.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6aa2ba53a32605cbd30e12a5"
+    },
+    "name":"Curtain W&F Large",
+    "weight":1100,
+    "service_name":"Bedsheet\/Heavy Wash",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "created_at":{
+      "$date":"2026-09-10T14:10:27.264Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-10T14:10:27.264Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1789049426830-curtain_double.webp"
+  },
+  {
+    "_id":{
+      "$oid":"6ab4c2eefadbd06eb3cbf951"
+    },
+    "name":"Single Bedsheet",
+    "weight":500,
+    "service_name":"Ironing",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-09-24T06:27:58.197Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-24T06:27:58.197Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1790231277350-images_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"6ab4c30afadbd06eb3cbfb08"
+    },
+    "name":"Queen Bedsheet",
+    "weight":700,
+    "service_name":"Ironing",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-09-24T06:28:26.950Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-24T06:28:26.950Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1790231306712-images_(1).webp"
+  },
+  {
+    "_id":{
+      "$oid":"6ab4c322fadbd06eb3cbfe4e"
+    },
+    "name":"King\/Double Bedsheet",
+    "weight":1000,
+    "service_name":"Ironing",
+    "menu":"Home Linen",
+    "service_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "created_at":{
+      "$date":"2026-09-24T06:28:50.467Z"
+    },
+    "updated_at":{
+      "$date":"2026-09-24T06:28:50.467Z"
+    },
+    "__v":0,
+    "image_url":"https:\/\/pub-2668de5dc5f74c24b45908665d942121.r2.dev\/CommodityImages\/1790231330201-images_(1).webp"
+  }
+]

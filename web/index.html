@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SuffAI Command Center</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <style>
+    :root {
+      --cream: #faf6ee;
+      --panel: #ffffff;
+      --raised: #f6eef0;
+      --line: #ead9e0;
+      --muted: #8a7480;
+      --ink: #3b2733;
+      --plum: #6b3a55;
+      --plum-dk: #552c43;
+      --mauve: #c59fb0;
+      --sage: #9cb09d;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: Outfit, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    button { font-family: inherit; }
+    :focus-visible { outline: 3px solid rgba(197, 159, 176, 0.7); outline-offset: 2px; }
+    .shell-top {
+      flex-shrink: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem 1rem;
+      padding: 0.6rem 1.1rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+    }
+    .brand { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
+    .brand-logo { height: 40px; width: auto; display: block; }
+    .brand h1 {
+      margin: 0;
+      font-family: Outfit, system-ui, sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--plum);
+      line-height: 1.1;
+    }
+    .brand p { margin: 0.1rem 0 0; font-size: 11px; color: var(--muted); }
+    .tabs {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--raised);
+      overflow-x: auto;
+      max-width: 100%;
+    }
+    .tab {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 0.5rem 1.05rem;
+      border-radius: 9px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tab:hover { color: var(--plum); background: rgba(255, 255, 255, 0.7); }
+    .tab.active, .tab.active:hover { background: linear-gradient(110deg, var(--wine-2), var(--plum)); color: #fff; box-shadow: 0 4px 12px rgba(107, 58, 85, 0.25), inset 0 -2px 0 rgba(201, 162, 74, 0.75); }
+    .brand { flex: 1 1 auto; }
+    .hdr-right { flex: 1 0 auto; display: flex; justify-content: flex-end; align-items: center; }
+    .tabs { flex: 0 1 auto; min-width: 0; }
+    /* Nine tabs don't fit beside the logo below ~1180px: give them their own row */
+    @media (max-width: 1180px) {
+      .tabs { order: 3; flex-basis: 100%; }
+      .hdr-right { flex: 0 0 auto; }
+    }
+
+    /* Profile: corner avatar → menu → settings dialog */
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: var(--raised); color: var(--plum);
+      font-weight: 600; font-size: 14px; letter-spacing: 0.02em;
+      overflow: hidden; border: 1px solid var(--line);
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
+    .avatar.lg { width: 56px; height: 56px; font-size: 18px; }
+    .avatar.xl { width: 88px; height: 88px; font-size: 28px; }
+    /* Fixed square + flex (not inline) so no baseline gap turns the circle into an oval */
+    .profile-btn {
+      display: flex; width: 40px; height: 40px; flex-shrink: 0; padding: 0; line-height: 0;
+      border: 0; border-radius: 50%; background: none; cursor: pointer;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--line);
+      transition: box-shadow 0.15s;
+    }
+    .profile-btn[hidden] { display: none; }
+    .profile-btn:hover, .profile-btn[aria-expanded="true"] { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--plum); }
+    .profile-btn .avatar { width: 100%; height: 100%; background: var(--plum); color: #fff; border: 0; font-size: 13px; }
+    .profile-menu {
+      position: fixed; right: 1rem; top: 4.5rem; z-index: 56;
+      transform-origin: top right; animation: menuIn 0.14s ease-out;
+      width: min(300px, calc(100vw - 2rem));
+      background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(107, 58, 85, 0.22);
+      overflow: hidden;
+    }
+    .profile-menu[hidden] { display: none; }
+    @keyframes menuIn { from { opacity: 0; transform: translateY(-4px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+    /* Custom select (listbox) — replaces the native OS menu */
+    .csel { position: relative; }
+    .csel-btn {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+      font: inherit; font-size: 14px; color: var(--ink); text-align: left; cursor: pointer;
+      padding: 0.6rem 0.75rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--panel);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .csel-btn:hover { border-color: var(--mauve); }
+    .csel-btn:focus-visible, .csel-btn[aria-expanded="true"] { outline: none; border-color: var(--plum); box-shadow: 0 0 0 3px rgba(197, 159, 176, 0.35); }
+    .csel-chev { flex-shrink: 0; color: var(--muted); transition: transform 0.18s; }
+    .csel-btn[aria-expanded="true"] .csel-chev { transform: rotate(180deg); color: var(--plum); }
+    .csel-list {
+      position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 5;
+      margin: 0; padding: 0.3rem; list-style: none;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+      box-shadow: 0 16px 36px rgba(59, 39, 51, 0.18); animation: menuIn 0.12s ease-out;
+    }
+    .csel-list.up { top: auto; bottom: calc(100% + 6px); }
+    .csel-list[hidden] { display: none; }
+    .csel-list li {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+      padding: 0.5rem 0.65rem; border-radius: 8px; font-size: 14px; color: var(--ink); cursor: pointer; outline: none;
+    }
+    .csel-list li:hover, .csel-list li:focus { background: var(--raised); }
+    .csel-list li[aria-selected="true"] { color: var(--plum); font-weight: 600; }
+    .csel-list li .tick { visibility: hidden; color: var(--plum); }
+    .csel-list li[aria-selected="true"] .tick { visibility: visible; }
+    .pm-head { display: flex; align-items: center; gap: 0.8rem; padding: 1rem; border-bottom: 1px solid var(--line); background: var(--raised); }
+    .pm-head .name { font-weight: 600; font-size: 15px; color: var(--ink); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pm-head .sub { font-size: 12px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pm-info { padding: 0.35rem 0; border-bottom: 1px solid var(--line); }
+    .pm-row { padding: 0.45rem 1rem; }
+    .pm-row .k { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+    .pm-row .v { font-size: 13px; color: var(--ink); margin-top: 1px; overflow-wrap: anywhere; }
+    .pm-actions { padding: 0.35rem; }
+    .pm-item {
+      width: 100%; display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.6rem 0.7rem; border: 0; border-radius: 10px; background: none;
+      font-size: 14px; color: var(--ink); cursor: pointer; text-align: left;
+    }
+    .pm-item:hover, .pm-item:focus-visible { background: var(--raised); }
+    .pm-item svg { color: var(--plum); flex-shrink: 0; }
+    .pm-item.danger, .pm-item.danger svg { color: #a03a3a; }
+
+    dialog.profile-dlg {
+      width: min(520px, calc(100vw - 2rem)); max-height: calc(100vh - 2rem);
+      padding: 0; border: 1px solid var(--line); border-radius: 18px;
+      background: var(--panel); color: var(--ink);
+      box-shadow: 0 30px 70px rgba(59, 39, 51, 0.3);
+    }
+    dialog.profile-dlg::backdrop { background: rgba(59, 39, 51, 0.35); backdrop-filter: blur(2px); }
+    .dlg-head { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); }
+    .dlg-head h2 { margin: 0; font-family: Outfit, system-ui, sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--plum); }
+    .dlg-x { border: 0; background: none; color: var(--muted); cursor: pointer; padding: 0.35rem; border-radius: 8px; display: flex; }
+    .dlg-x:hover { background: var(--raised); color: var(--plum); }
+    .dlg-body { padding: 1.1rem 1.25rem; display: grid; gap: 0.9rem; }
+    .photo-row { display: flex; align-items: center; gap: 1rem; }
+    .photo-row .btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .photo-row .hint { width: 100%; font-size: 11px; color: var(--muted); }
+    .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    @media (max-width: 520px) { .fgrid { grid-template-columns: 1fr; } }
+    .fld { display: flex; flex-direction: column; gap: 0.3rem; }
+    .fld.full { grid-column: 1 / -1; }
+    .fld > span { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+    .fld input {
+      font: inherit; font-size: 14px; color: var(--ink);
+      padding: 0.6rem 0.75rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--panel); outline: 0;
+    }
+    .fld input:focus { border-color: var(--plum); box-shadow: 0 0 0 3px rgba(197, 159, 176, 0.35); }
+    .fld input[readonly] { background: var(--raised); color: var(--muted); cursor: default; }
+    .fld input[aria-invalid="true"] { border-color: #c45a5a; }
+    .fld input[aria-invalid="true"]:focus { box-shadow: 0 0 0 3px rgba(196, 90, 90, 0.2); }
+    .fld-err { min-height: 0; font-size: 11.5px; color: #a03a3a; }
+    .fld .req { color: #a03a3a; margin-left: 2px; font-weight: 600; }
+    .fld-err:empty { display: none; }
+    .fld-err button { border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--plum); text-decoration: underline; cursor: pointer; }
+    .ph { position: relative; }
+    .ph em { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-style: normal; font-size: 14px; color: var(--muted); pointer-events: none; }
+    .ph input { width: 100%; padding-left: 2.9rem; }
+    .dlg-err { font-size: 12px; color: #a03a3a; }
+    .dlg-err:empty { display: none; }
+    .dlg-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.9rem 1.25rem; border-top: 1px solid var(--line); background: var(--raised); }
+    .dlg-foot small { color: var(--muted); font-size: 11px; }
+    .btn { font: inherit; font-size: 13px; font-weight: 600; padding: 0.55rem 1rem; border-radius: 10px; cursor: pointer; }
+    .btn.primary { border: 0; background: var(--plum); color: #fff; }
+    .btn.primary:hover { background: var(--plum-dk); }
+    .btn.ghost { border: 1px solid var(--line); background: var(--panel); color: var(--plum); }
+    .btn.ghost:hover { border-color: var(--plum); }
+    .toast {
+      position: fixed; left: 50%; bottom: 1.25rem; z-index: 70; transform: translate(-50%, 8px);
+      display: flex; align-items: center; gap: 0.55rem; max-width: calc(100vw - 2rem);
+      background: linear-gradient(110deg, #2a0f1f, #4a1a33 55%, #6b3a55); color: #fff; font-size: 13px; font-weight: 500;
+      padding: 0.65rem 1.1rem 0.65rem 0.8rem; border-radius: 12px; border: 1px solid rgba(201, 162, 74, 0.35);
+      box-shadow: 0 14px 34px rgba(42, 15, 31, 0.3);
+      opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast::before { content: '\2713'; flex: none; width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; background: #c9a24a; color: #2a0f1f; font-size: 11px; font-weight: 700; }
+    .frame-wrap { flex: 1; min-height: 0; position: relative; background: var(--cream); }
+    .frame-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--cream);
+    }
+    .frame-wrap iframe.hidden { display: none; }
+    .boot {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      color: var(--muted); font-size: 13px; z-index: 1; background: var(--cream); text-align: center; padding: 1rem;
+    }
+    .boot[hidden] { display: none; }
+    .boot.err { flex-direction: column; color: var(--ink); }
+    .boot.err .spinner { display: none; }
+    .spinner {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--line); border-top-color: var(--plum);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 640px) {
+      .brand p { display: none; }
+      .brand { flex: 1; }
+      .brand h1 { font-size: 1.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tabs { order: 3; width: 100%; }
+    }
+
+    /* ---------- AURA: floating brand agent (Geo, Ads Lab, Campaigns) ---------- */
+    :root { --wine: #2a0f1f; --wine-2: #4a1a33; --gold: #c9a24a; --gold-lt: #f3d58a; --aura-ease: cubic-bezier(.22, .8, .24, 1); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .chat-fab {
+      position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 50;
+      width: 62px; height: 62px; padding: 0; border-radius: 50%;
+      border: 2px solid rgba(201, 162, 74, .7); background: var(--wine); color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 26px rgba(42, 15, 31, .35);
+      transition: transform .25s var(--aura-ease), border-color .2s, background .2s, box-shadow .2s;
+    }
+    .chat-fab::before { /* soft halo that invites a click while AURA is closed */
+      content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(201, 162, 74, .45);
+      animation: auraHalo 2.8s ease-out infinite; pointer-events: none;
+    }
+    .chat-fab.open::before { display: none; }
+    .chat-fab.has-new::after { content: ''; position: absolute; top: 1px; right: 1px; width: 14px; height: 14px; border-radius: 50%; background: var(--gold); border: 2px solid #fff; }
+    @keyframes auraHalo { 0% { transform: scale(.9); opacity: .9; } 70%, 100% { transform: scale(1.25); opacity: 0; } }
+    .chat-fab img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+    .chat-fab:hover { transform: translateY(-2px) scale(1.04); border-color: var(--gold); box-shadow: 0 14px 32px rgba(42, 15, 31, .42); }
+    .chat-fab.open { background: linear-gradient(135deg, var(--plum), var(--wine-2)); }
+    .chat-fab .ico-close { display: none; }
+    .chat-fab.open .ico-chat { display: none; }
+    .chat-fab.open .ico-close { display: block; }
+    .chat-fab-tip {
+      position: fixed; right: 5.6rem; bottom: 2.05rem; z-index: 50; pointer-events: none;
+      padding: .4rem .75rem; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--wine);
+      background: #fff; border: 1px solid var(--line); box-shadow: 0 8px 20px rgba(42, 15, 31, .12);
+      opacity: 0; transform: translateX(6px); transition: opacity .2s, transform .2s var(--aura-ease);
+    }
+    .chat-fab:hover + .chat-fab-tip, .chat-fab:focus-visible + .chat-fab-tip { opacity: 1; transform: none; }
+    .chat-fab.open + .chat-fab-tip, .chat-fab[style*="none"] + .chat-fab-tip { display: none; }
+
+    .chat-popup {
+      display: none; position: fixed; right: 1.25rem; bottom: 6.1rem; z-index: 51;
+      width: min(400px, calc(100vw - 2rem)); height: min(600px, calc(100vh - 7.5rem));
+      flex-direction: column; overflow: hidden;
+      border: 1px solid rgba(107, 58, 85, .18); border-radius: 20px; background: #fdfbfb;
+      box-shadow: 0 24px 60px rgba(42, 15, 31, .28), 0 2px 6px rgba(42, 15, 31, .08);
+      transform-origin: 100% 100%;
+      transition: width .3s var(--aura-ease), height .3s var(--aura-ease), border-radius .3s;
+    }
+    body.chat-open .chat-popup { display: flex; animation: auraIn .32s var(--aura-ease); }
+    .chat-popup.placed { transform-origin: 50% 0; }
+    @keyframes auraIn { from { opacity: 0; transform: translateY(14px) scale(.94); } }
+    /* Expanded: tall panel that always fits the viewport, header (and the restore button) stays on screen */
+    .chat-popup.big { width: min(760px, calc(100vw - 2rem)); height: calc(100vh - 2rem); }
+    .chat-popup.big:not(.placed) { bottom: 1rem; }
+    .chat-popup.dragging { transition: none; user-select: none; box-shadow: 0 30px 70px rgba(42, 15, 31, .35); }
+
+    .chat-popup-header {
+      position: relative; display: flex; align-items: center; gap: .7rem; flex: none;
+      padding: .8rem .8rem .8rem 1rem; cursor: grab; user-select: none; touch-action: none; color: #fff;
+      background: radial-gradient(70% 140% at 100% 0%, rgba(224, 178, 84, .28), transparent 60%), linear-gradient(110deg, var(--wine), var(--wine-2) 55%, var(--plum));
+    }
+    .chat-popup.dragging .chat-popup-header { cursor: grabbing; }
+    .aura-av { position: relative; width: 38px; height: 38px; flex: none; border-radius: 50%; border: 1.5px solid rgba(243, 213, 138, .7); background: var(--wine); overflow: visible; }
+    .aura-av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    .aura-av::after { content: ''; position: absolute; right: -1px; bottom: 0; width: 10px; height: 10px; border-radius: 50%; background: #5fbf6f; border: 2px solid var(--wine-2); }
+    .aura-id { flex: 1; min-width: 0; }
+    .aura-id b { display: block; font-family: Outfit, system-ui, sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: .12em; line-height: 1.05; }
+    .aura-id .aura-ctx { display: block; margin-top: .15rem; font-size: 11px; font-weight: 400; color: #e6cfda; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-tools { display: flex; gap: .3rem; flex: none; }
+    .chat-tools button {
+      width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: #fff;
+      border: 1px solid rgba(255, 255, 255, .18); border-radius: 10px; background: rgba(255, 255, 255, .08); transition: background .15s, border-color .15s;
+    }
+    .chat-tools button:hover { background: rgba(255, 255, 255, .18); border-color: rgba(255, 255, 255, .35); }
+    .chat-tools button:focus-visible { outline: 2px solid var(--gold-lt); outline-offset: 1px; }
+    .chat-tools button:disabled { opacity: .5; cursor: wait; }
+    .chat-tools #chatNew.spin svg { animation: chatSpin .8s linear infinite; }
+    @keyframes chatSpin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .chat-tools #chatNew.spin svg { animation: none; } }
+    .chat-tools .ico-shrink { display: none; }
+    .chat-popup.big .chat-tools .ico-grow { display: none; }
+    .chat-popup.big .chat-tools .ico-shrink { display: block; }
+
+    .chat-log {
+      flex: 1; overflow-y: auto; padding: 1rem 1rem .75rem; display: flex; flex-direction: column; gap: .7rem;
+      background: radial-gradient(90% 50% at 50% 0%, rgba(246, 238, 240, .9), transparent 70%), #fdfbfb;
+      scrollbar-width: thin; scrollbar-color: #e2cfd8 transparent;
+    }
+    .chat-popup.big .chat-log { padding: 1.25rem 1.6rem 1rem; }
+    .chat-empty { margin: auto 0; text-align: center; color: var(--muted); font-size: 12.5px; line-height: 1.55; padding: 0 .25rem; }
+    .chat-empty .hello-av { width: 64px; height: 64px; margin: 0 auto .7rem; border-radius: 50%; border: 2px solid rgba(201, 162, 74, .6); box-shadow: 0 8px 22px rgba(42, 15, 31, .18); overflow: hidden; background: var(--wine); }
+    .chat-empty .hello-av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .chat-empty h3 { margin: 0 0 .25rem; font-family: Outfit, system-ui, sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--ink); }
+    .chat-empty .chat-greet { margin: 0; }
+    .chat-suggest { display: grid; gap: .45rem; margin-top: .95rem; text-align: left; }
+    .chat-popup.big .chat-suggest { grid-template-columns: repeat(3, 1fr); }
+    .chat-suggest button {
+      display: flex; align-items: center; gap: .6rem; width: 100%; cursor: pointer; text-align: left;
+      padding: .6rem .75rem; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font: inherit; font-size: 12.5px; font-weight: 500;
+      transition: border-color .15s, transform .2s var(--aura-ease), box-shadow .2s;
+    }
+    .chat-suggest button:hover { border-color: var(--mauve); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(107, 58, 85, .1); }
+    .chat-suggest button i { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 9px; background: var(--raised); color: var(--plum); font-style: normal; }
+    .chat-suggest button small { display: block; font-size: 11px; color: var(--muted); font-weight: 400; }
+
+    .chat-bubble {
+      max-width: 86%; padding: .65rem .85rem; border-radius: 16px; font-size: 13px; line-height: 1.5;
+      white-space: pre-wrap; word-break: break-word; animation: bubbleIn .28s var(--aura-ease);
+    }
+    @keyframes bubbleIn { from { opacity: 0; transform: translateY(8px); } }
+    .chat-bubble.user { align-self: flex-end; color: #fff; background: linear-gradient(135deg, var(--plum), var(--plum-dk)); border-bottom-right-radius: 5px; box-shadow: 0 4px 12px rgba(107, 58, 85, .22); }
+    .chat-bubble.assistant {
+      position: relative; align-self: flex-start; margin-left: 34px;
+      background: #fff; border: 1px solid var(--line); color: var(--ink); border-bottom-left-radius: 5px; box-shadow: 0 2px 8px rgba(59, 39, 51, .05);
+    }
+    .chat-bubble.assistant::before { /* AURA avatar beside each reply */
+      content: ''; position: absolute; left: -34px; bottom: 0; width: 26px; height: 26px; border-radius: 50%;
+      background: var(--wine) url('./assets/fashion-stylist.svg') center / cover; border: 1.5px solid rgba(201, 162, 74, .6);
+    }
+    .chat-bubble.pending { padding: .75rem .9rem; }
+    .typing { display: inline-flex; gap: 4px; align-items: center; height: 10px; }
+    .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--mauve); animation: typing 1.1s ease-in-out infinite; }
+    .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+    @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-4px); opacity: 1; } }
+    .chat-bubble.error { background: #fdf2f1; border-color: rgba(163, 48, 31, .3); color: #a3301f; }
+
+    .chat-form { flex: none; padding: .55rem .75rem .7rem; border-top: 1px solid var(--line); background: #fff; display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+    .chat-compose {
+      flex: 1; display: flex; align-items: center; gap: .25rem; min-width: 0;
+      padding: .25rem .3rem .25rem .3rem; border: 1.5px solid var(--line); border-radius: 999px; background: #fdfbfb; transition: border-color .15s, box-shadow .15s;
+    }
+    .chat-compose:focus-within { border-color: var(--plum); box-shadow: 0 0 0 3px rgba(197, 159, 176, .3); background: #fff; }
+    .chat-form input[type=text] { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--ink); font: inherit; font-size: 13px; padding: .45rem .35rem; }
+    .chat-form .chat-attach, .chat-form #chatSend { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; padding: 0; }
+    .chat-form .chat-attach { border: 0; background: none; color: var(--muted); transition: color .15s, background .15s; }
+    .chat-form .chat-attach:hover { color: var(--plum); background: var(--raised); }
+    .chat-form #chatSend { border: 0; color: #fff; background: linear-gradient(135deg, var(--plum), var(--plum-dk)); box-shadow: 0 4px 12px rgba(107, 58, 85, .3); transition: transform .2s var(--aura-ease), opacity .2s; }
+    .chat-form #chatSend:hover { transform: scale(1.06); }
+    .chat-form button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .chat-hint { width: 100%; text-align: center; font-size: 10.5px; color: var(--muted); }
+    .chat-hint kbd { font: 600 10px 'IBM Plex Mono', monospace; padding: 0 .3rem; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; background: #fff; }
+    @media (max-width: 640px) {
+      .chat-popup, .chat-popup.big { left: .5rem !important; right: .5rem !important; top: auto !important; bottom: 5.4rem !important; width: auto; height: calc(100dvh - 6.4rem); border-radius: 18px; }
+      #chatSize, .chat-fab-tip { display: none; }
+      .chat-popup-header { cursor: default; }
+    }
+    .chat-confirm-box {
+      border: 1px solid var(--line);
+      background: var(--raised);
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .chat-confirm-box .label {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 10px;
+      color: var(--plum);
+      margin-bottom: 0.25rem;
+    }
+    .chat-confirm { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+    .chat-confirm button, .cf-actions button {
+      flex: 1;
+      border: 0;
+      border-radius: 8px;
+      background: var(--plum);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0.4rem 0.5rem;
+      cursor: pointer;
+    }
+    .chat-confirm button:hover, .cf-actions button:hover { background: var(--plum-dk); }
+    .chat-confirm button.secondary, .cf-actions button.secondary { background: var(--panel); border: 1px solid var(--line); color: var(--muted); }
+    .chat-form-card {
+      border: 1px solid var(--line);
+      background: var(--raised);
+      border-radius: 12px;
+      padding: 0.65rem 0.75rem;
+      font-size: 12px;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .chat-form-card .cf-title { font-weight: 700; color: var(--plum); font-size: 12.5px; }
+    .chat-form-card .cf-note { color: var(--muted); font-size: 11px; }
+    .cf-field { display: flex; flex-direction: column; gap: 0.2rem; }
+    .cf-field[hidden] { display: none !important; }
+    .cf-field > label, .cf-field .cf-label { font-weight: 600; font-size: 11px; color: var(--muted); }
+    .cf-field select, .cf-field input[type="text"], .cf-field input[type="number"], .cf-multi > summary {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+      font-size: 12px;
+      padding: 0.35rem 0.5rem;
+    }
+    .cf-multi { position: relative; }
+    .cf-multi > summary { cursor: pointer; list-style: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cf-multi > summary::-webkit-details-marker { display: none; }
+    .cf-multi > summary::after { content: '▾'; float: right; color: var(--muted); }
+    .cf-multi .cf-opts {
+      max-height: 160px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      margin-top: 0.2rem;
+      padding: 0.25rem 0.4rem;
+    }
+    .cf-multi .cf-opts label.cf-all { font-weight: 600; border-bottom: 1px solid var(--line); margin-bottom: 0.15rem; }
+    .cf-multi .cf-opts label { display: flex; gap: 0.4rem; align-items: center; padding: 0.15rem 0; font-weight: 400; color: var(--ink); cursor: pointer; }
+    .cf-field.cf-invalid select, .cf-field.cf-invalid input, .cf-field.cf-invalid summary { border-color: #c0392b; }
+    .cf-error { color: #c0392b; font-size: 11px; }
+    .cf-req { color: #c0392b; margin-left: 2px; }
+    .cf-ferr { color: #c0392b; font-size: 10.5px; }
+    .cf-ferr:empty { display: none; }
+    .cf-actions { display: flex; gap: 0.5rem; }
+    .chat-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.7rem; }
+    .chat-chips:empty { display: none; }
+    .chat-chips .chip {
+      font-size: 11px;
+      border: 1px solid var(--line);
+      background: var(--raised);
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      color: var(--ink);
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .chat-chips .chip.clear { cursor: pointer; color: var(--plum); font-family: inherit; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="shell-top" id="shellTop" style="visibility:hidden">
+    <div class="brand">
+      <img class="brand-logo" src="logo.png" alt="SuffAI" />
+      <div>
+        <h1>Command Center</h1>
+        <p id="shellSubtitle">Fashion demand intelligence</p>
+      </div>
+    </div>
+
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" class="tab" data-tab="geo" hidden>Geo</button>
+      <button type="button" class="tab" data-tab="ads" hidden>Ads Lab</button>
+      <button type="button" class="tab" data-tab="campaigns" hidden>Campaigns</button>
+      <button type="button" class="tab" data-tab="pos" hidden>Store POS</button>
+      <button type="button" class="tab" data-tab="inventory" hidden>Inventory</button>
+      <button type="button" class="tab" data-tab="warehouse" hidden>Warehouse</button>
+      <button type="button" class="tab" data-tab="style" hidden>Style Assistant</button>
+      <button type="button" class="tab" data-tab="admin" hidden>Admin</button>
+    </nav>
+
+    <div class="hdr-right">
+      <button type="button" class="profile-btn" id="profileBtn" aria-label="Account menu" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu" hidden>
+        <span class="avatar" id="avBtn"></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="frame-wrap">
+    <div class="boot" id="bootMsg" role="status"><span class="spinner" aria-hidden="true"></span><span id="bootText">Loading your workspace…</span></div>
+    <iframe id="frame-geo" class="hidden" title="Geo" src="about:blank" data-src="./geo.html"></iframe>
+    <iframe id="frame-ads" class="hidden" title="Ads Lab" src="about:blank" data-src="./ads_lab.html"></iframe>
+    <iframe id="frame-campaigns" class="hidden" title="Campaigns" src="about:blank" data-src="./campaigns.html"></iframe>
+    <iframe id="frame-pos" class="hidden" title="Store POS" src="about:blank" data-src="./pos.html"></iframe>
+    <iframe id="frame-inventory" class="hidden" title="Inventory" src="about:blank" data-src="./inventory.html"></iframe>
+    <iframe id="frame-warehouse" class="hidden" title="Warehouse" src="about:blank" data-src="./warehouse.html"></iframe>
+    <iframe id="frame-style" class="hidden" title="Style Assistant" src="about:blank" data-src="./style_assistant.html"></iframe>
+    <iframe id="frame-admin" class="hidden" title="Admin" src="about:blank" data-src="./admin.html"></iframe>
+  </div>
+
+  <!-- Profile: header avatar (top right) → menu → settings -->
+  <div class="profile-menu" id="profileMenu" role="dialog" aria-label="Account" hidden>
+    <div class="pm-head">
+      <span class="avatar lg" id="avMenu"></span>
+      <div style="min-width:0">
+        <div class="name" id="pmName"></div>
+        <div class="sub" id="pmSub"></div>
+      </div>
+    </div>
+    <div class="pm-info" id="pmInfo"></div>
+    <div class="pm-actions">
+      <button type="button" class="pm-item" id="pmSettings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Profile Settings</button>
+      <button type="button" class="pm-item danger" id="pmLogout"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Log Out</button>
+    </div>
+  </div>
+
+  <dialog class="profile-dlg" id="profileDlg" aria-labelledby="dlgTitle">
+    <form id="profileForm" method="dialog" novalidate>
+      <div class="dlg-head">
+        <h2 id="dlgTitle">Profile Settings</h2>
+        <button type="button" class="dlg-x" id="dlgClose" aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="dlg-body">
+        <div class="photo-row">
+          <span class="avatar xl" id="avDlg"></span>
+          <div class="btns">
+            <input type="file" id="photoInput" accept="image/png,image/jpeg,image/webp" hidden />
+            <button type="button" class="btn ghost" id="photoUpload">Upload Photo</button>
+            <button type="button" class="btn ghost" id="photoRemove">Remove</button>
+            <div class="hint">PNG, JPG or WebP, up to 5 MB. Cropped to a square.</div>
+          </div>
+        </div>
+        <div class="fgrid">
+          <label class="fld full"><span>Display Name<b class="req" aria-hidden="true">*</b></span><input id="pfName" maxlength="60" required placeholder="Your name" autocomplete="name" aria-describedby="pfNameErr" />
+            <small class="fld-err" id="pfNameErr" aria-live="polite"></small></label>
+          <label class="fld"><span>Email</span>
+            <input id="pfEmail" type="email" maxlength="120" placeholder="name@gmail.com" autocomplete="email" spellcheck="false" autocapitalize="none" aria-describedby="pfEmailErr" />
+            <small class="fld-err" id="pfEmailErr" aria-live="polite"></small></label>
+          <label class="fld"><span>Mobile Number</span>
+            <div class="ph"><em>+91</em><input id="pfPhone" type="tel" inputmode="numeric" maxlength="14" placeholder="98765 43210" autocomplete="tel-national" aria-describedby="pfPhoneErr" /></div>
+            <small class="fld-err" id="pfPhoneErr" aria-live="polite"></small></label>
+          <label class="fld"><span>Job Title</span><input id="pfTitle" maxlength="60" placeholder="e.g. Merchandising lead" autocomplete="organization-title" /></label>
+          <div class="fld"><span id="pfTabLbl">Open on Sign-In</span>
+            <div class="csel">
+              <button type="button" class="csel-btn" id="pfTabBtn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="pfTabLbl pfTabText"><span id="pfTabText"></span><svg class="csel-chev" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button>
+              <ul class="csel-list" id="pfTabList" role="listbox" aria-labelledby="pfTabLbl" hidden></ul>
+            </div>
+            <input type="hidden" id="pfTab" />
+          </div>
+          <label class="fld"><span>Username</span><input id="pfUser" readonly tabindex="-1" /></label>
+          <label class="fld"><span>Role</span><input id="pfRole" readonly tabindex="-1" /></label>
+          <label class="fld full" id="pfOrgWrap"><span id="pfOrgLbl">Brand</span><input id="pfOrg" readonly tabindex="-1" /></label>
+        </div>
+        <div class="dlg-err" id="dlgErr" role="alert"></div>
+      </div>
+      <div class="dlg-foot">
+        <small>Profile details are saved on this device.</small>
+        <div style="display:flex;gap:.5rem">
+          <button type="button" class="btn ghost" id="dlgCancel">Cancel</button>
+          <button type="submit" class="btn primary">Save Changes</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+
+  <!-- AURA brand operating agent (Geo, Ads Lab, Campaigns — hidden on Style Assistant / Admin / customer) -->
+  <button type="button" class="chat-fab" id="chatFab" aria-label="Open AURA agent" aria-expanded="false" aria-controls="chatPopup" style="display:none">
+    <img class="ico-chat" src="./assets/fashion-stylist.svg" alt="" width="64" height="64" />
+    <svg class="ico-close" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <span class="chat-fab-tip" aria-hidden="true">Ask AURA</span>
+  <aside class="chat-popup" id="chatPopup" aria-label="AURA brand operating agent">
+    <div class="chat-popup-header" id="chatHead" title="Drag to move · double-click to dock">
+      <span class="aura-av" aria-hidden="true"><img src="./assets/fashion-stylist.svg" alt="" width="38" height="38" /></span>
+      <div class="aura-id">
+        <b>AURA</b>
+        <span class="aura-ctx" id="chatCtxHint">Brand operating agent · Geo, Ads, Campaigns &amp; Stock</span>
+      </div>
+      <div class="chat-tools">
+        <button type="button" id="chatNew" aria-label="New chat: clear this conversation" title="New chat">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 21v-5h5"/></svg>
+        </button>
+        <button type="button" id="chatSize" aria-label="Expand AURA" title="Expand" aria-pressed="false">
+          <svg class="ico-grow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg>
+          <svg class="ico-shrink" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h6v6M10 14l-7 7M20 10h-6V4M14 10l7-7"/></svg>
+        </button>
+        <button type="button" id="chatClose" aria-label="Close AURA" title="Close">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="chat-log" id="chatLog" aria-live="polite">
+      <div class="chat-empty" id="chatEmpty">
+        <div class="hello-av" aria-hidden="true"><img src="./assets/fashion-stylist.svg" alt="" width="64" height="64" /></div>
+        <h3>Hi, I’m AURA</h3>
+        <p class="chat-greet" data-intro>Ask about your audience, or have me set filters, rank SKUs and start a campaign.</p>
+        <div class="chat-suggest">
+          <button type="button" data-q="Summarise this audience"><i aria-hidden="true">✦</i><span>Summarise This Audience<small>Who they are and what they wear</small></span></button>
+          <button type="button" data-q="Which PIN looks strongest for a store?"><i aria-hidden="true">⌖</i><span>Strongest PIN for a Store?<small>Demand, share and the 4 km rule</small></span></button>
+          <button type="button" data-q="Find the best PIN for Champions and start a campaign"><i aria-hidden="true">➚</i><span>Start a Campaign<small>Best PIN for Champions, end to end</small></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="chat-chips" id="chatChips" aria-live="polite"></div>
+    <form class="chat-form" id="chatForm">
+      <div class="chat-compose">
+        <button type="button" class="chat-attach" id="chatAttach" title="Attach SKU images" aria-label="Attach SKU images">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>
+        </button>
+        <input id="chatFile" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
+        <input id="chatInput" type="text" maxlength="2000" aria-label="Message" placeholder="Ask AURA anything…" autocomplete="off" />
+        <button type="submit" id="chatSend" aria-label="Send" title="Send">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="chat-hint"><kbd>Enter</kbd> to send · <kbd>Esc</kbd> to close · drag the header to move</div>
+    </form>
+  </aside>
+
+  <script>
+    const tabs = {
+      geo: document.getElementById('frame-geo'),
+      ads: document.getElementById('frame-ads'),
+      campaigns: document.getElementById('frame-campaigns'),
+      pos: document.getElementById('frame-pos'),
+      inventory: document.getElementById('frame-inventory'),
+      warehouse: document.getElementById('frame-warehouse'),
+      style: document.getElementById('frame-style'),
+      admin: document.getElementById('frame-admin')
+    };
+
+    const chatFab = document.getElementById('chatFab');
+    let allowed = [];
+    let session = null;
+
+    window.__CC_CONTEXT__ = {
+      active_tab: null,
+      geo: null,
+      ads: null,
+      campaigns: null,
+      retail: null
+    };
+    // AURA follows these tabs; on the retail tabs only brand/admin logins may talk to it.
+    const RETAIL_AURA_TABS = ['inventory', 'warehouse'];
+    const auraOnTab = (id) => id === 'geo' || id === 'ads' || id === 'campaigns' ||
+      (RETAIL_AURA_TABS.indexOf(id) >= 0 && !!session && (session.role === 'brand' || session.role === 'admin'));
+
+    const SHELL_LOADED = Date.now();
+    // A frame is "ready" once its real page (not the initial about:blank) has loaded.
+    Object.values(tabs).forEach((frame) => frame.addEventListener('load', () => {
+      if (!frame.src || frame.src.endsWith('about:blank')) return;
+      frame.dataset.ready = '1';
+      if (tabs[window.__CC_CONTEXT__.active_tab] === frame) document.getElementById('bootMsg').hidden = true;
+    }));
+    function ensureFrameSrc(frame) {
+      const src = frame.getAttribute('data-src');
+      if (src && (!frame.src || frame.src.endsWith('about:blank'))) {
+        frame.src = src + (src.includes('?') ? '&' : '?') + 'v=' + SHELL_LOADED; // never show a stale cached tab
+      }
+    }
+
+    function setChatVisible(show) {
+      chatFab.style.display = show ? '' : 'none';
+      if (!show) {
+        document.body.classList.remove('chat-open');
+        chatFab.classList.remove('open');
+        chatFab.setAttribute('aria-expanded', 'false');
+        chatFab.setAttribute('aria-label', 'Open AURA agent');
+      }
+    }
+
+    const TAB_NAMES = { geo: 'Geo', ads: 'Ads Lab', campaigns: 'Campaigns', pos: 'Store POS', inventory: 'Inventory',
+                        warehouse: 'Warehouse', style: 'Style Assistant', admin: 'Admin' };
+    function updateHint() {
+      const c = window.__CC_CONTEXT__;
+      const ready = RETAIL_AURA_TABS.indexOf(c.active_tab) >= 0 ? (c.retail && c.retail.tab === c.active_tab) : (c[c.active_tab] || null);
+      document.getElementById('chatCtxHint').textContent =
+        (ready ? 'Using your ' : 'Reading your ') + (TAB_NAMES[c.active_tab] || '') + ' context' + (ready ? '' : '…');
+    }
+
+    function requestContext(frame) {
+      try {
+        if (!frame || !frame.contentWindow) return;
+        if (frame.src && !frame.src.endsWith('about:blank')) {
+          frame.contentWindow.postMessage({ type: 'cc-context-request' }, '*');
+        }
+      } catch (e) {
+        console.error('[chat] postMessage failed', e);
+      }
+    }
+
+    function refreshAllContext() {
+      requestContext(tabs.geo);
+      requestContext(tabs.ads);
+      requestContext(tabs.campaigns);
+      const active = window.__CC_CONTEXT__.active_tab;
+      if (RETAIL_AURA_TABS.indexOf(active) >= 0) requestContext(tabs[active]);
+      updateHint();
+    }
+    function openRetail(tab, section) {
+      if (RETAIL_AURA_TABS.indexOf(tab) < 0 || allowed.indexOf(tab) < 0) return;
+      activateTab(tab);
+      if (section) sendAgentCommand(tab, { type: 'show_section', section: String(section).slice(0, 20) });
+    }
+    function refreshRetail() {
+      RETAIL_AURA_TABS.forEach((t) => { if (tabs[t].dataset.ready === '1') sendAgentCommand(t, { type: 'refresh' }); });
+    }
+    function planOpening(pin, area) {
+      if (allowed.indexOf('warehouse') < 0) return;
+      activateTab('warehouse');
+      sendAgentCommand('warehouse', { type: 'opening_plan', pin_code: String(pin || '').slice(0, 6), area_label: String(area || '').slice(0, 80) });
+    }
+
+    function sendAgentCommand(tab, command) {
+      const frame = tabs[tab];
+      if (!frame) return;
+      ensureFrameSrc(frame);
+      const fire = () => {
+        try {
+          frame.contentWindow.postMessage({
+            type: 'cc-agent-command',
+            command: command,
+          }, '*');
+        } catch (e) {
+          console.error('[aura] command failed', tab, command, e);
+        }
+      };
+      // A just-activated frame is still on about:blank: wait for its page, then give its scripts a beat
+      if (frame.dataset.ready === '1') setTimeout(fire, 50);
+      else frame.addEventListener('load', () => setTimeout(fire, 300), { once: true });
+    }
+
+    const AURA_JOBS_KEY = 'suffai_aura_jobs';
+    function auraJobs() {
+      try { const v = JSON.parse(sessionStorage.getItem(AURA_JOBS_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (_) { return []; }
+    }
+    function rememberAuraJob(jobId, on) {
+      const ids = auraJobs().filter(id => id !== jobId);
+      if (on) ids.push(jobId);
+      try { sessionStorage.setItem(AURA_JOBS_KEY, JSON.stringify(ids.slice(-10))); } catch (_) { /* ignore */ }
+    }
+    // Only jobs AURA started get a follow-up in chat; Ads Lab Run-button jobs keep the popup.
+    function auraJobFinished(jobId, event) {
+      if (!jobId || auraJobs().indexOf(jobId) < 0) return;
+      rememberAuraJob(jobId, false);
+      sendAuraRequest({ event, job_id: jobId }, null);
+    }
+
+    function applyUiCommands(commands) {
+      const list = Array.isArray(commands) ? commands : [];
+      list.forEach((cmd) => {
+        if (!cmd || typeof cmd !== 'object') return;
+        const t = String(cmd.type || '');
+        if (t === 'switch_tab') {
+          activateTab(cmd.tab);
+          return;
+        }
+        if (t === 'prefill_campaign') {
+          if (cmd.context) {
+            openCampaignWizard(cmd.context);
+          } else {
+            if (window.__CC_CONTEXT__.active_tab !== 'geo') activateTab('geo');
+            sendAgentCommand('geo', { type: 'create_campaign_from_geo' });
+          }
+          return;
+        }
+        if (t === 'open_monitor') {
+          openCampaignMonitor(cmd.campaign_id);
+          return;
+        }
+        if (t === 'new_campaign') {
+          resetAdsCampaign(true, { keep_audience: !!cmd.keep_audience });
+          return;
+        }
+        if (t === 'campaign_launched') {
+          resetAdsCampaign(false);
+          return;
+        }
+        if (t === 'load_campaign') {
+          openCampaignsTab(cmd.campaign_id, null, false, cmd.focus || null);
+          return;
+        }
+        if (t === 'refresh_campaigns') {
+          if (allowed.indexOf('campaigns') >= 0) sendAgentCommand('campaigns', { type: 'refresh_campaigns' });
+          return;
+        }
+        if (t === 'track_job' || t === 'export_campaign') {
+          if (allowed.indexOf('ads') < 0) return;
+          if (t === 'track_job' && cmd.job_id) rememberAuraJob(String(cmd.job_id), true);
+          if (window.__CC_CONTEXT__.active_tab !== 'ads') activateTab('ads');
+          sendAgentCommand('ads', cmd);
+          return;
+        }
+        if (t === 'request_upload') {
+          appendBubble('assistant', 'Attach SKU images with the paperclip button below (JPEG, PNG or WebP).');
+          return;
+        }
+        if (t === 'open_retail') {
+          openRetail(String(cmd.tab || ''), cmd.section);
+          return;
+        }
+        if (t === 'refresh_retail') {
+          refreshRetail();
+          return;
+        }
+        if (t === 'opening_plan') {
+          planOpening(cmd.pin_code, cmd.area_label);
+          return;
+        }
+        const tab = cmd.tab || (t === 'focus_pin' || t === 'run_brief' ? 'geo'
+          : (t === 'run_campaign' || t === 'export_csv' || t === 'open_file_picker' ? 'ads'
+            : (window.__CC_CONTEXT__.active_tab || 'geo')));
+        if (t === 'set_filters' || t === 'reset_filters') {
+          const target = cmd.tab || tab;
+          if (target === 'geo' || target === 'ads') {
+            if (window.__CC_CONTEXT__.active_tab !== target) activateTab(target);
+            sendAgentCommand(target, cmd);
+          }
+          return;
+        }
+        if (t === 'focus_pin' || t === 'run_brief') {
+          if (window.__CC_CONTEXT__.active_tab !== 'geo') activateTab('geo');
+          sendAgentCommand('geo', cmd);
+          return;
+        }
+        if (t === 'run_campaign' || t === 'export_csv' || t === 'open_file_picker') {
+          if (window.__CC_CONTEXT__.active_tab !== 'ads') activateTab('ads');
+          sendAgentCommand('ads', cmd);
+          return;
+        }
+        // Fallback: send to active geo/ads tab
+        if (tab === 'geo' || tab === 'ads') sendAgentCommand(tab, cmd);
+      });
+      setTimeout(refreshAllContext, 600);
+    }
+
+    function buildFilterContext() {
+      const c = window.__CC_CONTEXT__ || {};
+      const geoF = (c.geo && c.geo.filters) || {};
+      const adsF = (c.ads && c.ads.filters) || {};
+      const adsPins = adsF.pin_codes || adsF.pins || null;
+      const geoPins = Array.isArray(geoF.pin) ? geoF.pin : (geoF.pin ? [geoF.pin] : null);
+      return {
+        active_tab: c.active_tab || null,
+        pin_code: (geoPins && geoPins[0]) || (adsPins && adsPins[0]) || null,
+        pin_codes: adsPins || geoPins,
+        age_group: (Array.isArray(geoF.age) ? geoF.age[0] : geoF.age) || adsF.age_group || null,
+        gender: (Array.isArray(geoF.gender) ? geoF.gender[0] : geoF.gender) || adsF.gender || null,
+        rfm_segment: (Array.isArray(geoF.rfm) ? geoF.rfm[0] : geoF.rfm) || adsF.rfm_segment || null,
+        brand: adsF.brand_name || (Array.isArray(geoF.brand) ? geoF.brand[0] : geoF.brand) || null,
+        brand_name: adsF.brand_name || (session && session.brand_name) || null
+      };
+    }
+
+    // Campaign / ranking job each tab has open. Sent as ui_focus, never inside `context` (which reaches the model).
+    const uiRefs = {};
+    function noteUiRef(tab, campaignId, jobId) {
+      const ref = { campaign_id: campaignId ? String(campaignId) : null, job_id: jobId ? String(jobId) : null };
+      const prev = uiRefs[tab];
+      if (prev && prev.campaign_id === ref.campaign_id && prev.job_id === ref.job_id) return;
+      uiRefs[tab] = { ...ref, at: Date.now() };
+    }
+    function buildUiFocus() {
+      const has = (r) => !!(r && (r.campaign_id || r.job_id));
+      const active = uiRefs[window.__CC_CONTEXT__.active_tab];
+      const pick = has(active) ? active : Object.values(uiRefs).filter(has).sort((a, b) => b.at - a.at)[0];
+      return pick ? { campaign_id: pick.campaign_id, job_id: pick.job_id } : null;
+    }
+
+    const AURA_GENERIC_ERROR = 'Something went wrong. Please try again.';
+
+    function maskedErrorText(data) {
+      const msg = data && data.error && typeof data.error.message === 'string' ? data.error.message : '';
+      return msg || AURA_GENERIC_ERROR;
+    }
+
+    function appendConfirmBar(action) {
+      if (!action || !action.token) return;
+      const log = document.getElementById('chatLog');
+      log.querySelectorAll('.chat-confirm-box').forEach((b) => b.remove()); // only the latest token is actionable
+      const box = document.createElement('div');
+      box.className = 'chat-confirm-box';
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.textContent = action.label || 'Confirm Action';
+      const summary = document.createElement('div');
+      summary.textContent = action.summary || '';
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-confirm';
+      const yes = document.createElement('button');
+      yes.type = 'button';
+      yes.textContent = 'Confirm';
+      const no = document.createElement('button');
+      no.type = 'button';
+      no.className = 'secondary';
+      no.textContent = 'Cancel';
+      yes.addEventListener('click', () => {
+        box.remove();
+        sendAuraRequest({ message: '', confirm_token: action.token }, 'Confirmed: ' + (action.label || 'action'));
+      });
+      no.addEventListener('click', () => {
+        box.remove();
+        appendBubble('assistant', 'Cancelled. Nothing was changed.');
+      });
+      wrap.appendChild(yes);
+      wrap.appendChild(no);
+      box.appendChild(label);
+      box.appendChild(summary);
+      box.appendChild(wrap);
+      log.appendChild(box);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    let activeFormCard = null;
+
+    function appendFormCard(form) {
+      if (!form || !form.form_id || !Array.isArray(form.fields)) return;
+      if (activeFormCard) activeFormCard.remove();
+      const log = document.getElementById('chatLog');
+      const card = document.createElement('div');
+      card.className = 'chat-form-card';
+      activeFormCard = card;
+      if (form.title) {
+        const t = document.createElement('div');
+        t.className = 'cf-title';
+        t.textContent = form.title;
+        card.appendChild(t);
+      }
+      const getters = {};
+      const rows = {};
+      const optLabel = {};
+      const fieldErrs = {};
+      const markRequired = form.fields.length > 1; // a lone question needs no asterisk
+      const reqMark = () => {
+        const s = document.createElement('span');
+        s.className = 'cf-req';
+        s.setAttribute('aria-hidden', 'true');
+        s.textContent = '*';
+        return s;
+      };
+
+      form.fields.forEach((f, i) => {
+        const row = document.createElement('div');
+        row.className = 'cf-field';
+        const inputId = 'cf_' + form.form_id.slice(0, 8) + '_' + i;
+        const fe = document.createElement('div');
+        fe.className = 'cf-ferr';
+        fe.id = inputId + '_err';
+        const opts = Array.isArray(f.options) ? f.options : [];
+        optLabel[f.id] = {};
+        opts.forEach((o) => { optLabel[f.id][String(o.value)] = String(o.label); });
+        if (f.type === 'multiselect') {
+          const cap = document.createElement('span');
+          cap.className = 'cf-label';
+          cap.textContent = f.label;
+          if (markRequired && f.required) cap.appendChild(reqMark());
+          row.appendChild(cap);
+          const det = document.createElement('details');
+          det.className = 'cf-multi';
+          const sum = document.createElement('summary');
+          const list = document.createElement('div');
+          list.className = 'cf-opts';
+          const chosen = new Set((Array.isArray(f.default) ? f.default : []).map(String));
+          const boxes = [];
+          let allBox = null;
+          if (opts.length > 1) {
+            const allLab = document.createElement('label');
+            allLab.className = 'cf-all';
+            allBox = document.createElement('input');
+            allBox.type = 'checkbox';
+            allLab.appendChild(allBox);
+            allLab.appendChild(document.createTextNode('Select All'));
+            list.appendChild(allLab);
+          }
+          opts.forEach((o) => {
+            const lab = document.createElement('label');
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = String(o.value);
+            cb.checked = chosen.has(cb.value);
+            lab.appendChild(cb);
+            lab.appendChild(document.createTextNode(String(o.label)));
+            list.appendChild(lab);
+            boxes.push(cb);
+          });
+          const refreshSummary = () => {
+            const picked = boxes.filter((b) => b.checked).map((b) => optLabel[f.id][b.value]);
+            if (allBox) {
+              allBox.checked = picked.length === boxes.length;
+              allBox.indeterminate = picked.length > 0 && picked.length < boxes.length;
+            }
+            sum.textContent = !picked.length ? 'Select…'
+              : (boxes.length > 1 && picked.length === boxes.length) ? 'All selected (' + boxes.length + ')'
+              : (picked.length <= 2 ? picked.join(', ') : picked.length + ' selected');
+          };
+          if (allBox) allBox.addEventListener('change', () => { boxes.forEach((b) => { b.checked = allBox.checked; }); });
+          list.addEventListener('change', () => { refreshSummary(); updateVisibility(); });
+          refreshSummary();
+          det.appendChild(sum);
+          det.appendChild(list);
+          row.appendChild(det);
+          getters[f.id] = () => boxes.filter((b) => b.checked).map((b) => b.value);
+        } else {
+          const lab = document.createElement('label');
+          lab.htmlFor = inputId;
+          lab.textContent = f.label;
+          if (markRequired && f.required) lab.appendChild(reqMark());
+          row.appendChild(lab);
+          let el;
+          if (f.type === 'select') {
+            el = document.createElement('select');
+            opts.forEach((o) => {
+              const op = document.createElement('option');
+              op.value = String(o.value);
+              op.textContent = String(o.label);
+              el.appendChild(op);
+            });
+            if (f.default != null) el.value = String(f.default);
+            el.addEventListener('change', updateVisibility);
+          } else {
+            el = document.createElement('input');
+            el.type = f.type === 'number' ? 'number' : 'text';
+            if (f.type === 'number') {
+              if (f.min != null) el.min = String(f.min);
+              if (f.max != null) el.max = String(f.max);
+              el.step = 'any';
+            } else if (f.max_length) {
+              el.maxLength = f.max_length;
+            }
+            if (f.default != null) el.value = String(f.default);
+          }
+          el.id = inputId;
+          if (f.required) el.setAttribute('aria-required', 'true');
+          el.setAttribute('aria-describedby', fe.id);
+          row.appendChild(el);
+          getters[f.id] = () => el.value;
+        }
+        row.appendChild(fe);
+        fieldErrs[f.id] = fe;
+        const clearRow = () => {
+          if (!row.classList.contains('cf-invalid')) return;
+          row.classList.remove('cf-invalid');
+          fe.textContent = '';
+          if (!card.querySelector('.cf-invalid')) err.hidden = true;
+        };
+        row.addEventListener('input', clearRow);
+        row.addEventListener('change', clearRow);
+        rows[f.id] = row;
+        card.appendChild(row);
+      });
+
+      function isShown(f) {
+        const c = f.show_if;
+        if (!c || !getters[c.field]) return true;
+        const v = getters[c.field]();
+        if ('equals' in c) return v === c.equals;
+        if ('includes' in c) return Array.isArray(v) && v.includes(c.includes);
+        return true;
+      }
+
+      function updateVisibility() {
+        form.fields.forEach((f) => { rows[f.id].hidden = !isShown(f); });
+      }
+      updateVisibility();
+
+      if (form.note) {
+        const n = document.createElement('div');
+        n.className = 'cf-note';
+        n.textContent = form.note;
+        card.appendChild(n);
+      }
+      const err = document.createElement('div');
+      err.className = 'cf-error';
+      err.hidden = true;
+      card.appendChild(err);
+
+      const actions = document.createElement('div');
+      actions.className = 'cf-actions';
+      const submit = document.createElement('button');
+      submit.type = 'button';
+      submit.textContent = form.submit_label || 'Continue';
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'secondary';
+      cancel.textContent = 'Cancel';
+      actions.appendChild(submit);
+      actions.appendChild(cancel);
+      card.appendChild(actions);
+
+      submit.addEventListener('click', () => {
+        const values = {};
+        const echo = [];
+        const missing = [];
+        form.fields.forEach((f) => {
+          rows[f.id].classList.remove('cf-invalid');
+          fieldErrs[f.id].textContent = '';
+          if (!isShown(f)) return;
+          const v = getters[f.id]();
+          const empty = Array.isArray(v) ? v.length === 0 : String(v).trim() === '';
+          if (f.required && empty) {
+            rows[f.id].classList.add('cf-invalid');
+            fieldErrs[f.id].textContent = f.type === 'multiselect' ? 'Choose at least one option.' : f.label + ' is required.';
+            missing.push(f.label);
+          }
+          if (f.type === 'number') {
+            values[f.id] = String(v).trim() === '' ? null : Number(v);
+          } else {
+            values[f.id] = Array.isArray(v) ? v : String(v).trim();
+          }
+          if (empty) return;
+          const shown = Array.isArray(v)
+            ? (v.length <= 3 ? v.map((x) => optLabel[f.id][x] || x).join(', ') : v.length + ' selected')
+            : (optLabel[f.id][v] || String(v).trim());
+          echo.push(f.label + ': ' + (shown.length > 60 ? shown.slice(0, 57) + '…' : shown));
+        });
+        if (missing.length) {
+          err.textContent = 'Please fill in the required fields: ' + missing.join(', ') + '.';
+          err.hidden = false;
+          card.querySelector('.cf-invalid input, .cf-invalid select, .cf-invalid summary')?.focus();
+          return;
+        }
+        card.remove();
+        if (activeFormCard === card) activeFormCard = null;
+        sendAuraRequest({ message: '', form_response: { form_id: form.form_id, values } }, echo.join(' · ') || 'Submitted');
+      });
+      cancel.addEventListener('click', () => {
+        card.remove();
+        if (activeFormCard === card) activeFormCard = null;
+        appendBubble('assistant', 'Cancelled. Nothing was changed.');
+      });
+
+      log.appendChild(card);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    let auraBusy = 0; // requests in flight (user + background job events)
+    async function sendAuraRequest(payload, userEcho) {
+      const input = document.getElementById('chatInput');
+      const sendBtn = document.getElementById('chatSend');
+      refreshAllContext();
+      if (userEcho) appendBubble('user', userEcho);
+      auraBusy++;
+      sendBtn.disabled = true;
+      const pending = appendBubble('assistant pending', '');
+      pending.innerHTML = '<span class="typing" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only">AURA is thinking…</span>';
+      try {
+        const res = await fetch('/v1/agent/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            ...(window.SuffaiSession ? SuffaiSession.authHeaders() : {}),
+          },
+          body: JSON.stringify({
+            context: window.__CC_CONTEXT__,
+            filter_context: buildFilterContext(),
+            ui_focus: buildUiFocus(),
+            ...payload,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        pending.remove();
+        if (!res.ok || data.ok === false) {
+          if (data.request_id) console.info('[aura] failed request_id=', data.request_id);
+          appendBubble('assistant', maskedErrorText(data), true);
+          if (res.status === 401 && window.SuffaiSession) setTimeout(() => SuffaiSession.logout(), 1500);
+          return;
+        }
+        applyUiCommands(data.ui_commands || []);
+        appendBubble('assistant', data.answer || 'Done.');
+        if (data.pending_action) appendConfirmBar(data.pending_action);
+        else if (data.input_form) appendFormCard(data.input_form);
+        if (data.attached_images === 0 && stagedFiles.length) {
+          stagedFiles = [];
+          renderStagedChips();
+        }
+      } catch (_) {
+        pending.remove();
+        appendBubble('assistant', 'Connection problem. Please check your network and try again.', true);
+      } finally {
+        if (--auraBusy === 0) sendBtn.disabled = false;
+        // Background job follow-ups must not pull focus out of the page the user is working in
+        if (userEcho && document.body.classList.contains('chat-open')) input.focus();
+      }
+    }
+
+    let stagedFiles = [];
+
+    function renderStagedChips() {
+      const box = document.getElementById('chatChips');
+      box.innerHTML = '';
+      if (!stagedFiles.length) return;
+      stagedFiles.forEach((name) => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.title = name;
+        chip.textContent = name;
+        box.appendChild(chip);
+      });
+      const clear = document.createElement('button');
+      clear.type = 'button';
+      clear.className = 'chip clear';
+      clear.textContent = 'Clear';
+      clear.addEventListener('click', clearStagedImages);
+      box.appendChild(clear);
+    }
+
+    async function clearStagedImages() {
+      try {
+        await fetch('/v1/agent/uploads', {
+          method: 'DELETE',
+          headers: { Accept: 'application/json', ...(window.SuffaiSession ? SuffaiSession.authHeaders() : {}) },
+        });
+      } catch (_) { /* ignore */ }
+      stagedFiles = [];
+      renderStagedChips();
+    }
+
+    async function uploadChatImages(fileList) {
+      const files = Array.from(fileList || []).filter(f => /^image\/(jpeg|png|webp)$/.test(f.type));
+      if (!files.length) {
+        appendBubble('assistant', 'Please attach JPEG, PNG or WebP images.', true);
+        return;
+      }
+      const fd = new FormData();
+      const sent = files.slice(0, 10);
+      sent.forEach(f => fd.append('files', f, f.name));
+      const attach = document.getElementById('chatAttach');
+      attach.disabled = true;
+      appendBubble('user', 'Attached ' + sent.length + ' image' + (sent.length === 1 ? '' : 's')
+        + (files.length > sent.length ? ' (first 10 of ' + files.length + ')' : ''));
+      let staged = false;
+      try {
+        const res = await fetch('/v1/agent/uploads', {
+          method: 'POST',
+          headers: { Accept: 'application/json', ...(window.SuffaiSession ? SuffaiSession.authHeaders() : {}) },
+          body: fd,
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.ok === false) {
+          appendBubble('assistant', maskedErrorText(data), true);
+          return;
+        }
+        stagedFiles = Array.isArray(data.files) ? data.files : [];
+        renderStagedChips();
+        staged = true;
+      } catch (_) {
+        appendBubble('assistant', 'Connection problem. Please check your network and try again.', true);
+      } finally {
+        attach.disabled = false;
+      }
+      if (staged) await sendAuraRequest({ event: 'uploads_ready' }, null);
+    }
+
+    document.getElementById('chatAttach').addEventListener('click', () => document.getElementById('chatFile').click());
+    document.getElementById('chatFile').addEventListener('change', (e) => {
+      uploadChatImages(e.target.files);
+      e.target.value = '';
+    });
+
+    /* Clean URLs (/geo, /ads-lab, …) when the Command Center server serves the app; #tab when opened as index.html. */
+    const TAB_PATHS = { geo: 'geo', ads: 'ads-lab', campaigns: 'campaigns', style: 'style-assistant', admin: 'admin',
+                        inventory: 'inventory', warehouse: 'warehouse', pos: 'pos' };
+    const CLEAN_URLS = !/\.html$/i.test(location.pathname);
+    const tabFromPath = () => {
+      const seg = location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+      return Object.keys(TAB_PATHS).find(k => TAB_PATHS[k] === seg) || '';
+    };
+    function writeTabUrl(id, push) {
+      if (!history.replaceState) return;
+      if (!CLEAN_URLS) { history.replaceState(null, '', '#' + id); return; }
+      const path = '/' + TAB_PATHS[id];
+      if (location.pathname === path && !location.hash) return;
+      history[push ? 'pushState' : 'replaceState']({ tab: id }, '', path); // drops one-shot ?campaign_id / #hash
+    }
+    window.addEventListener('popstate', () => { // browser Back / Forward between tabs
+      const id = CLEAN_URLS ? tabFromPath() : (location.hash || '').slice(1);
+      if (id && allowed.indexOf(id) >= 0) activateTab(id, { fromHistory: true });
+    });
+
+    function activateTab(id, opts) {
+      if (allowed.indexOf(id) < 0) return;
+      const fromHistory = !!(opts && opts.fromHistory);
+      const changed = window.__CC_CONTEXT__.active_tab && window.__CC_CONTEXT__.active_tab !== id;
+      window.__CC_CONTEXT__.active_tab = id;
+      document.querySelectorAll('.tab').forEach(b => {
+        const on = b.dataset.tab === id;
+        b.classList.toggle('active', on);
+        if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+      });
+      const boot = document.getElementById('bootMsg');
+      boot.hidden = tabs[id].dataset.ready === '1';
+      document.getElementById('bootText').textContent = 'Loading ' + (TAB_NAMES[id] || '') + '…';
+      if (!fromHistory) writeTabUrl(id, changed);
+      document.title = (TAB_NAMES[id] ? TAB_NAMES[id] + ' · ' : '') + 'SuffAI Command Center';
+      Object.entries(tabs).forEach(([key, frame]) => {
+        const show = key === id;
+        frame.classList.toggle('hidden', !show);
+        if (show) ensureFrameSrc(frame);
+      });
+      const chatTab = auraOnTab(id);
+      setChatVisible(chatTab);
+      if (chatTab) refreshAllContext();
+      if (chatTab) refreshChatSuggestions();
+    }
+
+    const CAMPAIGN_DRAFT_KEY = 'suffai_campaign_draft';
+
+    function openCampaignWizard(context) {
+      if (allowed.indexOf('ads') < 0) return;
+      const ctx = context && typeof context === 'object' ? context : {};
+      try {
+        sessionStorage.setItem(CAMPAIGN_DRAFT_KEY, JSON.stringify(ctx));
+      } catch (e) {
+        console.error('[shell] draft save failed', e);
+      }
+      activateTab('ads');
+      sendAgentCommand('ads', { type: 'prefill_campaign', context: ctx });
+    }
+
+    // After a 1P launch (or "New campaign") Ads Lab drops the old campaign so the brand starts fresh.
+    // open: also switch to Ads Lab. A never-loaded Ads Lab boots fresh on its own.
+    function forgetAdsCampaign() {
+      delete uiRefs.ads;
+      try { sessionStorage.removeItem(CAMPAIGN_DRAFT_KEY); } catch (_) { /* ignore */ }
+    }
+    function resetAdsCampaign(open, opts) {
+      forgetAdsCampaign();
+      if (allowed.indexOf('ads') < 0) return;
+      if (open) activateTab('ads');
+      if (open || tabs.ads.dataset.ready === '1') {
+        sendAgentCommand('ads', { type: 'new_campaign', quiet: !open, keep_audience: !!(opts && opts.keep_audience) });
+      }
+    }
+
+    function openCampaignsTab(campaignId, sourceContext, background, focus) {
+      if (allowed.indexOf('campaigns') < 0) return;
+      if (!background) activateTab('campaigns');
+      if (campaignId) {
+        sendAgentCommand('campaigns', { type: 'load_campaign', campaign_id: campaignId, source_context: sourceContext || null, focus: focus || null });
+      }
+    }
+
+    function openCampaignMonitor(campaignId) {
+      if (!campaignId) return;
+      openCampaignsTab(campaignId, null, false, 'analysis');
+    }
+
+    const isOwnFrame = (src) => Object.values(tabs).some((f) => f.contentWindow === src);
+    window.addEventListener('message', (ev) => {
+      const data = ev.data;
+      if (!data || typeof data !== 'object') return;
+      // Only our own tab iframes may drive the shell / feed AURA context (blocks openers & foreign frames)
+      if (!isOwnFrame(ev.source)) return;
+      if (data.type === 'cc-open-campaign') {
+        openCampaignWizard(data.context);
+        return;
+      }
+      if (data.type === 'cc-open-monitor') {
+        openCampaignMonitor(data.campaign_id);
+        return;
+      }
+      if (data.type === 'cc-plan-opening') { // Geo "Plan opening stock" → Warehouse new-store plan for that PIN
+        planOpening(data.pin_code, data.area_label);
+        return;
+      }
+      const retailFrom = RETAIL_AURA_TABS.find((t) => tabs[t].contentWindow === ev.source) || null;
+      if (data.type === 'cc-open-retail' && ev.origin === location.origin) {
+        openRetail(String(data.tab || ''), data.section);
+        return;
+      }
+      if (data.type === 'cc-ask-aura') { // Stock Pilot "Ask AURA" buttons
+        if (!retailFrom || ev.origin !== location.origin || !auraOnTab(retailFrom)) return;
+        if (!document.body.classList.contains('chat-open')) chatFab.click();
+        const payload = {};
+        if (data.event === 'stock_brief' || data.event === 'stock_action') {
+          payload.event = data.event;
+          if (data.event === 'stock_action') payload.action_ref = String(data.action_ref || '').slice(0, 40);
+        } else {
+          const msg = String(data.message || '').trim().slice(0, 2000);
+          if (!msg) return;
+          payload.message = msg;
+        }
+        sendAuraRequest(payload, String(data.echo || data.message || '').slice(0, 200) || null);
+        return;
+      }
+      if (data.type === 'cc-context' && data.source === 'retail') {
+        if (!retailFrom) return;
+        window.__CC_CONTEXT__.retail = { tab: retailFrom, section: String(data.section || '').slice(0, 20),
+                                         brand: String(data.brand || '').slice(0, 80) };
+        if (window.__CC_CONTEXT__.active_tab === retailFrom) updateHint();
+        return;
+      }
+      if (data.type === 'cc-open-campaigns') {
+        openCampaignsTab(data.campaign_id, data.source_context);
+        return;
+      }
+      if (data.type === 'cc-campaign-created') {
+        if (allowed.indexOf('campaigns') >= 0 && tabs.campaigns.src && !tabs.campaigns.src.endsWith('about:blank')) {
+          sendAgentCommand('campaigns', { type: 'refresh_campaigns' });
+        }
+        auraJobFinished(String(data.job_id || ''), 'ranking_done');
+        return;
+      }
+      if (data.type === 'cc-campaign-job-failed') {
+        auraJobFinished(String(data.job_id || ''), 'ranking_failed');
+        return;
+      }
+      if (data.type === 'cc-campaign-launched') {
+        resetAdsCampaign(false);
+        return;
+      }
+      if (data.type === 'cc-new-campaign') {
+        if (ev.source === tabs.ads.contentWindow) forgetAdsCampaign(); // Ads Lab already reset itself
+        else resetAdsCampaign(true);
+        return;
+      }
+      if (data.type === 'open-tab' && ev.origin === location.origin && TAB_NAMES[data.tab]) {
+        activateTab(data.tab);
+        return;
+      }
+      if (data.type !== 'cc-context') return;
+      if (data.source === 'geo') {
+        window.__CC_CONTEXT__.geo = {
+          filters: data.filters || {},
+          summary: data.summary || {}
+        };
+      } else if (data.source === 'ads') {
+        window.__CC_CONTEXT__.ads = {
+          filters: data.filters || {},
+          filters_label: data.filters_label || '',
+          ranked: data.ranked || []
+        };
+        noteUiRef('ads', data.campaign_id, data.job && data.job.job_id);
+      } else if (data.source === 'campaigns') {
+        window.__CC_CONTEXT__.campaigns = {
+          campaign_name: data.campaign_name || null,
+          status: data.status || null
+        };
+        noteUiRef('campaigns', data.campaign_id, null);
+      }
+      updateHint();
+    });
+
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+    });
+
+    /* ---------- Profile (local, per user; no profile API exists) ---------- */
+    const ROLE_NAMES = { admin: 'Administrator', brand: 'Brand Partner', customer: 'Customer',
+                         warehouse_staff: 'Warehouse Staff', store_staff: 'Store Staff' };
+    const $id = (id) => document.getElementById(id);
+    const profileKey = () => 'suffai_profile:' + ((session && session.username) || '');
+    function loadProfile() {
+      try { return JSON.parse(localStorage.getItem(profileKey())) || {}; } catch (_) { return {}; }
+    }
+    function saveProfile(p) {
+      try { localStorage.setItem(profileKey(), JSON.stringify(p)); return true; } catch (_) { return false; }
+    }
+    function displayName() {
+      return loadProfile().display_name || session.display_name || session.username || 'User';
+    }
+    function initials(name) {
+      const parts = String(name).trim().split(/[\s._-]+/).filter(Boolean);
+      return ((parts[0] || '?')[0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+    }
+    function paintAvatar(el, photo, name) {
+      el.textContent = '';
+      if (photo) {
+        const img = document.createElement('img');
+        img.src = photo; img.alt = '';
+        el.appendChild(img);
+      } else {
+        el.textContent = initials(name);
+      }
+    }
+    function renderProfile() {
+      const p = loadProfile(), name = displayName();
+      ['avBtn', 'avMenu'].forEach(id => paintAvatar($id(id), p.photo, name));
+      $id('pmName').textContent = name;
+      $id('pmSub').textContent = p.email || session.username;
+      const rows = [['Role', ROLE_NAMES[session.role] || session.role]];
+      if (p.title) rows.push(['Job Title', p.title]);
+      if (session.brand_name) rows.push(['Brand', session.brand_name]);
+      if (session.customer_id) rows.push(['Customer ID', session.customer_id]);
+      rows.push(['Access', allowed.map(t => TAB_NAMES[t] || t).join(' · ')]);
+      $id('pmInfo').innerHTML = '';
+      rows.forEach(([k, v]) => {
+        const r = document.createElement('div');
+        r.className = 'pm-row';
+        r.innerHTML = '<div class="k"></div><div class="v"></div>';
+        r.firstChild.textContent = k; r.lastChild.textContent = v;
+        $id('pmInfo').appendChild(r);
+      });
+      $id('profileBtn').setAttribute('aria-label', 'Account menu for ' + name);
+    }
+    function setMenu(open) {
+      if (open) $id('profileMenu').style.top = ($id('profileBtn').getBoundingClientRect().bottom + 10) + 'px';
+      $id('profileMenu').hidden = !open;
+      $id('profileBtn').setAttribute('aria-expanded', String(open));
+      if (open) $id('pmSettings').focus();
+    }
+    $id('profileBtn').addEventListener('click', (e) => { e.stopPropagation(); setMenu($id('profileMenu').hidden); });
+    $id('profileMenu').addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', () => setMenu(false));
+    window.addEventListener('blur', () => setMenu(false)); // clicks inside an iframe
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !$id('profileMenu').hidden) { e.preventDefault(); setMenu(false); $id('profileBtn').focus(); }
+    });
+    $id('profileMenu').addEventListener('focusout', (e) => {
+      if (e.relatedTarget && !$id('profileMenu').contains(e.relatedTarget) && e.relatedTarget !== $id('profileBtn')) setMenu(false);
+    });
+    $id('pmLogout').addEventListener('click', () => SuffaiSession.logout());
+
+    let draftPhoto = null;
+    function openSettings() {
+      setMenu(false);
+      const p = loadProfile();
+      draftPhoto = p.photo || null;
+      $id('pfName').value = displayName();
+      $id('pfEmail').value = p.email || '';
+      $id('pfPhone').value = phoneDigits(p.phone || '');
+      ['pfName', 'pfEmail', 'pfPhone'].forEach(id => setFieldError(id, ''));
+      $id('pfTitle').value = p.title || '';
+      $id('pfTabList').innerHTML = '';
+      allowed.forEach(t => {
+        const li = document.createElement('li');
+        li.setAttribute('role', 'option'); li.tabIndex = -1; li.dataset.value = t;
+        li.innerHTML = '<span></span><svg class="tick" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>';
+        li.firstChild.textContent = TAB_NAMES[t] || t;
+        $id('pfTabList').appendChild(li);
+      });
+      setTabChoice(allowed.indexOf(p.default_tab) >= 0 ? p.default_tab : allowed[0]);
+      openTabList(false);
+      $id('pfUser').value = session.username || '';
+      $id('pfRole').value = ROLE_NAMES[session.role] || session.role || '';
+      const org = session.brand_name ? ['Brand', session.brand_name] : session.customer_id ? ['Customer ID', session.customer_id] : null;
+      $id('pfOrgWrap').hidden = !org;
+      if (org) { $id('pfOrgLbl').textContent = org[0]; $id('pfOrg').value = org[1]; }
+      $id('dlgErr').textContent = '';
+      paintAvatar($id('avDlg'), draftPhoto, displayName());
+      $id('profileDlg').showModal();
+    }
+    $id('pmSettings').addEventListener('click', openSettings);
+
+    /* "Open on Sign-In" listbox: click, ↑/↓, Home/End, Enter/Space, Esc, Tab */
+    function setTabChoice(v) {
+      $id('pfTab').value = v;
+      $id('pfTabText').textContent = TAB_NAMES[v] || v;
+      [...$id('pfTabList').children].forEach(li => li.setAttribute('aria-selected', String(li.dataset.value === v)));
+    }
+    function openTabList(open) {
+      const list = $id('pfTabList'), btn = $id('pfTabBtn');
+      list.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+      if (!open) return;
+      // Flip upward if the dialog doesn't have room below the button
+      list.classList.remove('up');
+      const room = $id('profileDlg').getBoundingClientRect().bottom - btn.getBoundingClientRect().bottom;
+      if (room < list.offsetHeight + 16) list.classList.add('up');
+      (list.querySelector('[aria-selected="true"]') || list.firstElementChild).focus();
+    }
+    $id('pfTabBtn').addEventListener('click', () => openTabList($id('pfTabList').hidden));
+    $id('pfTabBtn').addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); openTabList(true); }
+    });
+    $id('pfTabList').addEventListener('click', (e) => {
+      const li = e.target.closest('li');
+      if (!li) return;
+      setTabChoice(li.dataset.value); openTabList(false); $id('pfTabBtn').focus();
+    });
+    $id('pfTabList').addEventListener('keydown', (e) => {
+      const items = [...$id('pfTabList').children], i = items.indexOf(document.activeElement);
+      const go = (n) => { e.preventDefault(); items[(n + items.length) % items.length].focus(); };
+      if (e.key === 'ArrowDown') go(i + 1);
+      else if (e.key === 'ArrowUp') go(i - 1);
+      else if (e.key === 'Home') go(0);
+      else if (e.key === 'End') go(items.length - 1);
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (items[i]) { setTabChoice(items[i].dataset.value); openTabList(false); $id('pfTabBtn').focus(); } }
+      else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); openTabList(false); $id('pfTabBtn').focus(); } // don't close the dialog
+      else if (e.key === 'Tab') openTabList(false);
+    });
+    $id('profileDlg').addEventListener('click', (e) => { if (!e.target.closest('.csel')) openTabList(false); });
+    $id('dlgClose').addEventListener('click', () => $id('profileDlg').close());
+    $id('dlgCancel').addEventListener('click', () => $id('profileDlg').close());
+    $id('profileDlg').addEventListener('close', () => $id('profileBtn').focus());
+    $id('pfName').addEventListener('input', () => {
+      if (!draftPhoto) paintAvatar($id('avDlg'), null, $id('pfName').value || '?');
+      if ($id('pfName').value.trim()) setFieldError('pfName', '');
+    });
+    $id('profileForm').addEventListener('input', () => { $id('dlgErr').textContent = ''; });
+
+    /* ---- Email + Indian mobile validation (fields optional; if filled they must be valid) ---- */
+    const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$/;
+    const DOMAIN_TYPOS = {
+      'gmial.com': 'gmail.com', 'gmal.com': 'gmail.com', 'gmai.com': 'gmail.com', 'gmaill.com': 'gmail.com',
+      'gamil.com': 'gmail.com', 'gnail.com': 'gmail.com', 'gmail.co': 'gmail.com', 'gmail.con': 'gmail.com',
+      'gmail.cm': 'gmail.com', 'gmail.in': 'gmail.com', 'yaho.com': 'yahoo.com', 'yahoo.co': 'yahoo.com',
+      'hotmial.com': 'hotmail.com', 'outlok.com': 'outlook.com',
+    };
+    function setFieldError(id, msg) {
+      const el = $id(id), err = $id(id + 'Err');
+      err.innerHTML = msg || '';
+      if (msg) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
+    }
+    /** Returns '' when valid/empty, else an error message (HTML allowed for the fix-it link). */
+    function emailError(v) {
+      if (!v) return '';
+      if (/\s/.test(v)) return 'Email can’t contain spaces.';
+      if ((v.match(/@/g) || []).length !== 1) return 'Enter an email like name@gmail.com.';
+      if (!EMAIL_RE.test(v) || /\.\./.test(v)) return 'That doesn’t look like a valid email address.';
+      const [local, domain] = v.split('@');
+      const fix = DOMAIN_TYPOS[domain.toLowerCase()];
+      if (fix) return `Did you mean <button type="button" data-fix-email="${local}@${fix}">${local}@${fix}</button>?`;
+      return '';
+    }
+    /** Keep digits only; accept pasted +91 / 0 prefixes. */
+    function phoneDigits(v) {
+      let d = String(v).replace(/\D/g, '');
+      if (d.length > 10 && d.startsWith('91')) d = d.slice(2);
+      else if (d.length === 11 && d.startsWith('0')) d = d.slice(1);
+      return d.slice(0, 10);
+    }
+    function phoneError(d) {
+      if (!d) return '';
+      if (d.length !== 10) return `Enter a 10-digit mobile number (${d.length}/10).`;
+      if (!/^[6-9]/.test(d)) return 'Indian mobile numbers start with 6, 7, 8 or 9.';
+      return '';
+    }
+    $id('pfPhone').addEventListener('input', (e) => {
+      const d = phoneDigits(e.target.value);
+      if (e.target.value !== d) e.target.value = d;
+      if ($id('pfPhone').hasAttribute('aria-invalid') || d.length === 10) setFieldError('pfPhone', phoneError(d));
+    });
+    $id('pfPhone').addEventListener('blur', () => setFieldError('pfPhone', phoneError($id('pfPhone').value)));
+    $id('pfEmail').addEventListener('input', () => {
+      if ($id('pfEmail').hasAttribute('aria-invalid')) setFieldError('pfEmail', emailError($id('pfEmail').value.trim()));
+    });
+    $id('pfEmail').addEventListener('blur', () => setFieldError('pfEmail', emailError($id('pfEmail').value.trim())));
+    $id('pfEmailErr').addEventListener('mousedown', (e) => e.preventDefault()); // keep focus in the field
+    $id('pfEmailErr').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-fix-email]');
+      if (!b) return;
+      $id('pfEmail').value = b.dataset.fixEmail;
+      setFieldError('pfEmail', '');
+      $id('pfEmail').focus();
+    });
+    $id('photoUpload').addEventListener('click', () => $id('photoInput').click());
+    $id('photoRemove').addEventListener('click', () => { draftPhoto = null; paintAvatar($id('avDlg'), null, $id('pfName').value || displayName()); });
+
+    // Center-crop to a 256px WebP so the stored data URL stays small
+    function cropToSquare(file) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          const side = Math.min(img.width, img.height), c = document.createElement('canvas');
+          c.width = c.height = 256;
+          const g = c.getContext('2d');
+          g.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, 256, 256);
+          URL.revokeObjectURL(url);
+          resolve(c.toDataURL('image/webp', 0.88)); // keeps transparency (PNG fallback where WEBP encode is unsupported)
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('That file could not be read as an image.')); };
+        img.src = url;
+      });
+    }
+    $id('photoInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      $id('dlgErr').textContent = '';
+      if (!/^image\/(png|jpeg|webp)$/.test(file.type)) { $id('dlgErr').textContent = 'Please choose a PNG, JPG or WebP image.'; return; }
+      if (file.size > 5 * 1024 * 1024) { $id('dlgErr').textContent = 'That image is over 5 MB. Please choose a smaller one.'; return; }
+      try {
+        draftPhoto = await cropToSquare(file);
+        paintAvatar($id('avDlg'), draftPhoto, '');
+      } catch (err) { $id('dlgErr').textContent = err.message; }
+    });
+
+    function showToast(msg) {
+      const t = $id('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+    $id('profileForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = $id('pfName').value.trim();
+      const email = $id('pfEmail').value.trim(), phone = phoneDigits($id('pfPhone').value);
+      const nErr = name ? '' : 'Display name is required.', eErr = emailError(email), pErr = phoneError(phone);
+      setFieldError('pfName', nErr); setFieldError('pfEmail', eErr); setFieldError('pfPhone', pErr);
+      if (nErr || eErr || pErr) { $id(nErr ? 'pfName' : eErr ? 'pfEmail' : 'pfPhone').focus(); return; }
+      const ok = saveProfile({
+        display_name: name,
+        email,
+        phone: phone ? `+91 ${phone.slice(0, 5)} ${phone.slice(5)}` : '',
+        title: $id('pfTitle').value.trim(),
+        default_tab: $id('pfTab').value,
+        photo: draftPhoto,
+      });
+      if (!ok) { $id('dlgErr').textContent = 'Could not save. Your browser storage may be full or disabled.'; return; }
+      renderProfile();
+      $id('profileDlg').close();
+      showToast('Profile updated');
+    });
+
+    (async function bootShell() {
+      const local = SuffaiSession.getSession();
+      if (!local || !local.token) {
+        location.replace(CLEAN_URLS ? '/login' : './login.html');
+        return;
+      }
+      try {
+        session = await SuffaiSession.fetchMe();
+      } catch (_) { // network / server down: say so instead of spinning forever
+        const boot = $id('bootMsg');
+        boot.classList.add('err');
+        $id('bootText').textContent = 'Couldn’t reach the Command Center server. Check your connection and try again.';
+        const retry = document.createElement('button');
+        retry.type = 'button'; retry.className = 'btn primary'; retry.textContent = 'Retry';
+        retry.addEventListener('click', () => location.reload());
+        boot.appendChild(retry);
+        return;
+      }
+      if (!session) {
+        location.replace(CLEAN_URLS ? '/login' : './login.html');
+        return;
+      }
+      allowed = session.allowed_tabs || [];
+      if (!allowed.length) {
+        SuffaiSession.clearSession();
+        location.replace(CLEAN_URLS ? '/login' : './login.html');
+        return;
+      }
+
+      renderProfile();
+      $id('profileBtn').hidden = false;
+
+      document.querySelectorAll('.tab').forEach(btn => {
+        const ok = allowed.indexOf(btn.dataset.tab) >= 0;
+        btn.hidden = !ok;
+      });
+
+      const params = new URLSearchParams(location.search);
+      const hashTab = (location.hash || '').replace(/^#/, '');
+      // Path (/geo) first, then old #geo links, then ?tab=, then the saved default, else the first allowed tab. activateTab rewrites the URL, so a stale ?tab= never wins on reload
+      const want = tabFromPath() || hashTab || params.get('tab') || loadProfile().default_tab || allowed[0];
+      const start = allowed.indexOf(want) >= 0 ? want : allowed[0];
+      document.getElementById('shellTop').style.visibility = 'visible';
+      if (start === 'campaigns' && params.get('campaign_id')) {
+        openCampaignsTab(params.get('campaign_id'), null, false, params.get('focus'));
+      } else {
+        activateTab(start);
+      }
+    })();
+
+    /* AURA window: drag by the header, expand / shrink; remembered per browser. */
+    const chatPopup = document.getElementById('chatPopup');
+    const AURA_UI_KEY = 'suffai_aura_ui';
+    const auraUi = (() => { try { return JSON.parse(localStorage.getItem(AURA_UI_KEY)) || {}; } catch (_) { return {}; } })();
+    const saveAuraUi = () => { try { localStorage.setItem(AURA_UI_KEY, JSON.stringify(auraUi)); } catch (_) { /* ignore */ } };
+    function placeChat(left, top) {
+      const w = chatPopup.offsetWidth, h = chatPopup.offsetHeight;
+      left = Math.max(8, Math.min(window.innerWidth - w - 8, left));
+      top = Math.max(8, Math.min(window.innerHeight - h - 8, top));
+      Object.assign(chatPopup.style, { left: left + 'px', top: top + 'px', right: 'auto', bottom: 'auto' });
+      chatPopup.classList.add('placed');
+      return { left, top };
+    }
+    function restoreChatPlace() {
+      if (auraUi.pos) placeChat(auraUi.pos.left, auraUi.pos.top);
+      else { // docked bottom-right above the launcher
+        Object.assign(chatPopup.style, { left: '', top: '', right: '', bottom: '' });
+        chatPopup.classList.remove('placed');
+      }
+    }
+    // Expand/shrink animates width/height; keep a moved window fully on screen once it settles
+    chatPopup.addEventListener('transitionend', (e) => {
+      if (e.target === chatPopup && (e.propertyName === 'height' || e.propertyName === 'width') && auraUi.pos) {
+        auraUi.pos = placeChat(auraUi.pos.left, auraUi.pos.top); saveAuraUi();
+      }
+    });
+    function setChatBig(big) {
+      chatPopup.classList.toggle('big', big);
+      const b = document.getElementById('chatSize');
+      b.setAttribute('aria-pressed', String(big));
+      b.setAttribute('aria-label', big ? 'Shrink AURA' : 'Expand AURA');
+      b.title = big ? 'Shrink' : 'Expand';
+      auraUi.big = big; saveAuraUi();
+      if (auraUi.pos && document.body.classList.contains('chat-open')) auraUi.pos = placeChat(auraUi.pos.left, auraUi.pos.top); // keep it on screen
+    }
+    document.getElementById('chatClose').addEventListener('click', () => { chatFab.click(); chatFab.focus(); });
+    document.getElementById('chatSize').addEventListener('click', () => setChatBig(!chatPopup.classList.contains('big')));
+    let chatDrag = null;
+    document.getElementById('chatHead').addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 || e.target.closest('button') || window.innerWidth <= 640) return;
+      const r = chatPopup.getBoundingClientRect();
+      chatDrag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+      chatPopup.classList.add('dragging');
+      e.currentTarget.setPointerCapture(e.pointerId);
+    });
+    document.getElementById('chatHead').addEventListener('pointermove', (e) => {
+      if (chatDrag) auraUi.pos = placeChat(e.clientX - chatDrag.dx, e.clientY - chatDrag.dy);
+    });
+    const endChatDrag = () => { if (!chatDrag) return; chatDrag = null; chatPopup.classList.remove('dragging'); saveAuraUi(); };
+    document.getElementById('chatHead').addEventListener('pointerup', endChatDrag);
+    document.getElementById('chatHead').addEventListener('pointercancel', endChatDrag);
+    document.getElementById('chatHead').addEventListener('dblclick', (e) => { // double-click header: back to the corner
+      if (e.target.closest('button')) return;
+      delete auraUi.pos; saveAuraUi(); restoreChatPlace();
+    });
+    window.addEventListener('resize', () => { if (auraUi.pos && document.body.classList.contains('chat-open')) auraUi.pos = placeChat(auraUi.pos.left, auraUi.pos.top); });
+    if (auraUi.big) setChatBig(true);
+
+    chatFab.addEventListener('click', () => {
+      const open = document.body.classList.toggle('chat-open');
+      chatFab.classList.toggle('open', open);
+      chatFab.setAttribute('aria-expanded', open ? 'true' : 'false');
+      chatFab.setAttribute('aria-label', open ? 'Close AURA agent' : 'Open AURA agent');
+      if (open) chatFab.classList.remove('has-new');
+      if (open) {
+        restoreChatPlace();
+        refreshAllContext();
+        document.getElementById('chatInput').focus();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || e.defaultPrevented || !document.body.classList.contains('chat-open')) return;
+      if ($id('profileDlg').open) return; // Esc belongs to the modal
+      chatFab.click(); chatFab.focus();
+    });
+    document.getElementById('chatLog').addEventListener('click', (e) => {
+      const b = e.target.closest('.chat-suggest button[data-q]');
+      if (!b) return;
+      document.getElementById('chatInput').value = b.dataset.q;
+      document.getElementById('chatForm').requestSubmit();
+    });
+
+    /* New chat: the server forgets the conversation, open forms and pending confirms, keeps campaigns,
+       jobs and attached images, and returns a greeting that says what is going on. */
+    const CHAT_SUGGESTIONS = {
+      geo: [
+        ['Summarise this audience', '✦', 'Summarise This Audience', 'Who they are and what they wear'],
+        ['Which PIN looks strongest for a store?', '⌖', 'Strongest PIN for a Store?', 'Demand, share and the 4 km rule'],
+        ['Create a campaign for this audience', '➚', 'Start a Campaign', 'Carry this audience into Ads Lab'],
+      ],
+      ads: [
+        ['Start a new campaign', '+', 'New Campaign', 'Fresh audience and SKUs'],
+        ['Rank my SKUs for this audience', '➚', 'Rank My SKUs', 'Attach images, then rank'],
+        ['How is my ranking job doing?', '◷', 'Ranking Progress', 'Time left and results'],
+      ],
+      campaigns: [
+        ['How is my latest campaign performing?', '✦', 'Latest Campaign', 'Simulated performance'],
+        ['Create another campaign', '+', 'Create Another Campaign', 'Back to Ads Lab, fresh'],
+        ['List my campaigns', '≡', 'My Campaigns', 'Status and budgets'],
+      ],
+      inventory: [
+        ['What should I restock today?', '✦', 'What to Restock Today', 'Stock Pilot, from actual POS sales'],
+        ['Where are my navy shirts in size M?', '⌕', 'Find Stock', 'Units by store, warehouse and on the road'],
+        ['How well does each store fit local wardrobes?', '◎', 'Wardrobe Fit', 'Stock mix vs what locals wear'],
+      ],
+      warehouse: [
+        ['What should I restock or reorder today?', '✦', 'Today’s Stock Moves', 'Ranked, with the reasons'],
+        ['What needs reordering from suppliers?', '➚', 'Reorder', 'Brand-wide cover, drafted as POs'],
+        ['Which transfers or POs are stuck?', '◷', 'Stuck Documents', 'In transit, drafts, late POs'],
+      ],
+    };
+    const CHAT_INTRO = {
+      inventory: 'Ask what to restock, where a SKU is, or how each store fits local wardrobes. I read your actual POS sales and stock.',
+      warehouse: 'Ask what to restock, rebalance or reorder today. I draft transfers and POs only after you confirm.',
+    };
+    const DEFAULT_INTRO = 'Ask about your audience, or have me set filters, rank SKUs and start a campaign.';
+    function refreshChatSuggestions() {
+      const box = document.getElementById('chatEmpty');
+      const list = box && box.querySelector('.chat-suggest');
+      if (!list) return;
+      list.replaceWith(renderChatEmpty('').querySelector('.chat-suggest'));
+      const intro = box.querySelector('.chat-greet[data-intro]');
+      if (intro) intro.textContent = CHAT_INTRO[window.__CC_CONTEXT__.active_tab] || DEFAULT_INTRO;
+    }
+    function renderChatEmpty(text) {
+      const box = document.createElement('div');
+      box.className = 'chat-empty';
+      box.id = 'chatEmpty';
+      box.innerHTML = '<div class="hello-av" aria-hidden="true"><img src="./assets/fashion-stylist.svg" alt="" width="64" height="64" /></div>'
+        + '<h3>Hi, I’m AURA</h3><p class="chat-greet"></p><div class="chat-suggest"></div>';
+      box.querySelector('.chat-greet').textContent = text;
+      const list = box.querySelector('.chat-suggest');
+      (CHAT_SUGGESTIONS[window.__CC_CONTEXT__.active_tab] || CHAT_SUGGESTIONS.geo).forEach(([q, icon, title, sub]) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.q = q;
+        const i = document.createElement('i');
+        i.setAttribute('aria-hidden', 'true');
+        i.textContent = icon;
+        const span = document.createElement('span');
+        span.textContent = title;
+        const small = document.createElement('small');
+        small.textContent = sub;
+        span.appendChild(small);
+        b.append(i, span);
+        list.appendChild(b);
+      });
+      return box;
+    }
+    async function newChat() {
+      const btn = document.getElementById('chatNew');
+      if (btn.disabled) return;
+      if (auraBusy) { btn.title = 'Wait for AURA to finish replying'; return; }
+      btn.disabled = true;
+      btn.classList.add('spin');
+      btn.title = 'New chat';
+      refreshAllContext();
+      const log = document.getElementById('chatLog');
+      log.innerHTML = ''; // bubbles, forms and confirm cards; staged image chips sit outside the log
+      activeFormCard = null;
+      const empty = renderChatEmpty('Starting a fresh chat…');
+      log.appendChild(empty);
+      const greet = (t) => { if (empty.isConnected) empty.querySelector('.chat-greet').textContent = t; };
+      try {
+        const res = await fetch('/v1/agent/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...(window.SuffaiSession ? SuffaiSession.authHeaders() : {}) },
+          body: JSON.stringify({ context: window.__CC_CONTEXT__, filter_context: buildFilterContext(), ui_focus: buildUiFocus() }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.ok === false) {
+          if (data.request_id) console.info('[aura] reset failed request_id=', data.request_id);
+          greet(maskedErrorText(data));
+          if (res.status === 401 && window.SuffaiSession) setTimeout(() => SuffaiSession.logout(), 1500);
+          return;
+        }
+        greet(data.answer || 'Fresh chat. How can I help?');
+      } catch (_) {
+        greet('Connection problem. Please check your network and try again.');
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('spin');
+        if (document.body.classList.contains('chat-open')) document.getElementById('chatInput').focus();
+      }
+    }
+    document.getElementById('chatNew').addEventListener('click', newChat);
+
+    function appendBubble(role, text, isError) {
+      const empty = document.getElementById('chatEmpty');
+      if (empty) empty.remove();
+      const el = document.createElement('div');
+      el.className = 'chat-bubble ' + role + (isError ? ' error' : '');
+      el.textContent = text;
+      if (role === 'assistant' && !document.body.classList.contains('chat-open') && chatFab.style.display !== 'none') {
+        chatFab.classList.add('has-new');
+        chatFab.setAttribute('aria-label', 'Open AURA agent (new reply)');
+      }
+      const log = document.getElementById('chatLog');
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+      return el;
+    }
+
+    document.getElementById('chatForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const message = (input.value || '').trim();
+      if (!message || document.getElementById('chatSend').disabled) return; // one turn at a time; text is kept
+
+      input.value = '';
+      await sendAuraRequest({ message }, message);
+    });
+
+    setTimeout(refreshAllContext, 1200);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1174 @@
+{
+  "generated_at": "2026-10-15T18:43:45.827882+00:00",
+  "filters": {
+    "pin_codes": [
+      "560008",
+      "560034",
+      "560041",
+      "560066",
+      "560102"
+    ],
+    "age_groups": [
+      "18-24",
+      "25-34",
+      "35-44",
+      "45-54"
+    ],
+    "genders": [
+      "F",
+      "M"
+    ],
+    "rfm_segments": [
+      "At Risk",
+      "Champions",
+      "Hibernating",
+      "Loyal"
+    ],
+    "brands": [
+      "Fabindia",
+      "H&M",
+      "Levis",
+      "Nike",
+      "Snitch",
+      "Uniqlo",
+      "Zara"
+    ]
+  },
+  "pin_geo": {
+    "560008": {
+      "area_label": "Indiranagar",
+      "centroid_lat": 12.97817,
+      "centroid_lon": 77.64043,
+      "population_pin": 42000,
+      "pop_buffer_1km": 68400,
+      "pop_buffer_2km": 210000,
+      "pop_buffer_4km": 540000,
+      "customers": 3,
+      "orders": 4,
+      "revenue": 1850.0
+    },
+    "560034": {
+      "area_label": "Koramangala",
+      "centroid_lat": 12.9346,
+      "centroid_lon": 77.62375,
+      "population_pin": 51000,
+      "pop_buffer_1km": 82000,
+      "pop_buffer_2km": 260000,
+      "pop_buffer_4km": 680000,
+      "customers": 2,
+      "orders": 3,
+      "revenue": 1560.0
+    },
+    "560102": {
+      "area_label": "HSR Layout",
+      "centroid_lat": 12.91255,
+      "centroid_lon": 77.64375,
+      "population_pin": 38000,
+      "pop_buffer_1km": 55000,
+      "pop_buffer_2km": 185000,
+      "pop_buffer_4km": 490000,
+      "customers": 2,
+      "orders": 2,
+      "revenue": 880.0
+    },
+    "560041": {
+      "area_label": "Jayanagar",
+      "centroid_lat": 12.9299,
+      "centroid_lon": 77.5826,
+      "population_pin": 48000,
+      "pop_buffer_1km": 74000,
+      "pop_buffer_2km": 240000,
+      "pop_buffer_4km": 610000,
+      "customers": 1,
+      "orders": 1,
+      "revenue": 240.0
+    },
+    "560066": {
+      "area_label": "Whitefield",
+      "centroid_lat": 12.9704,
+      "centroid_lon": 77.74895,
+      "population_pin": 45000,
+      "pop_buffer_1km": 60000,
+      "pop_buffer_2km": 290000,
+      "pop_buffer_4km": 720000,
+      "customers": 2,
+      "orders": 2,
+      "revenue": 1650.0
+    }
+  },
+  "customer_cells": [
+    {
+      "pin_code": "560008",
+      "age_group": "25-34",
+      "gender": "F",
+      "rfm_segment": "Champions",
+      "customers": 1,
+      "orders": 2,
+      "revenue": 1250.0,
+      "clothes": 16,
+      "centroid_lat": 12.9784,
+      "centroid_lon": 77.6408,
+      "services": [
+        {
+          "value": "wash_fold",
+          "count": 1
+        },
+        {
+          "value": "dry_clean",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-01",
+          "orders": 1
+        },
+        {
+          "month": "2026-02",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560008",
+      "age_group": "25-34",
+      "gender": "M",
+      "rfm_segment": "Loyal",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 320.0,
+      "clothes": 8,
+      "centroid_lat": 12.9791,
+      "centroid_lon": 77.6415,
+      "services": [
+        {
+          "value": "wash_fold",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-01",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560034",
+      "age_group": "18-24",
+      "gender": "F",
+      "rfm_segment": "Champions",
+      "customers": 1,
+      "orders": 2,
+      "revenue": 960.0,
+      "clothes": 25,
+      "centroid_lat": 12.9352,
+      "centroid_lon": 77.6245,
+      "services": [
+        {
+          "value": "wash_iron",
+          "count": 1
+        },
+        {
+          "value": "wash_fold",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-01",
+          "orders": 1
+        },
+        {
+          "month": "2026-03",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560034",
+      "age_group": "35-44",
+      "gender": "M",
+      "rfm_segment": "At Risk",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 600.0,
+      "clothes": 3,
+      "centroid_lat": 12.934,
+      "centroid_lon": 77.623,
+      "services": [
+        {
+          "value": "dry_clean",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-02",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560102",
+      "age_group": "25-34",
+      "gender": "F",
+      "rfm_segment": "Loyal",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 360.0,
+      "clothes": 9,
+      "centroid_lat": 12.9121,
+      "centroid_lon": 77.6445,
+      "services": [
+        {
+          "value": "wash_fold",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-01",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560102",
+      "age_group": "35-44",
+      "gender": "M",
+      "rfm_segment": "Champions",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 520.0,
+      "clothes": 14,
+      "centroid_lat": 12.913,
+      "centroid_lon": 77.643,
+      "services": [
+        {
+          "value": "wash_iron",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-02",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560041",
+      "age_group": "45-54",
+      "gender": "F",
+      "rfm_segment": "Hibernating",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 240.0,
+      "clothes": 6,
+      "centroid_lat": 12.9299,
+      "centroid_lon": 77.5826,
+      "services": [
+        {
+          "value": "wash_fold",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-01",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560066",
+      "age_group": "25-34",
+      "gender": "M",
+      "rfm_segment": "Champions",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 750.0,
+      "clothes": 20,
+      "centroid_lat": 12.9698,
+      "centroid_lon": 77.7499,
+      "services": [
+        {
+          "value": "wash_fold",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-03",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560066",
+      "age_group": "25-34",
+      "gender": "F",
+      "rfm_segment": "Loyal",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 900.0,
+      "clothes": 5,
+      "centroid_lat": 12.971,
+      "centroid_lon": 77.748,
+      "services": [
+        {
+          "value": "dry_clean",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-02",
+          "orders": 1
+        }
+      ]
+    },
+    {
+      "pin_code": "560008",
+      "age_group": "45-54",
+      "gender": "M",
+      "rfm_segment": "At Risk",
+      "customers": 1,
+      "orders": 1,
+      "revenue": 280.0,
+      "clothes": 7,
+      "centroid_lat": 12.977,
+      "centroid_lon": 77.639,
+      "services": [
+        {
+          "value": "wash_fold",
+          "count": 1
+        }
+      ],
+      "orders_by_month": [
+        {
+          "month": "2026-03",
+          "orders": 1
+        }
+      ]
+    }
+  ],
+  "garment_cells": [
+    {
+      "pin_code": "560008",
+      "age_group": "25-34",
+      "gender": "F",
+      "rfm_segment": "Champions",
+      "brand": "Zara",
+      "garments": 2,
+      "sizes": [
+        {
+          "value": "L",
+          "count": 1
+        },
+        {
+          "value": "M",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "black",
+          "count": 1
+        },
+        {
+          "value": "navy",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 2
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        },
+        {
+          "value": "wool",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 2
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "hoodie",
+          "count": 1
+        },
+        {
+          "value": "lapel",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Hoodie",
+          "count": 1
+        },
+        {
+          "value": "Blazer",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 1.73,
+      "confidence_n": 2,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560008",
+      "age_group": "25-34",
+      "gender": "F",
+      "rfm_segment": "Champions",
+      "brand": "H&M",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "M",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "white",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "short",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "crew",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Tee",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.88,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560008",
+      "age_group": "25-34",
+      "gender": "M",
+      "rfm_segment": "Loyal",
+      "brand": "Levis",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "32",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "blue",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "denim",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "na",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "na",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Jeans",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.95,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560034",
+      "age_group": "18-24",
+      "gender": "F",
+      "rfm_segment": "Champions",
+      "brand": "Snitch",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "L",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "olive",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "graphic",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "short",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "crew",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Tee",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.79,
+      "confidence_n": 1,
+      "low_confidence_n": 1
+    },
+    {
+      "pin_code": "560034",
+      "age_group": "18-24",
+      "gender": "F",
+      "rfm_segment": "Champions",
+      "brand": "Uniqlo",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "M",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "white",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "linen",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "collar",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Shirt",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.91,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560034",
+      "age_group": "18-24",
+      "gender": "F",
+      "rfm_segment": "Champions",
+      "brand": "H&M",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "XL",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "grey",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "hoodie",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Hoodie",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.86,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560034",
+      "age_group": "35-44",
+      "gender": "M",
+      "rfm_segment": "At Risk",
+      "brand": "Zara",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "L",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "blue",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "check",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "collar",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Shirt",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.72,
+      "confidence_n": 1,
+      "low_confidence_n": 1
+    },
+    {
+      "pin_code": "560102",
+      "age_group": "25-34",
+      "gender": "F",
+      "rfm_segment": "Loyal",
+      "brand": "Nike",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "M",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "black",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "polyester",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "na",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "na",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Joggers",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.9,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560102",
+      "age_group": "35-44",
+      "gender": "M",
+      "rfm_segment": "Champions",
+      "brand": "Snitch",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "L",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "black",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "short",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "crew",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Tee",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.84,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560102",
+      "age_group": "35-44",
+      "gender": "M",
+      "rfm_segment": "Champions",
+      "brand": "Uniqlo",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "XL",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "green",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "nylon",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "collar",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Jacket",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.77,
+      "confidence_n": 1,
+      "low_confidence_n": 1
+    },
+    {
+      "pin_code": "560041",
+      "age_group": "45-54",
+      "gender": "F",
+      "rfm_segment": "Hibernating",
+      "brand": "Fabindia",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "M",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "cream",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "print",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "band",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Kurta",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.93,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560066",
+      "age_group": "25-34",
+      "gender": "M",
+      "rfm_segment": "Champions",
+      "brand": "Nike",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "L",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "black",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "hoodie",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Hoodie",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.89,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560066",
+      "age_group": "25-34",
+      "gender": "M",
+      "rfm_segment": "Champions",
+      "brand": "Zara",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "M",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "white",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "short",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "crew",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Tee",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.85,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560066",
+      "age_group": "25-34",
+      "gender": "F",
+      "rfm_segment": "Loyal",
+      "brand": "H&M",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "S",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "red",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "floral",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "polyester",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "sleeveless",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "vneck",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Dress",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.8,
+      "confidence_n": 1,
+      "low_confidence_n": 0
+    },
+    {
+      "pin_code": "560008",
+      "age_group": "45-54",
+      "gender": "M",
+      "rfm_segment": "At Risk",
+      "brand": "Uniqlo",
+      "garments": 1,
+      "sizes": [
+        {
+          "value": "XL",
+          "count": 1
+        }
+      ],
+      "colors": [
+        {
+          "value": "grey",
+          "count": 1
+        }
+      ],
+      "patterns": [
+        {
+          "value": "solid",
+          "count": 1
+        }
+      ],
+      "materials": [
+        {
+          "value": "cotton",
+          "count": 1
+        }
+      ],
+      "sleeve_types": [
+        {
+          "value": "long",
+          "count": 1
+        }
+      ],
+      "collar_types": [
+        {
+          "value": "collar",
+          "count": 1
+        }
+      ],
+      "names": [
+        {
+          "value": "Shirt",
+          "count": 1
+        }
+      ],
+      "confidence_sum": 0.7,
+      "confidence_n": 1,
+      "low_confidence_n": 1
+    }
+  ]
+}

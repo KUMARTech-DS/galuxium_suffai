@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SuffAI Admin — Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="./select.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #faf6ee;
+      --panel: #ffffff;
+      --raised: #f6eef0;
+      --line: #ead9e0;
+      --line-soft: #f3e9ed;
+      --muted: #8a7480;
+      --ink: #3b2733;
+      --plum: #6b3a55;
+      --plum-dk: #552c43;
+      --mauve: #c59fb0;
+      --wine: #2a0f1f;
+      --wine-2: #4a1a33;
+      --gold: #c9a24a;
+      --gold-lt: #f3d58a;
+      --bad: #a3301f;
+      --ease: cubic-bezier(.22, .8, .24, 1);
+      --shadow: 0 1px 2px rgba(59, 39, 51, .04), 0 8px 24px rgba(107, 58, 85, .06);
+      --shadow-up: 0 2px 4px rgba(59, 39, 51, .05), 0 16px 34px rgba(107, 58, 85, .12);
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Outfit, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 70% 40% at 100% 0%, rgba(197, 159, 176, 0.16), transparent 60%),
+        var(--cream);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1 { font-family: Outfit, system-ui, sans-serif; font-weight: 700; }
+    h2 { color: var(--ink); }
+    :focus-visible { outline: 3px solid rgba(201, 162, 74, .6); outline-offset: 2px; }
+    input, button, select { font-family: inherit; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative; overflow: hidden; color: #f7eaf0; padding: 24px 28px 20px;
+      background: radial-gradient(60% 120% at 85% 0%, rgba(224, 178, 84, .26), transparent 60%),
+                  linear-gradient(110deg, var(--wine) 0%, var(--wine-2) 55%, var(--plum) 100%);
+    }
+    .hero::after { /* soft fabric weave */
+      content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .06;
+      background-image: repeating-linear-gradient(45deg, #fff 0 1px, transparent 1px 12px), repeating-linear-gradient(-45deg, #fff 0 1px, transparent 1px 12px);
+    }
+    .hero-in { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; }
+    .hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .eyebrow { display: inline-flex; align-items: center; gap: .45rem; font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-lt); margin: 0 0 6px; }
+    .hero h1 { font-size: clamp(1.7rem, 2.6vw, 2.25rem); letter-spacing: -0.01em; line-height: 1.1; color: #fff; margin: 0; }
+    .hero-sub { font-size: 13px; color: #d9bfcb; margin: 8px 0 0; max-width: 640px; line-height: 1.5; }
+    .trust { display: flex; gap: 8px; flex-wrap: wrap; }
+    .trust span {
+      display: inline-flex; align-items: center; gap: .45rem; padding: .45rem .75rem; border-radius: 999px; font-size: 11.5px; font-weight: 500;
+      color: #f1dde6; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14);
+    }
+    .trust i { color: var(--gold-lt); font-size: 11px; }
+
+    /* Tab bar stays pinned so sections can be switched from anywhere on the page */
+    .tabnav {
+      position: sticky; top: 0; z-index: 40; padding: 0 28px;
+      background: linear-gradient(110deg, var(--wine) 0%, var(--wine-2) 55%, var(--plum) 100%);
+      border-top: 1px solid rgba(255, 255, 255, .08); box-shadow: 0 8px 20px rgba(42, 15, 31, .16);
+    }
+    .tabbar {
+      position: relative; display: flex; gap: 2px; max-width: 1320px; margin: 0 auto; overflow-x: auto; scrollbar-width: none;
+    }
+    .tabbar::-webkit-scrollbar { display: none; }
+    .tabbar button {
+      position: relative; display: inline-flex; align-items: center; gap: .55rem; flex: none;
+      background: none; border: none; cursor: pointer; white-space: nowrap;
+      padding: .95rem 1.1rem; font-size: 13.5px; font-weight: 600; color: #d9bfcb; transition: color .2s;
+    }
+    .tabbar button i { font-size: 13px; opacity: .8; transition: color .2s, opacity .2s; }
+    .tabbar button:hover { color: #fff; }
+    .tabbar button[aria-selected=true] { color: #fff; }
+    .tabbar button[aria-selected=true] i { color: var(--gold-lt); opacity: 1; }
+    .tabbar button:focus-visible { outline-offset: -3px; border-radius: 10px; }
+    .tab-ink { /* gold underline that slides to the active tab */
+      position: absolute; left: 0; bottom: 0; height: 3px; width: 0; border-radius: 3px 3px 0 0; pointer-events: none;
+      background: linear-gradient(90deg, var(--gold-lt), var(--gold)); transition: transform .35s var(--ease), width .35s var(--ease);
+    }
+
+    /* ---------- Layout ---------- */
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 22px 28px 64px; }
+    .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0 0 14px; }
+    .sec-head h2 { font-family: Outfit, system-ui, sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--ink); margin: 0; line-height: 1.1; }
+    .sec-head p { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); max-width: 680px; }
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 16px;
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow);
+    }
+    .card-h { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .card-h h2 { display: flex; align-items: center; gap: .5rem; font-size: 14.5px; font-weight: 600; margin: 0; }
+    .card-h h2 > i { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-size: 11.5px; color: var(--plum); background: var(--raised); flex: none; }
+    .card-h p { margin: 3px 0 0 34px; font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+
+    /* ---------- Filter bar ---------- */
+    form.filters {
+      position: relative; z-index: 25; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+      padding: .9rem 1.1rem; margin-bottom: 18px; background: rgba(255, 255, 255, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .f-title { display: flex; align-items: center; gap: .5rem; align-self: center; padding-right: 12px; margin-right: 2px; border-right: 1px solid var(--line); font-size: 12px; font-weight: 700; color: var(--plum); letter-spacing: .04em; }
+    .f-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .lbl { display: flex; flex-direction: column; gap: 0.3rem; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+    .search { position: relative; display: block; }
+    .search i { position: absolute; left: .75rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; pointer-events: none; }
+    .search input { padding-left: 2rem !important; min-width: 220px; }
+    input[type=text], input[type=tel], input[type=number], input[type=date], input:not([type]) {
+      background: var(--panel);
+      border: 1.5px solid var(--line);
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 0.55rem 0.8rem;
+      font-size: 13px;
+      outline: 0;
+      text-transform: none;
+      letter-spacing: normal;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input:focus { border-color: var(--plum); box-shadow: 0 0 0 3px rgba(197, 159, 176, 0.35); }
+    input[type=checkbox] { accent-color: var(--plum); width: 15px; height: 15px; }
+    .check {
+      display: inline-flex; align-items: center; gap: .45rem; padding: .5rem .8rem; border: 1.5px solid var(--line); border-radius: 10px;
+      font-size: 13px; font-weight: 500; color: var(--ink); background: var(--panel); cursor: pointer; text-transform: none; letter-spacing: normal;
+    }
+    .check:has(input:checked) { border-color: var(--plum); background: var(--raised); color: var(--plum); }
+    select.sel {
+      background: var(--panel); border: 1.5px solid var(--line); color: var(--ink); border-radius: 10px;
+      padding: 0.55rem 0.8rem; font-size: 13px; min-width: 150px; text-transform: none; letter-spacing: normal; font-weight: 500;
+    }
+    select.sel:focus { border-color: var(--plum); outline: 0; box-shadow: 0 0 0 3px rgba(197, 159, 176, 0.35); }
+    button.primary {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: linear-gradient(135deg, var(--plum), var(--plum-dk));
+      border: none; color: #fff; font-weight: 600; font-size: 13px; padding: 0.62rem 1.15rem; border-radius: 10px; cursor: pointer;
+      box-shadow: 0 6px 16px rgba(107, 58, 85, .25); transition: transform .2s var(--ease), box-shadow .2s;
+    }
+    button.primary:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(107, 58, 85, .32); }
+    button.primary:disabled { opacity: 0.6; cursor: wait; transform: none; }
+
+    /* ---------- Customers & Orders forms ---------- */
+    .rec-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .rec-grid .lbl input, .rec-grid .lbl select { width: 100%; }
+    .rec-wide { grid-column: 1 / -1; }
+    .rec-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .rec-msg { font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
+    .rec-msg.bad { color: #a03a3a; }
+    .rec-msg.good { color: #2f6b2a; }
+    .pick { display: flex; flex-wrap: wrap; gap: 6px; min-height: 0; }
+    .pick button { display: inline-flex; align-items: center; gap: .4rem; border: 1.5px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: .3rem .75rem; font-size: 12px; cursor: pointer; }
+    .pick button:hover, .pick button[aria-selected=true] { border-color: var(--plum); background: var(--raised); color: var(--plum); }
+    .rec-login { margin-top: 14px; padding: 12px 14px; border: 1px solid #d9c9a3; border-radius: 10px; background: #fdf8ec; display: grid; gap: 8px; }
+    .rec-login[hidden] { display: none; }
+    .rec-login p { margin: 0; font-size: 12.5px; }
+    .rec-login-row { display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; align-items: center; gap: 8px; font-size: 13px; }
+    .rec-login-row code { overflow-wrap: anywhere; }
+    .photo-name { display: inline-flex; align-items: center; gap: .4rem; max-width: 100%; }
+    .photo-name code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px; }
+    @media (max-width: 640px) { .rec-grid { grid-template-columns: 1fr; } }
+    button.reset { background: none; border: 0; padding: .5rem .4rem; font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; border-radius: 8px; }
+    button.reset:hover { color: var(--plum); background: var(--raised); }
+    button.ghost {
+      display: inline-flex; align-items: center; gap: .35rem;
+      background: var(--panel); border: 1.5px solid var(--line); color: var(--plum);
+      font-size: 12px; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 999px; cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    button.ghost:hover { border-color: var(--plum); background: var(--raised); }
+    button.ghost:disabled { opacity: 0.45; cursor: default; background: var(--panel); border-color: var(--line); }
+
+    /* status pill next to Apply */
+    [data-status], #uniqStatus { font-size: 11.5px; color: var(--muted); }
+    [data-status]:not(:empty), #uniqStatus:not(:empty) { display: inline-flex; align-items: center; gap: .4rem; }
+    [data-status]:not(:empty)::before, #uniqStatus:not(:empty)::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #3f7d3b; box-shadow: 0 0 0 3px rgba(63, 125, 59, .15); }
+    section[data-loading] [data-status]::before { background: var(--gold); box-shadow: 0 0 0 3px rgba(201, 162, 74, .2); animation: pulse 1s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .35; } }
+
+    /* multi-select */
+    details.ms { position: relative; }
+    details.ms > summary {
+      list-style: none; cursor: pointer; background: var(--panel); border: 1.5px solid var(--line); border-radius: 10px;
+      padding: 0.55rem 2rem 0.55rem 0.8rem; font-size: 13px; color: var(--ink); text-transform: none; letter-spacing: normal; font-weight: 500;
+      min-width: 150px; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; transition: border-color .15s;
+    }
+    details.ms > summary::after {
+      content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 9px; color: var(--muted);
+      position: absolute; right: .8rem; top: 50%; transform: translateY(-50%); transition: transform .18s;
+    }
+    details.ms > summary:hover { border-color: var(--mauve); }
+    details.ms > summary::-webkit-details-marker { display: none; }
+    details.ms[open] > summary { border-color: var(--plum); box-shadow: 0 0 0 3px rgba(197, 159, 176, .35); }
+    details.ms[open] > summary::after { transform: translateY(-50%) rotate(180deg); color: var(--plum); }
+    details.ms .ms-pop {
+      position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; min-width: 230px; max-height: 300px; overflow: auto;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 0.35rem; box-shadow: 0 16px 36px rgba(59, 39, 51, .18);
+      animation: pop .12s ease-out;
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(-4px); } }
+    details.ms label.opt {
+      display: flex; gap: 0.55rem; align-items: center; padding: 0.42rem 0.55rem; border-radius: 8px; font-size: 13px; color: var(--ink);
+      text-transform: none; letter-spacing: normal; font-weight: 400; cursor: pointer;
+    }
+    details.ms label.opt:hover { background: var(--raised); }
+    details.ms label.opt:has(input:checked) { color: var(--plum); font-weight: 500; }
+    details.ms label.opt.all { font-weight: 600; border-bottom: 1px solid var(--line); border-radius: 8px 8px 0 0; margin-bottom: 0.2rem; }
+
+    /* ---------- KPI tiles ---------- */
+    .kpi { position: relative; display: flex; gap: 12px; align-items: flex-start; overflow: hidden; transition: transform .2s var(--ease), box-shadow .2s; }
+    .kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow-up); }
+    .kpi .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; font-size: 15px; color: var(--plum); background: var(--raised); }
+    .kpi > div:last-child { min-width: 0; flex: 1; }
+    .kpi.feature { color: #f7eaf0; border-color: #3e1729; background: radial-gradient(80% 140% at 100% 0%, rgba(224, 178, 84, .25), transparent 60%), linear-gradient(120deg, var(--wine), var(--wine-2) 60%, var(--plum)); }
+    .kpi.feature .ic { color: var(--wine); background: linear-gradient(135deg, var(--gold-lt), var(--gold)); }
+    .kpi.feature .kpi-label { color: #d9bfcb; }
+    .kpi.feature .kpi-val { color: #fff; }
+    .kpi-val { font-family: 'IBM Plex Mono', monospace; font-size: 1.6rem; line-height: 1.15; color: var(--plum); font-weight: 500; margin-top: 2px; overflow-wrap: anywhere; }
+    .kpi-label { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+    .kpi-text { font-size: 13px; margin-top: 4px; line-height: 1.5; }
+
+    /* loading shimmer */
+    section[data-loading] .kpi-val, section[data-loading] .kpi-text {
+      color: transparent !important; border-radius: 6px; min-width: 80px; display: inline-block;
+      background: linear-gradient(90deg, #f1e6ea 25%, #faf5f7 50%, #f1e6ea 75%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite;
+    }
+    section[data-loading] .kpi.feature .kpi-val { background: linear-gradient(90deg, rgba(255,255,255,.08) 25%, rgba(255,255,255,.2) 50%, rgba(255,255,255,.08) 75%); background-size: 200% 100%; }
+    section[data-loading] .chart, section[data-loading] tbody, section[data-loading] .cards { opacity: .5; transition: opacity .2s; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* ---------- Tables ---------- */
+    .tbl { border: 1px solid var(--line); border-radius: 12px; overflow: auto; }
+    .tbl table th:first-child, .tbl table td:first-child { padding-left: .9rem; }
+    .tbl table th:last-child, .tbl table td:last-child { padding-right: .9rem; }
+    .tbl tbody tr:last-child td { border-bottom: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      position: sticky; top: 0; z-index: 1;
+      text-align: left; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+      padding: 0.7rem 0.6rem; border-bottom: 1px solid var(--line); background: #fbf7f8; white-space: nowrap;
+    }
+    td { padding: 0.75rem 0.6rem; border-bottom: 1px solid var(--line-soft); color: var(--ink); vertical-align: top; }
+    tbody tr { transition: background .12s; }
+    tbody tr:hover td { background: rgba(246, 238, 240, 0.55); }
+    tr.detail-row td { background: #fcf9fa; }
+    tr.detail-row:hover td { background: #fcf9fa; }
+    .num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+    .mono { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--plum); }
+    .who { display: flex; align-items: center; gap: .65rem; }
+    .av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none; font-size: 11.5px; font-weight: 600; color: var(--plum); background: linear-gradient(135deg, #f6eef0, #ead9e0); }
+
+    /* ---------- Feedback ---------- */
+    .err {
+      display: flex; gap: .6rem; align-items: flex-start;
+      padding: 0.75rem 0.9rem; border-radius: 12px; font-size: 13px;
+      background: rgba(163, 48, 31, 0.06); border: 1px solid rgba(163, 48, 31, 0.25); color: var(--bad);
+    }
+    .err::before { content: '\f071'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 13px; margin-top: 1px; }
+    .err.hidden { display: none; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; min-height: 120px; height: 100%; padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px; }
+    .empty i { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 16px; color: var(--mauve); background: var(--raised); }
+    .cards > .empty, td > .empty { grid-column: 1 / -1; min-height: 100px; }
+
+    /* ---------- Charts & cards ---------- */
+    .chart { width: 100%; height: 300px; }
+    .chart.sm { height: 240px; }
+    .chart.lg { height: 380px; }
+    .badge { display: inline-flex; align-items: center; gap: .35rem; font-size: 11px; font-weight: 600; padding: 0.18rem 0.6rem; border-radius: 999px; white-space: nowrap; }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .75; }
+    .sim { display: inline-flex; align-items: center; gap: .25rem; font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9a6b1e; background: #fbf0dc; border: 1px solid #f0dcae; border-radius: 6px; padding: 0.08rem 0.4rem; vertical-align: middle; }
+    .bar-track { background: var(--raised); border-radius: 6px; height: 8px; overflow: hidden; }
+    .bar-fill { background: linear-gradient(90deg, var(--plum), var(--mauve)); height: 100%; border-radius: 6px; }
+    .item-card { border: 1px solid var(--line); border-radius: 14px; padding: 0.95rem 1.05rem; background: var(--panel); transition: transform .2s var(--ease), box-shadow .2s, border-color .2s; }
+    .cards > .item-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-up); border-color: #dcc3cd; }
+    .kv { display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 0.85rem; font-size: 12.5px; }
+    .kv dt { color: var(--muted); }
+    .kv dd { margin: 0; color: var(--ink); min-width: 0; overflow-wrap: anywhere; }
+    .pager { display: flex; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-top: 0.9rem; }
+    details.section > summary { display: flex; align-items: center; gap: .6rem; cursor: pointer; list-style: none; font-weight: 600; color: var(--ink); font-size: 14.5px; }
+    details.section > summary::-webkit-details-marker { display: none; }
+    details.section > summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 11px; color: var(--muted); margin-left: auto; transition: transform .2s; }
+    details.section[open] > summary::after { transform: rotate(180deg); }
+    details.section > summary > i { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-size: 11.5px; color: var(--plum); background: var(--raised); }
+    .note { display: flex; gap: .55rem; align-items: flex-start; padding: .7rem .9rem; border-radius: 12px; font-size: 12px; color: #8c6a22; background: #fdf7e9; border: 1px solid #f0dcae; }
+    .note:empty { display: none; }
+    .note::before { content: '\f05a'; font-family: 'Font Awesome 6 Free'; font-weight: 900; }
+
+    /* Tab switch: the panel's blocks rise in one after another */
+    main.wrap { min-height: 100vh; }
+    section.enter > * { animation: fadeUp .42s var(--ease) both; }
+    section.enter > *:nth-child(2) { animation-delay: .04s; }
+    section.enter > *:nth-child(3) { animation-delay: .08s; }
+    section.enter > *:nth-child(4) { animation-delay: .12s; }
+    section.enter > *:nth-child(5) { animation-delay: .16s; }
+    section.enter > *:nth-child(n+6) { animation-delay: .2s; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } }
+    section[data-loading] .chart:empty { border-radius: 12px; background: linear-gradient(90deg, #f6eef0 25%, #fbf7f8 50%, #f6eef0 75%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+
+    /* Customer detail panel */
+    .detail { padding: .5rem 0 .25rem; animation: fadeUp .35s var(--ease) both; }
+    .dcard { display: flex; flex-direction: column; }
+    .dcard .kpi-label { display: flex; align-items: center; gap: .45rem; }
+    .dcard .kpi-label i { color: var(--mauve); font-size: 11px; }
+    .chart.svc { height: 320px; }
+    .chart.mom { height: 440px; }
+    .stat { padding: .55rem .7rem; border-radius: 10px; background: var(--raised); }
+    .stat .mono { font-size: 17px; }
+    table.compact th { position: static; padding: .45rem .5rem; }
+    table.compact td { padding: .45rem .5rem; }
+    @media (max-width: 760px) {
+      .hero { padding: 18px 16px 16px; }
+      .tabnav { padding: 0 8px; }
+      .wrap { padding: 16px 16px 48px; }
+      .f-title { display: none; }
+      .f-actions { margin-left: 0; width: 100%; }
+      .search input { min-width: 0; width: 100%; }
+      .lbl { flex: 1 1 140px; }
+      .kpi { padding: .85rem .9rem; gap: 10px; }
+      .kpi .ic { width: 34px; height: 34px; font-size: 13px; }
+      .kpi-val { font-size: 1.2rem; overflow-wrap: normal; }
+      details.ms > summary { max-width: none; }
+      details.ms .ms-pop { min-width: 100%; max-width: calc(100vw - 32px); } /* never push past the viewport */
+      .card-h p { margin-left: 0; }
+    }
+    /* Phones: the customer directory becomes a stack of cards, so the details panel opens full width (no sideways clipping) */
+    @media (max-width: 760px) {
+      #tab-customers .tbl { border: 0; overflow: visible; border-radius: 0; }
+      #tab-customers .tbl table, #tab-customers .tbl tbody { display: block; }
+      #tab-customers .tbl thead { display: none; }
+      #custBody tr[data-cid] { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem .9rem; padding: .85rem .9rem; margin-bottom: .6rem; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: var(--shadow); }
+      #custBody tr[data-cid] td { display: block; padding: 0; border: 0; text-align: left; background: none !important; min-width: 0; }
+      #custBody tr[data-cid] td[data-label]::before { content: attr(data-label); display: block; margin-bottom: .1rem; font: 600 9.5px Outfit, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+      #custBody tr[data-cid] td:first-child, #custBody tr[data-cid] td:last-child { grid-column: 1 / -1; }
+      #custBody tr[data-cid] td:last-child .ghost { width: 100%; justify-content: center; padding: .5rem; }
+      #custBody tr.detail-row { display: block; margin: -.35rem 0 .9rem; }
+      #custBody tr.detail-row > td { display: block; padding: 0; border: 0; }
+      #custBody tr > td[colspan] { display: block; border: 0; }
+      .chart.mom { height: 320px; }
+      .badge { white-space: normal; max-width: 100%; line-height: 1.25; } /* long RFM tiers wrap inside narrow cards */
+      .chart.svc { height: 280px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <script>
+    SuffaiSession.requireAuth('admin');
+  </script>
+
+  <header class="hero">
+    <div class="hero-in">
+      <div class="hero-row">
+        <div>
+          <p class="eyebrow"><i class="fa-solid fa-shield-halved"></i> Central Admin</p>
+          <h1>Admin Intelligence</h1>
+          <p class="hero-sub">Real BigQuery customers, orders and garments plus Cloud SQL campaigns, in one place. Missing fields show "No data".</p>
+        </div>
+        <div class="trust" aria-label="Data Handling">
+          <span><i class="fa-solid fa-database"></i> Real Data Only</span>
+          <span><i class="fa-solid fa-mask"></i> No Phone Numbers Shown</span>
+          <span><i class="fa-solid fa-lock"></i> Admin Access Only</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <nav class="tabnav">
+    <div class="tabbar" role="tablist" aria-label="Admin Sections">
+      <button role="tab" id="tabbtn-customers" aria-controls="tab-customers" data-tab="customers" aria-selected="true"><i class="fa-solid fa-users" aria-hidden="true"></i>Customer Intelligence</button>
+      <button role="tab" id="tabbtn-garments" aria-controls="tab-garments" data-tab="garments" aria-selected="false" tabindex="-1"><i class="fa-solid fa-shirt" aria-hidden="true"></i>Wardrobe &amp; Garments</button>
+      <button role="tab" id="tabbtn-brands" aria-controls="tab-brands" data-tab="brands" aria-selected="false" tabindex="-1"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i>Brand Intelligence</button>
+      <button role="tab" id="tabbtn-campaigns" aria-controls="tab-campaigns" data-tab="campaigns" aria-selected="false" tabindex="-1"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i>Campaign Management</button>
+      <button role="tab" id="tabbtn-records" aria-controls="tab-records" data-tab="records" aria-selected="false" tabindex="-1"><i class="fa-solid fa-file-circle-plus" aria-hidden="true"></i>Customers &amp; Orders</button>
+      <span class="tab-ink" aria-hidden="true"></span>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <!-- ============ Tab 1: Customers ============ -->
+    <section id="tab-customers" role="tabpanel" aria-labelledby="tabbtn-customers">
+      <div class="sec-head"><div><h2>Customer Intelligence</h2><p>Who your customers are, how they're tiered and how they spend. Open Details on any row for the full profile.</p></div></div>
+      <form class="card filters" id="custFilters">
+        <span class="f-title"><i class="fa-solid fa-sliders"></i> Filters</span>
+        <label class="lbl">Name or Phone
+          <span class="search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="custQ" type="text" placeholder="e.g. Priya or 98450" maxlength="80" autocomplete="off" /></span>
+        </label>
+        <div class="lbl">Brand<details class="ms" id="custBrand"></details></div>
+        <div class="lbl">PIN Code<details class="ms" id="custPin"></details></div>
+        <div class="lbl">RFM Tier<details class="ms" id="custRfm"></details></div>
+        <label class="check"><input type="checkbox" id="custQualified" /> Qualified Only</label>
+        <div class="f-actions">
+          <span class="muted" data-status="customers" aria-live="polite"></span>
+          <button type="button" class="reset" data-reset>Reset</button>
+          <button type="submit" class="primary"><i class="fa-solid fa-filter"></i> Apply</button>
+        </div>
+      </form>
+      <div class="err mb-4 hidden" data-error="customers" role="alert"></div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 mb-4">
+        <div class="card kpi feature"><span class="ic"><i class="fa-solid fa-users"></i></span><div><div class="kpi-label">Total Customers</div><div class="kpi-val" id="kCustTotal">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-circle-check"></i></span><div><div class="kpi-label" id="kQualLabel" title="">Qualified Users</div><div class="kpi-val" id="kCustQual">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-people-group"></i></span><div><div class="kpi-label">Cohort Size</div><div class="kpi-val" id="kCohort">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-indian-rupee-sign"></i></span><div><div class="kpi-label">Cohort Spend</div><div class="kpi-val" id="kCohortSpend">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-receipt"></i></span><div><div class="kpi-label">Avg Orders</div><div class="kpi-val" id="kAvgOrders">—</div></div></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-ranking-star"></i>RFM Tier Breakdown</h2><p>Share of the cohort in each recency-frequency-monetary tier.</p></div></div><div class="chart" id="chRfm"></div></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-venus-mars"></i>Age × Gender Spread</h2><p>Customers per age band, stacked by gender.</p></div></div><div class="chart" id="chAgeGender"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <div><h2><i class="fa-solid fa-address-book"></i>Customer Directory</h2><p>Open Details for a customer's full profile, wardrobe and spending.</p></div>
+          <span class="muted" id="custCount"></span>
+        </div>
+        <div class="tbl">
+          <table>
+            <thead><tr>
+              <th>Name</th><th>PIN</th><th>RFM</th><th>Tag</th>
+              <th class="num">Orders</th><th class="num">Spend</th><th>Last Order</th><th></th>
+            </tr></thead>
+            <tbody id="custBody"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="custPager"></div>
+      </div>
+    </section>
+
+    <!-- ============ Tab 2: Garments ============ -->
+    <section id="tab-garments" role="tabpanel" aria-labelledby="tabbtn-garments" hidden>
+      <div class="sec-head"><div><h2>Wardrobe &amp; Garments</h2><p>What sits in customers' wardrobes: categories, fabrics, patterns and the size curve.</p></div></div>
+      <form class="card filters" id="garFilters">
+        <span class="f-title"><i class="fa-solid fa-sliders"></i> Filters</span>
+        <div class="lbl">Brand<details class="ms" id="garBrand"></details></div>
+        <div class="lbl">PIN Code<details class="ms" id="garPin"></details></div>
+        <div class="lbl">Commodity<details class="ms" id="garCommodity"></details></div>
+        <div class="lbl">Fabric<details class="ms" id="garFabric"></details></div>
+        <div class="lbl">Pattern<details class="ms" id="garPattern"></details></div>
+        <div class="lbl">Size<details class="ms" id="garSize"></details></div>
+        <div class="f-actions">
+          <span class="muted" data-status="garments" aria-live="polite"></span>
+          <button type="button" class="reset" data-reset>Reset</button>
+          <button type="submit" class="primary"><i class="fa-solid fa-filter"></i> Apply</button>
+        </div>
+      </form>
+      <div class="err mb-4 hidden" data-error="garments" role="alert"></div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="card kpi feature"><span class="ic"><i class="fa-solid fa-shirt"></i></span><div><div class="kpi-label">Garments (Filtered)</div><div class="kpi-val" id="kGarTotal">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-box-archive"></i></span><div><div class="kpi-label">Tracked in Wardrobes</div><div class="kpi-val" id="kGarTracked">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-layer-group"></i></span><div><div class="kpi-label">Top Fabrics</div><div class="kpi-text" id="kGarFabrics">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-shapes"></i></span><div><div class="kpi-label">Dominant Patterns</div><div class="kpi-text" id="kGarPatterns">—</div></div></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="card lg:col-span-2"><div class="card-h"><div><h2><i class="fa-solid fa-table-cells"></i>Category × Fabric</h2><p>Garments per category, stacked by fabric.</p></div></div><div class="chart" id="chComFab"></div></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-swatchbook"></i>Pattern Mix</h2><p>Share of each pattern.</p></div></div><div class="chart" id="chPattern"></div></div>
+      </div>
+      <div class="card mb-4"><div class="card-h"><div><h2><i class="fa-solid fa-ruler"></i>Size Curve</h2><p>How demand spreads across sizes.</p></div></div><div class="chart sm" id="chSize"></div></div>
+
+      <div class="card mb-4">
+        <div class="card-h">
+          <div><h2><i class="fa-solid fa-grip"></i>Garments</h2><p>Every garment matching the filters, with its owner and attributes.</p></div>
+          <span class="muted" id="garCount"></span>
+        </div>
+        <div class="cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="garCards"></div>
+        <div class="pager" id="garPager"></div>
+      </div>
+
+      <details class="card section" id="uniqueSection">
+        <summary><i class="fa-solid fa-fingerprint"></i>Image-Deduplicated Garments <span class="muted" style="font-weight:400">· photos matched by the similarity service, current customer PINs</span></summary>
+        <form class="mt-4 mb-4 flex flex-wrap gap-3 items-end" id="uniqFilters">
+          <label class="lbl">Brand<select id="uniqBrand" class="sel"><option value="">All brands</option></select></label>
+          <label class="lbl">PIN Code<select id="uniqPin" class="sel"><option value="">All PINs</option></select></label>
+          <button type="submit" class="primary"><i class="fa-solid fa-filter"></i> Apply</button>
+          <span class="muted self-center" id="uniqStatus" aria-live="polite"></span>
+        </form>
+        <div class="err mb-3 hidden" id="uniqErr" role="alert"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+          <div class="card kpi"><span class="ic"><i class="fa-solid fa-fingerprint"></i></span><div><div class="kpi-label">Unique Garments</div><div class="kpi-val" id="kpiUnique">—</div></div></div>
+          <div class="card kpi"><span class="ic"><i class="fa-solid fa-eye"></i></span><div><div class="kpi-label">Total Observations</div><div class="kpi-val" id="kpiObs">—</div></div></div>
+          <div class="card kpi"><span class="ic"><i class="fa-solid fa-user"></i></span><div><div class="kpi-label">Unique Users</div><div class="kpi-val" id="kpiUsers">—</div></div></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+          <div><h3 class="text-sm font-semibold m-0 mb-2">By PIN</h3>
+            <div class="tbl"><table><thead><tr><th>PIN</th><th class="num">Unique</th><th class="num">Observations</th></tr></thead><tbody id="byPin"></tbody></table></div>
+            <div class="pager" id="byPinPager"></div></div>
+          <div><h3 class="text-sm font-semibold m-0 mb-2">By Brand</h3>
+            <div class="tbl"><table><thead><tr><th>Brand</th><th class="num">Unique</th><th class="num">Observations</th></tr></thead><tbody id="byBrand"></tbody></table></div>
+            <div class="pager" id="byBrandPager"></div></div>
+        </div>
+        <h3 class="text-sm font-semibold m-0 mb-2">Recent Unique Garments</h3>
+        <div class="tbl">
+          <table><thead><tr><th>Garment ID</th><th>Brand</th><th>GCS Key</th><th class="num">Observations</th><th>Created</th></tr></thead>
+            <tbody id="listBody"></tbody></table>
+        </div>
+        <div class="pager" id="listPager"></div>
+      </details>
+    </section>
+
+    <!-- ============ Tab 3: Brands ============ -->
+    <section id="tab-brands" role="tabpanel" aria-labelledby="tabbtn-brands" hidden>
+      <div class="sec-head"><div><h2>Brand Intelligence</h2><p>Market share, co-ownership and taste across brands, so you can see who leads and where.</p></div></div>
+      <form class="card filters" id="brFilters">
+        <span class="f-title"><i class="fa-solid fa-sliders"></i> Filters</span>
+        <div class="lbl">Brands<details class="ms" id="brBrands"></details></div>
+        <div class="lbl">Hubs / PINs<details class="ms" id="brPin"></details></div>
+        <div class="lbl">Customer Tier<details class="ms" id="brRfm"></details></div>
+        <div class="lbl">Commodity<details class="ms" id="brCommodity"></details></div>
+        <div class="lbl" title="Derived from each garment's gender field">Menu Catalogue<details class="ms" id="brMenu"></details></div>
+        <div class="f-actions">
+          <span class="muted" data-status="brands" aria-live="polite"></span>
+          <button type="button" class="reset" data-reset>Reset</button>
+          <button type="submit" class="primary"><i class="fa-solid fa-filter"></i> Apply</button>
+        </div>
+      </form>
+      <div class="err mb-4 hidden" data-error="brands" role="alert"></div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div class="card kpi feature"><span class="ic"><i class="fa-solid fa-boxes-stacked"></i></span><div><div class="kpi-label">Wardrobe Items</div><div class="kpi-val" id="kBrItems">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-tags"></i></span><div><div class="kpi-label">Brands</div><div class="kpi-val" id="kBrCount">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-crown"></i></span><div><div class="kpi-label">Leader</div><div class="kpi-text text-lg font-semibold" id="kBrLeader">—</div></div></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-chart-bar"></i>Market Share Ranking</h2><p>Top 15 brands by share of wardrobe items.</p></div></div><div class="chart lg" id="chShare"></div></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-border-all"></i>Wardrobe Overlap</h2><p>Each brand split into the commodities customers own.</p></div></div><div class="chart lg" id="chTreemap"></div></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-link"></i>Brand Co-Ownership</h2><p>Customers who own both brands. Darker means more overlap.</p></div></div><div class="chart lg" id="chOverlap"></div></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-sun"></i>Taste Sunburst</h2><p>Menu → commodity → colour.</p></div></div><div class="chart lg" id="chSunburst"></div>
+          <p class="muted m-0" id="brMenuNote"></p></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-ruler-combined"></i>Size Demand Matrix</h2><p>Items per commodity and size.</p></div></div><div class="chart" id="chSizeMatrix"></div></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-map-location-dot"></i>Regional Skew Across Hubs</h2><p>Brand mix per PIN hub.</p></div></div><div class="chart" id="chRegional"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h2><i class="fa-solid fa-magnifying-glass-chart"></i>Brand Deep Dives</h2><p>Reach, catalogue and taste for each brand.</p></div></div>
+        <div class="cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="brCards"></div>
+        <div class="pager" id="brPager"></div>
+      </div>
+    </section>
+
+    <!-- ============ Tab 4: Campaigns ============ -->
+    <section id="tab-campaigns" role="tabpanel" aria-labelledby="tabbtn-campaigns" hidden>
+      <div class="sec-head"><div><h2>Campaign Management</h2><p>Every brand campaign with its status, audience and outcome. Delivery outcomes are simulated.</p></div></div>
+      <form class="card filters" id="cmpFilters">
+        <span class="f-title"><i class="fa-solid fa-sliders"></i> Filters</span>
+        <div class="lbl">Brand<details class="ms" id="cmpBrand"></details></div>
+        <div class="lbl">Status<details class="ms" id="cmpStatus"></details></div>
+        <div class="lbl">PIN Code<details class="ms" id="cmpPin"></details></div>
+        <div class="lbl">RFM<details class="ms" id="cmpRfm"></details></div>
+        <div class="f-actions">
+          <span class="muted" data-status="campaigns" aria-live="polite"></span>
+          <button type="button" class="reset" data-reset>Reset</button>
+          <button type="submit" class="primary"><i class="fa-solid fa-filter"></i> Apply</button>
+        </div>
+      </form>
+      <div class="err mb-4 hidden" data-error="campaigns" role="alert"></div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="card kpi feature"><span class="ic"><i class="fa-solid fa-bullhorn"></i></span><div><div class="kpi-label">Campaigns</div><div class="kpi-val" id="kCmpTotal">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-bolt"></i></span><div><div class="kpi-label">Active</div><div class="kpi-val" id="kCmpActive">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-percent"></i></span><div><div class="kpi-label">Avg Conversion <span class="sim">Simulated</span></div><div class="kpi-val" id="kCmpConv">—</div></div></div>
+        <div class="card kpi"><span class="ic"><i class="fa-solid fa-ticket"></i></span><div><div class="kpi-label">Total Redemptions <span class="sim">Simulated</span></div><div class="kpi-val" id="kCmpRed">—</div></div></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-ticket"></i>Redemptions by Brand <span class="sim">Simulated</span></h2><p>Simulated offer redemptions per brand.</p></div></div><div class="chart" id="chRedemptions"></div></div>
+        <div class="card"><div class="card-h"><div><h2><i class="fa-solid fa-list-check"></i>Status Split by Brand</h2><p>Campaigns per brand by lifecycle status.</p></div></div><div class="chart" id="chStatus"></div></div>
+      </div>
+      <p class="note mb-4" id="cmpNote"></p>
+      <div class="card mb-4">
+        <div class="card-h">
+          <div><h2><i class="fa-solid fa-rectangle-list"></i>Campaigns</h2><p>Cards show the essentials. Open All Columns for the full table.</p></div>
+          <button type="button" class="ghost" id="btnAllCols" aria-expanded="false">All Columns</button>
+        </div>
+        <div class="cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="cmpCards"></div>
+        <div class="tbl mt-4" id="cmpTableWrap" hidden>
+          <table>
+            <thead><tr>
+              <th>Created</th><th>Brand</th><th>Name</th><th>Status</th><th>Run Mode</th><th>Channels</th><th>Objective</th>
+              <th>Budget</th><th>Launched</th><th>Audience</th><th>SKUs</th><th>Eligible</th><th>Recs</th><th>Style Serves</th>
+              <th title="Simulated metrics">Reach</th><th title="Simulated metrics">Impr.</th><th title="Simulated metrics">CTR</th>
+              <th title="Simulated metrics">Conv.</th><th title="Simulated metrics">Rev.</th><th title="Simulated metrics">Lift</th>
+              <th title="Simulated metrics">ROAS</th><th>Campaign ID</th>
+            </tr></thead>
+            <tbody id="campaignBody"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="cmpPager"></div>
+      </div>
+    </section>
+
+    <!-- ============ Tab 5: Customers & Orders ============ -->
+    <section id="tab-records" role="tabpanel" aria-labelledby="tabbtn-records" hidden>
+      <div class="sec-head">
+        <div><h2>Customers &amp; Orders</h2><p>Add customers and orders before any photos exist. Upload each garment photo later as <span class="mono" id="recPattern">garments/&lt;customer_id&gt;_&lt;order_id&gt;_&lt;item_id&gt;.jpg</span> and extraction adds the item to every dashboard.</p></div>
+        <span class="muted" data-status="records" aria-live="polite"></span>
+      </div>
+      <div class="err mb-4 hidden" data-error="records" role="alert"></div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+        <form class="card" id="custCreate" novalidate>
+          <div class="card-h"><div><h2><i class="fa-solid fa-user-plus"></i>Add Customer</h2><p>Name, phone and address stay admin-only: brands and AURA never see them.</p></div></div>
+          <div class="rec-grid">
+            <label class="lbl">Name<input type="text" name="name" maxlength="80" required autocomplete="off" /></label>
+            <label class="lbl">Phone<input type="tel" name="phone" maxlength="16" placeholder="98450 12210" required autocomplete="off" /></label>
+            <label class="lbl rec-wide">Address<input type="text" name="address" maxlength="200" required autocomplete="off" /></label>
+            <label class="lbl">Age<input type="number" name="age" min="10" max="100" step="1" required /></label>
+            <label class="lbl">Gender<select class="sel" name="gender" required></select></label>
+            <label class="lbl">PIN Code<input type="text" name="pin_code" inputmode="numeric" maxlength="6" placeholder="560034" required list="recPins" autocomplete="off" /></label>
+            <p class="rec-wide muted">The PIN is checked against Google Search and must be in the city. The RFM segment starts as <b id="recNewSeg">New</b> and is recomputed from orders.</p>
+            <label class="check rec-wide"><input type="checkbox" name="create_login" /> Create Style Assistant login</label>
+          </div>
+          <div class="rec-actions"><span class="rec-msg" data-msg aria-live="polite"></span><button type="submit" class="primary"><i class="fa-solid fa-user-plus"></i> Create Customer</button></div>
+          <div class="rec-login" id="recLogin" role="status" hidden>
+            <div class="font-semibold"><i class="fa-solid fa-key" aria-hidden="true"></i> Style Assistant login (shown once)</div>
+            <p class="muted">Copy it now and give it to the customer. The password is not stored in readable form and can't be shown again.</p>
+            <div class="rec-login-row"><span>Username</span><code class="mono" id="recLoginUser"></code><button type="button" class="ghost" id="recLoginCopyUser" aria-label="Copy username"><i class="fa-regular fa-copy" aria-hidden="true"></i></button></div>
+            <div class="rec-login-row"><span>Password</span><code class="mono" id="recLoginPass"></code><button type="button" class="ghost" id="recLoginCopyPass" aria-label="Copy password"><i class="fa-regular fa-copy" aria-hidden="true"></i></button></div>
+            <button type="button" class="ghost" id="recLoginDone">I've copied it</button>
+          </div>
+        </form>
+
+        <form class="card" id="orderCreate" novalidate>
+          <div class="card-h"><div><h2><i class="fa-solid fa-receipt"></i>Add Order</h2><p>The order starts with no items. Each garment photo uploaded later becomes one item.</p></div></div>
+          <div class="rec-grid">
+            <label class="lbl rec-wide">Customer
+              <span class="search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input type="text" id="recCustQ" placeholder="Search by name or phone" maxlength="80" autocomplete="off" /></span>
+            </label>
+            <div class="rec-wide pick" id="recCustPick" role="listbox" aria-label="Matching customers"></div>
+            <input type="hidden" name="customer_id" />
+            <label class="lbl">Scheduled Date<input type="date" name="scheduled_date" /></label>
+            <label class="lbl">Service<input type="text" name="service" list="recServices" maxlength="60" placeholder="Dry Clean" required autocomplete="off" /></label>
+            <label class="lbl">Number of Clothes<input type="number" name="total_number_of_clothes" min="1" max="500" step="1" required /></label>
+            <label class="lbl">Amount (₹)<input type="number" name="amount" min="0" step="0.01" /></label>
+          </div>
+          <div class="rec-actions"><span class="rec-msg" data-msg aria-live="polite"></span><button type="submit" class="primary"><i class="fa-solid fa-plus"></i> Create Order</button></div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <div><h2><i class="fa-solid fa-camera"></i>Orders &amp; Photo Progress</h2><p>Photos received against the clothes on each order. Copy the photo name and replace &lt;item_id&gt; for each garment (1, 2, 3…).</p></div>
+          <label class="check"><input type="checkbox" id="recPending" /> Awaiting Photos Only</label>
+        </div>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Order</th><th>Customer</th><th>PIN</th><th>Date</th><th>Service</th><th class="num">Photos</th><th>Photo Name</th></tr></thead>
+            <tbody id="recBody"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="recPager"></div>
+      </div>
+      <datalist id="recPins"></datalist>
+      <datalist id="recServices"></datalist>
+    </section>
+  </main>
+
+  <script>
+    // ---------------- shared helpers ----------------
+    const apiBase = () => (window.DASHBOARD_API || '').replace(/\/$/, '');
+    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const fmt = (n) => (n == null || n === '' ? '—' : Number.isFinite(Number(n)) ? Number(n).toLocaleString() : esc(n));
+    const money = (v) => (v == null || v === '' || !Number.isFinite(Number(v)) ? '—' : '₹' + Math.round(Number(v)).toLocaleString());
+    const compact = (v) => Intl.NumberFormat('en-IN', { notation: 'compact', maximumFractionDigits: 1 }).format(v);
+    const nd = (v) => (v == null || v === '' ? '<span class="muted">No data</span>' : esc(v));
+    const NO_DATA = '<div class="empty"><i class="fa-regular fa-folder-open" aria-hidden="true"></i>No data for these filters</div>';
+    const PALETTE = ['#6b3a55', '#c59fb0', '#a8577e', '#e3b7a0', '#7d8fb3', '#9bb59a', '#d9a441', '#5c7a8a', '#b07a9a', '#8a7480'];
+    const initials = (name) => String(name || '?').trim().split(/\s+/).slice(0, 2).map(w => w.charAt(0)).join('').toUpperCase() || '?';
+
+    async function api(path, params, opts) {
+      const q = params ? new URLSearchParams(Object.entries(params).filter(([, v]) => v !== '' && v != null && v !== false)).toString() : '';
+      const res = await fetch(apiBase() + path + (q ? '?' + q : ''), {
+        signal: opts && opts.signal,
+        headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (opts && opts.signal) opts.signal.throwIfAborted(); // body read aborted: don't hand back {}
+      if (!res.ok) {
+        const detail = data.detail ? SuffaiSession.formatApiDetail(data.detail) : '';
+        throw new Error(detail || ('Request failed (HTTP ' + res.status + ')'));
+      }
+      return data;
+    }
+    async function apiPost(path, body) {
+      const res = await fetch(apiBase() + path, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...SuffaiSession.authHeaders() },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const detail = data.detail ? SuffaiSession.formatApiDetail(data.detail) : '';
+        throw new Error(detail || ('Request failed (HTTP ' + res.status + ')'));
+      }
+      return data;
+    }
+
+    function setStatus(tab, text) { const el = document.querySelector('[data-status="' + tab + '"]'); if (el) el.textContent = text; }
+    function setError(tab, msg) {
+      const el = document.querySelector('[data-error="' + tab + '"]');
+      if (!el) return;
+      el.textContent = msg || '';
+      el.classList.toggle('hidden', !msg);
+      if (msg) console.error('[admin]', tab, msg);
+    }
+    // One load per tab at a time: a newer Apply / page / Reset aborts the older request so a slow
+    // stale response can never overwrite fresher results. fn(signal) must pass signal to api().
+    const inflight = {};
+    async function run(tab, fn) {
+      const sec = document.getElementById('tab-' + tab);
+      const btn = sec && sec.querySelector('form.filters button[type=submit]');
+      if (inflight[tab]) inflight[tab].abort();
+      const ctl = inflight[tab] = new AbortController();
+      setStatus(tab, 'Loading…');
+      setError(tab, '');
+      if (sec) sec.dataset.loading = '1';
+      if (btn) btn.disabled = true;
+      try { await fn(ctl.signal); if (!ctl.signal.aborted) setStatus(tab, 'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })); }
+      catch (e) {
+        if (ctl.signal.aborted) return; // superseded by a newer load
+        setError(tab, e.message || String(e)); setStatus(tab, '');
+        if (sec) sec.querySelectorAll('.chart:empty, .cards:empty').forEach(el => { el.innerHTML = '<div class="empty"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i>Couldn\'t load this. Try Apply again.</div>'; });
+      }
+      finally {
+        if (inflight[tab] === ctl) {
+          delete inflight[tab];
+          if (sec) delete sec.dataset.loading;
+          if (btn) btn.disabled = false;
+        }
+      }
+    }
+
+    const charts = {};
+    function chart(id, option) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (!window.echarts) { el.innerHTML = '<div class="muted">Charts unavailable (ECharts did not load).</div>'; return; }
+      if (!option) {
+        if (charts[id]) { charts[id].dispose(); delete charts[id]; }
+        el.innerHTML = NO_DATA;
+        return;
+      }
+      // Re-init when the element was replaced (e.g. a customer detail panel closed and reopened)
+      if (charts[id] && (charts[id].isDisposed() || charts[id].getDom() !== el)) { charts[id].dispose(); delete charts[id]; }
+      if (!charts[id]) { el.innerHTML = ''; charts[id] = echarts.init(el); }
+      charts[id].setOption(themed(option), true);
+    }
+    // One look for every chart: dark tooltip, quiet axes, rounded bars, separated pie slices.
+    function themed(option) {
+      const axis = (a) => ({
+        ...a,
+        axisLine: { lineStyle: { color: '#ead9e0' } }, axisTick: { show: false },
+        splitLine: { lineStyle: { color: '#f3e9ed', type: 'dashed' } }, nameTextStyle: { color: '#8a7480' },
+        axisLabel: { color: '#8a7480', fontSize: 11, ...(a.axisLabel || {}) },
+      });
+      const axes = (a) => (a == null ? a : Array.isArray(a) ? a.map(axis) : axis(a));
+      const horizontal = option.yAxis && !Array.isArray(option.yAxis) && option.yAxis.type === 'category';
+      const series = (option.series || []).map(s => {
+        if (s.type === 'bar' && !s.stack) return { barMaxWidth: 34, ...s, itemStyle: { borderRadius: horizontal ? [0, 6, 6, 0] : [6, 6, 0, 0], ...(s.itemStyle || {}) } };
+        if (s.type === 'bar') return { barMaxWidth: 34, ...s };
+        if (s.type === 'pie') return { ...s, itemStyle: { borderColor: '#fff', borderWidth: 2, borderRadius: 6, ...(s.itemStyle || {}) }, label: { color: '#3b2733', ...(s.label || {}) } };
+        if (s.type === 'line') return { symbolSize: 6, ...s, lineStyle: { width: 2.5, ...(s.lineStyle || {}) } };
+        return s;
+      });
+      return {
+        color: PALETTE,
+        textStyle: { fontFamily: 'Outfit, system-ui, sans-serif', color: '#3b2733' },
+        ...option,
+        tooltip: option.tooltip && {
+          backgroundColor: 'rgba(42, 15, 31, .94)', borderWidth: 0, padding: [8, 12],
+          textStyle: { color: '#fff', fontSize: 12 }, extraCssText: 'border-radius:10px;box-shadow:0 10px 24px rgba(42,15,31,.25);',
+          ...option.tooltip,
+        },
+        legend: option.legend && { icon: 'roundRect', itemWidth: 10, itemHeight: 10, itemGap: 14, textStyle: { color: '#3b2733', fontSize: 11.5 }, ...option.legend },
+        xAxis: axes(option.xAxis), yAxis: axes(option.yAxis),
+        series,
+      };
+    }
+    // Dispose charts whose element left the DOM (closed detail rows, re-rendered tables).
+    function pruneCharts() {
+      for (const [id, c] of Object.entries(charts)) if (c.isDisposed() || !c.getDom().isConnected) { c.dispose(); delete charts[id]; }
+    }
+    const resizeCharts = () => { pruneCharts(); Object.values(charts).forEach(c => c.resize()); };
+    window.addEventListener('resize', resizeCharts);
+
+    // Multi-select built on <details>; keeps selections across option refreshes.
+    function msRender(id, label, options) {
+      const el = document.getElementById(id);
+      const keep = new Set(msValues(id));
+      options = options || [];
+      el.dataset.label = label;
+      el.innerHTML = '<summary></summary><div class="ms-pop">' + (options.length
+        ? (options.length > 1 ? '<label class="opt all"><input type="checkbox" data-all="1" /> Select All</label>' : '')
+          + options.map(o => '<label class="opt"><input type="checkbox" value="' + esc(o) + '"' + (keep.has(o) ? ' checked' : '') + ' /> ' + esc(o) + '</label>').join('')
+        : '<div class="muted p-2">No data</div>') + '</div>';
+      el.querySelectorAll('input:not([data-all])').forEach(i => i.addEventListener('change', () => msSummary(el)));
+      const all = el.querySelector('input[data-all]');
+      if (all) all.addEventListener('change', () => {
+        el.querySelectorAll('input:not([data-all])').forEach(i => { i.checked = all.checked; });
+        msSummary(el);
+      });
+      msSummary(el);
+    }
+    function msSummary(el) {
+      const vals = msValues(el.id);
+      const total = el.querySelectorAll('input:not([data-all])').length;
+      const all = el.querySelector('input[data-all]');
+      if (all) {
+        all.checked = total > 0 && vals.length === total;
+        all.indeterminate = vals.length > 0 && vals.length < total;
+      }
+      el.querySelector('summary').textContent = !vals.length ? 'All ' + el.dataset.label
+        : (total > 1 && vals.length === total) ? 'All selected (' + total + ')'
+        : (vals.length <= 2 ? vals.join(', ') : vals.length + ' selected');
+    }
+    function msValues(id) { return [...document.querySelectorAll('#' + id + ' input:not([data-all]):checked')].map(i => i.value); }
+    const msCsv = (id) => msValues(id).join(',');
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('details.ms[open]').forEach(d => { if (!d.contains(e.target)) d.removeAttribute('open'); });
+    });
+    // Escape closes an open multi-select and returns focus to its toggle
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const d = e.target.closest && e.target.closest('details.ms[open]');
+      if (d) { d.removeAttribute('open'); d.querySelector('summary').focus(); }
+    });
+
+    function pager(elId, total, page, size, onPage) {
+      const el = document.getElementById(elId);
+      const pages = Math.max(1, Math.ceil((Number(total) || 0) / (size || PAGE_SIZE)));
+      if (pages <= 1) { el.innerHTML = ''; return; }
+      el.innerHTML = '<span class="muted">Page ' + page + ' of ' + pages + '</span>'
+        + '<button type="button" class="ghost" data-p="' + (page - 1) + '"' + (page <= 1 ? ' disabled' : '') + '><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Previous</button>'
+        + '<button type="button" class="ghost" data-p="' + (page + 1) + '"' + (page >= pages ? ' disabled' : '') + '>Next <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>';
+      el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => onPage(Number(b.dataset.p))));
+    }
+    const PAGE_SIZE = 10;
+    // Pages an in-memory list; draw(chunk) renders the visible rows.
+    function clientPage(pagerId, items, draw, page) {
+      const p = page || 1;
+      draw(items.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE));
+      const el = document.getElementById(pagerId);
+      if (!el) return;
+      if (items.length > PAGE_SIZE) pager(pagerId, items.length, p, PAGE_SIZE, (pg) => clientPage(pagerId, items, draw, pg));
+      else el.innerHTML = '';
+    }
+
+    const RFM_COLORS = {
+      champions: ['#e8f3e6', '#2f6b2a'], loyal: ['#e6eef8', '#2b5a8f'], potential: ['#eef0fb', '#4a4f9a'],
+      new: ['#e9f6f6', '#2a6f6f'], promising: ['#eef7ea', '#4c7a2e'], 'at risk': ['#fbeee4', '#a0522d'],
+      hibernating: ['#f1eef0', '#6f6070'], lost: ['#fbe9ea', '#a03a3a'], 'need attention': ['#fdf4dc', '#8a6a12'],
+    };
+    function rfmBadge(seg) {
+      const k = String(seg || '').toLowerCase();
+      const hit = Object.keys(RFM_COLORS).find(key => k.includes(key));
+      const [bg, fg] = hit ? RFM_COLORS[hit] : ['#f6eef0', '#6b3a55'];
+      return '<span class="badge" style="background:' + bg + ';color:' + fg + '">' + esc(seg || 'Unknown') + '</span>';
+    }
+    const STATUS_COLORS = { Active: ['#e8f3e6', '#2f6b2a'], Scheduled: ['#e6eef8', '#2b5a8f'], Completed: ['#f1eef0', '#6f6070'], Draft: ['#fdf4dc', '#8a6a12'], Discarded: ['#fbe9ea', '#a03a3a'] };
+    function statusBadge(s) { const [bg, fg] = STATUS_COLORS[s] || ['#f6eef0', '#6b3a55']; return '<span class="badge" style="background:' + bg + ';color:' + fg + '">' + esc(s) + '</span>'; }
+    const shareList = (arr) => (arr && arr.length ? arr.map(x => esc(x.value) + ' <span class="muted">' + esc(x.share) + '%</span>').join('<br>') : '<span class="muted">No data</span>');
+
+    // ---------------- tabs ----------------
+    const loaders = {};
+    const loaded = new Set();
+    const tabBtns = [...document.querySelectorAll('.tabbar button[data-tab]')];
+    const tabInk = document.querySelector('.tab-ink');
+    const hero = document.querySelector('.hero');
+    let currentTab = null;
+    function moveInk() {
+      const b = tabBtns.find(x => x.getAttribute('aria-selected') === 'true');
+      if (!b) return;
+      tabInk.style.width = b.offsetWidth + 'px';
+      tabInk.style.transform = 'translateX(' + b.offsetLeft + 'px)';
+    }
+    function showTab(name) {
+      if (!document.getElementById('tab-' + name)) name = 'customers';
+      if (name === currentTab) return;
+      currentTab = name;
+      tabBtns.forEach(b => {
+        const on = b.dataset.tab === name;
+        b.setAttribute('aria-selected', String(on));
+        b.tabIndex = on ? 0 : -1;
+        if (on) b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      });
+      moveInk();
+      // Land at the top of the new section instead of mid-page where the last one was scrolled
+      if (window.scrollY > hero.offsetHeight) window.scrollTo({ top: hero.offsetHeight, behavior: 'auto' });
+      document.querySelectorAll('section[role=tabpanel]').forEach(s => {
+        const on = s.id === 'tab-' + name;
+        s.hidden = !on;
+        s.classList.remove('enter');
+        if (on) { void s.offsetWidth; s.classList.add('enter'); }
+      });
+      if (!loaded.has(name)) { loaded.add(name); loaders[name](); }
+      else requestAnimationFrame(resizeCharts);
+      history.replaceState(null, '', '#' + name);
+    }
+    tabBtns.forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+    // Arrow keys / Home / End move between tabs (WAI-ARIA tabs pattern)
+    document.querySelector('.tabbar').addEventListener('keydown', (e) => {
+      const i = tabBtns.indexOf(document.activeElement);
+      if (i < 0) return;
+      const to = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabBtns.length - 1 }[e.key];
+      if (to == null) return;
+      e.preventDefault();
+      const b = tabBtns[(to + tabBtns.length) % tabBtns.length];
+      b.focus();
+      showTab(b.dataset.tab);
+    });
+    window.addEventListener('resize', moveInk);
+    window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
+    document.fonts && document.fonts.ready.then(moveInk);
+
+    // ---------------- Tab 1: customers ----------------
+    function custParams() {
+      return { q: document.getElementById('custQ').value.trim(), rfm: msCsv('custRfm'), pin: msCsv('custPin'), brand: msCsv('custBrand') };
+    }
+    async function loadCustomerOverview(signal) {
+      const p = custParams();
+      const o = await api('/v1/admin/intel/customers-overview', { rfm: p.rfm, pin: p.pin, brand: p.brand }, { signal });
+      msRender('custBrand', 'brands', o.options.brands);
+      msRender('custRfm', 'tiers', o.options.rfm_segments);
+      msRender('custPin', 'PINs', o.options.pin_codes);
+      document.getElementById('kCustTotal').textContent = fmt(o.total_customers);
+      document.getElementById('kCustQual').textContent = fmt(o.qualified_users);
+      document.getElementById('kQualLabel').title = o.qualified_rule || '';
+      document.getElementById('kCohort').textContent = fmt(o.cohort_size);
+      document.getElementById('kCohortSpend').textContent = money(o.cohort_spend);
+      document.getElementById('kAvgOrders').textContent = fmt(o.avg_orders);
+      chart('chRfm', o.rfm_breakdown.length ? {
+        tooltip: { trigger: 'item' }, legend: { bottom: 0, type: 'scroll' },
+        series: [{ type: 'pie', radius: ['45%', '70%'], data: o.rfm_breakdown.map(r => ({ name: r.value, value: r.count })) }],
+      } : null);
+      const ag = o.age_gender;
+      const genders = Object.keys(ag.series || {});
+      chart('chAgeGender', ag.ages.length ? {
+        tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 40, right: 16, top: 16, bottom: 48 },
+        xAxis: { type: 'category', data: ag.ages }, yAxis: { type: 'value' },
+        series: genders.map(g => ({ name: g, type: 'bar', stack: 'g', data: ag.series[g] })),
+      } : null);
+    }
+    async function loadCustomerPage(page, signal) {
+      const p = custParams();
+      const data = await api('/v1/admin/intel/customers', { ...p, qualified: document.getElementById('custQualified').checked ? 'true' : '', page: page || 1, size: PAGE_SIZE }, { signal });
+      document.getElementById('custCount').textContent = fmt(data.total) + (data.total === 1 ? ' customer' : ' customers');
+      const body = document.getElementById('custBody');
+      body.innerHTML = data.items.length ? data.items.map(c => `<tr data-cid="${esc(c.customer_id)}">
+          <td><div class="who"><span class="av" aria-hidden="true">${esc(initials(c.name))}</span><div><div class="font-semibold">${esc(c.name)}</div><div class="mono">${esc(c.short_id)}</div></div></div></td>
+          <td data-label="PIN">${nd(c.pin_code)}</td>
+          <td data-label="RFM">${rfmBadge(c.rfm_segment)}</td>
+          <td data-label="Tag" class="muted">${esc(c.tag)}</td>
+          <td data-label="Orders" class="num">${fmt(c.orders)}</td>
+          <td data-label="Spend" class="num">${money(c.spend)}</td>
+          <td data-label="Last Order">${nd(c.last_order)}</td>
+          <td><button type="button" class="ghost" data-expand aria-expanded="false">Details</button></td>
+        </tr>`).join('') : '<tr><td colspan="8">' + NO_DATA + '</td></tr>';
+      pruneCharts(); // detail-row charts that were just replaced
+      pager('custPager', data.total, data.page, data.size, (pg) => run('customers', (sig) => loadCustomerPage(pg, sig)));
+    }
+    document.getElementById('custBody').addEventListener('click', async (e) => {
+      const tr = e.target.closest('tr[data-cid]');
+      if (!tr) return;
+      const cid = tr.dataset.cid;
+      if (e.target.matches('[data-expand]')) {
+        const btn = e.target;
+        const next = tr.nextElementSibling;
+        if (next && next.classList.contains('detail-row')) {
+          next.remove(); pruneCharts(); btn.setAttribute('aria-expanded', 'false'); btn.textContent = 'Details';
+          return;
+        }
+        btn.setAttribute('aria-expanded', 'true'); btn.textContent = 'Hide';
+        const row = document.createElement('tr');
+        row.className = 'detail-row';
+        row.innerHTML = '<td colspan="8"><div class="empty"><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>Loading profile…</div></td>';
+        tr.after(row);
+        try {
+          const d = (await api('/v1/admin/intel/customers/' + encodeURIComponent(cid))).customer;
+          if (row.isConnected) renderCustomerDetail(row.firstElementChild, d); // closed / re-paged meanwhile
+        } catch (err) { row.firstElementChild.innerHTML = '<div class="err">' + esc(err.message) + '</div>'; }
+      }
+    });
+    let detailSeq = 0;
+    function renderCustomerDetail(td, d) {
+      const uid = 'cd' + (++detailSeq); // unique per open, so reopened panels never collide with old ids
+      const dm = d.demographics;
+      const bars = (arr) => (arr.length ? arr.map(c => `<div class="mb-2"><div class="flex justify-between text-xs"><span>${esc(c.value)}</span><span class="muted">${esc(c.share)}%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, Number(c.share) || 0)}%"></div></div></div>`).join('') : NO_DATA);
+      const topSize = d.sizes.reduce((a, s) => (!a || s.share > a.share ? s : a), null);
+      td.innerHTML = `<div class="detail">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="item-card dcard"><div class="kpi-label mb-2"><i class="fa-solid fa-id-card"></i>Profile</div>
+          <dl class="kv">
+            <dt>Customer</dt><dd class="mono">${esc(dm.short_id)}</dd>
+            <dt>PIN</dt><dd>${nd(dm.pin_code)}</dd>
+            <dt>Age Group</dt><dd>${nd(dm.age_group)}</dd>
+            <dt>Gender</dt><dd>${nd(dm.gender)}</dd>
+            <dt>RFM</dt><dd>${rfmBadge(d.rfm_segment)}</dd>
+            <dt>Tag</dt><dd>${nd(d.tag)}</dd>
+            <dt>Menus</dt><dd>${dm.menus.length ? esc(dm.menus.join(', ')) : '<span class="muted">No data</span>'}</dd>
+            <dt>LTV</dt><dd>${money(dm.ltv)}</dd>
+            <dt>AOV</dt><dd>${money(dm.aov)}</dd>
+            <dt>Orders / Month</dt><dd>${fmt(dm.orders_per_month)}</dd>
+            <dt>First Order</dt><dd>${nd(dm.first_order)}</dd>
+            <dt>Last Order</dt><dd>${nd(dm.last_order)}</dd>
+          </dl></div>
+        <div class="item-card dcard"><div class="kpi-label mb-2"><i class="fa-solid fa-star"></i>Top Commodities</div>
+          ${d.top_commodities.length ? '<div class="grid grid-cols-2 gap-2 mb-3">' + d.top_commodities.map(c => `<div class="stat"><div class="mono">${esc(c.share)}%</div><div class="text-xs">${esc(c.value)}</div></div>`).join('') + '</div>' : NO_DATA}
+          <div class="kpi-label mb-2 mt-2"><i class="fa-solid fa-palette"></i>Colour Preference</div>${bars(d.colors)}</div>
+        <div class="item-card dcard"><div class="kpi-label mb-2"><i class="fa-solid fa-ruler"></i>Size / Fit</div>
+          ${topSize ? `<div class="stat mb-3"><div class="mono">${esc(topSize.value)}</div><div class="text-xs">Most owned size · ${esc(topSize.share)}%</div></div>` : ''}
+          ${d.sizes.length ? '<table class="compact"><thead><tr><th>Size</th><th class="num">Items</th><th class="num">Share</th></tr></thead><tbody>' + d.sizes.map(s => `<tr><td>${esc(s.value)}</td><td class="num">${fmt(s.count)}</td><td class="num">${esc(s.share)}%</td></tr>`).join('') + '</tbody></table>' : NO_DATA}</div>
+        <div class="item-card dcard"><div class="kpi-label mb-2"><i class="fa-solid fa-jug-detergent"></i>Service Split</div><div class="chart svc" id="${uid}svc"></div></div>
+      </div>
+      <div class="grid grid-cols-1 xl:grid-cols-5 gap-4 mt-4">
+        <div class="item-card dcard xl:col-span-3"><div class="kpi-label mb-2"><i class="fa-solid fa-shirt"></i>Garment Attributes (${fmt(d.garment_count)} items${d.garment_count > d.garments.length ? ', showing ' + d.garments.length : ''})</div>
+          <div class="overflow-x-auto">${d.garments.length ? '<table class="compact"><thead><tr><th>Garment</th><th>Commodity</th><th>Brand</th><th>Colour</th><th>Pattern</th><th>Size</th><th>Fabric</th></tr></thead><tbody id="' + uid + 'gb"></tbody></table>' : NO_DATA}</div>
+          <div class="pager" id="${uid}gp"></div></div>
+        <div class="item-card dcard xl:col-span-2"><div class="kpi-label mb-2"><i class="fa-solid fa-chart-line"></i>Spending Momentum</div><div class="chart mom" id="${uid}mom"></div></div>
+      </div>
+      <div class="item-card dcard mt-4"><div class="kpi-label mb-2"><i class="fa-solid fa-camera"></i>Recent Orders &amp; Photos</div>
+        <div class="overflow-x-auto">${(d.recent_orders || []).length ? '<table class="compact"><thead><tr><th>Order</th><th>Date</th><th>Service</th><th class="num">Amount</th><th class="num">Photos Received</th></tr></thead><tbody>'
+          + d.recent_orders.map(o => `<tr><td class="mono" title="${esc(o.order_id)}">${esc(shortId(o.order_id))}</td><td>${nd(o.date)}</td><td>${nd(o.service)}</td><td class="num">${money(o.amount)}</td><td class="num">${photoProgress(o)}</td></tr>`).join('')
+          + '</tbody></table>' : NO_DATA}</div></div>
+      </div>`;
+      if (d.garments.length) {
+        clientPage(uid + 'gp', d.garments, (chunk) => {
+          document.getElementById(uid + 'gb').innerHTML = chunk.map(g => `<tr><td class="mono">${esc((g.garment_id || '').slice(0, 8)) || '—'}</td><td>${nd(g.commodity)}${g.catalog_match ? ' <span class="tag" title="Matched warehouse SKU ' + esc(g.brand_style_code || g.brand_sku || '') + '">Brand SKU</span>' : ''}</td><td>${nd(g.brand)}</td><td>${nd(g.color)}</td><td>${nd(g.pattern)}</td><td>${nd(g.size)}</td><td>${nd(g.material)}</td></tr>`).join('');
+        });
+      }
+      chart(uid + 'svc', d.service_split.length ? {
+        tooltip: { trigger: 'item', formatter: (p) => esc(p.name) + ': ' + fmt(p.value) + (p.value === 1 ? ' order' : ' orders') + ' (' + p.percent + '%)' },
+        legend: { bottom: 0, type: 'scroll', formatter: (n) => (n.length > 16 ? n.slice(0, 15) + '…' : n) },
+        series: [{ type: 'pie', radius: ['42%', '70%'], center: ['50%', '44%'], label: { show: false }, labelLine: { show: false },
+          emphasis: { label: { show: true, fontSize: 12, fontWeight: 600, formatter: '{d}%' } },
+          data: d.service_split.map(s => ({ name: s.value, value: s.count })) }],
+      } : null);
+      chart(uid + 'mom', d.momentum.length ? {
+        tooltip: { trigger: 'axis' }, legend: { bottom: 0, type: 'scroll' }, grid: { left: 52, right: 44, top: 28, bottom: 52 },
+        xAxis: { type: 'category', data: d.momentum.map(m => m.month) },
+        yAxis: [{ type: 'value', name: '₹', axisLabel: { formatter: compact } }, { type: 'value', name: 'Orders', minInterval: 1, splitLine: { show: false } }],
+        series: [
+          { name: 'Monthly Spend', type: 'bar', data: d.momentum.map(m => m.spend), tooltip: { valueFormatter: money } },
+          { name: 'Cumulative Spend', type: 'line', smooth: true, areaStyle: { opacity: 0.15 }, data: d.momentum.map(m => m.cumulative_spend), tooltip: { valueFormatter: money } },
+          { name: 'Orders', type: 'line', yAxisIndex: 1, data: d.momentum.map(m => m.orders), tooltip: { valueFormatter: fmt } },
+        ],
+      } : null);
+      // The panel sits in a table cell whose width settles after first paint; re-measure then.
+      requestAnimationFrame(() => [uid + 'svc', uid + 'mom'].forEach(id => charts[id] && !charts[id].isDisposed() && charts[id].resize()));
+    }
+    loaders.customers = () => run('customers', async (sig) => { await loadCustomerOverview(sig); await loadCustomerPage(1, sig); });
+    document.getElementById('custFilters').addEventListener('submit', (e) => { e.preventDefault(); loaders.customers(); });
+
+    // ---------------- Tab 2: garments ----------------
+    async function loadGarments(page, signal) {
+      const data = await api('/v1/admin/intel/garments', {
+        commodity: msCsv('garCommodity'), brand: msCsv('garBrand'), pin: msCsv('garPin'), fabric: msCsv('garFabric'),
+        pattern: msCsv('garPattern'), garment_size: msCsv('garSize'), page: page || 1, size: PAGE_SIZE,
+      }, { signal });
+      const o = data.options;
+      msRender('garBrand', 'brands', o.brand);
+      msRender('garPin', 'PINs', o.pin_codes);
+      msRender('garCommodity', 'commodities', o.commodity);
+      msRender('garFabric', 'fabrics', o.material);
+      msRender('garPattern', 'patterns', o.pattern);
+      msRender('garSize', 'sizes', o.size);
+      document.getElementById('kGarTotal').textContent = fmt(data.total);
+      document.getElementById('kGarTracked').textContent = fmt(data.total_tracked);
+      document.getElementById('kGarFabrics').innerHTML = shareList(data.top_fabrics.slice(0, 3));
+      document.getElementById('kGarPatterns').innerHTML = shareList(data.patterns.slice(0, 3));
+      const cf = data.commodity_fabric;
+      const fabrics = Object.keys(cf.series || {});
+      chart('chComFab', cf.commodities.length && fabrics.length ? {
+        tooltip: { trigger: 'axis' }, legend: { bottom: 0, type: 'scroll' }, grid: { left: 48, right: 16, top: 16, bottom: 84 },
+        xAxis: { type: 'category', data: cf.commodities, axisLabel: { interval: 0, rotate: 20 } }, yAxis: { type: 'value' },
+        series: fabrics.map(f => ({ name: f, type: 'bar', stack: 'f', data: cf.series[f] })),
+      } : null);
+      chart('chPattern', data.patterns.length ? {
+        tooltip: { trigger: 'item' }, legend: { bottom: 0, type: 'scroll' },
+        series: [{ type: 'pie', radius: '65%', data: data.patterns.map(p => ({ name: p.value, value: p.count })) }],
+      } : null);
+      chart('chSize', data.size_curve.length ? {
+        tooltip: { trigger: 'axis' }, grid: { left: 48, right: 16, top: 16, bottom: 32 },
+        xAxis: { type: 'category', data: data.size_curve.map(s => s.value) }, yAxis: { type: 'value' },
+        series: [{ type: 'bar', name: 'Items', data: data.size_curve.map(s => s.count) },
+                 { type: 'line', name: 'Curve', smooth: true, data: data.size_curve.map(s => s.count) }],
+      } : null);
+      document.getElementById('garCount').textContent = fmt(data.total) + (data.total === 1 ? ' garment' : ' garments');
+      document.getElementById('garCards').innerHTML = data.items.length ? data.items.map(g => `<div class="item-card">
+          <div class="flex justify-between items-start mb-2"><div class="font-semibold">${nd(g.commodity)}${g.catalog_match ? ' <span class="tag" title="' + esc(g.brand_style_code || g.brand_sku || g.catalog_match) + '">Brand SKU</span>' : ''}</div><span class="mono">${esc((g.garment_id || '').slice(0, 8)) || '—'}</span></div>
+          <dl class="kv">
+            <dt>Owner</dt><dd>${g.owner_name ? esc(g.owner_name) + ' <span class="mono">' + esc(g.owner_id) + '</span>' : nd(g.owner_id)}</dd>
+            <dt>Brand</dt><dd>${nd(g.brand)}</dd><dt>Colour</dt><dd>${nd(g.color)}</dd>
+            <dt>Pattern</dt><dd>${nd(g.pattern)}</dd><dt>Size</dt><dd>${nd(g.size)}</dd><dt>Fabric</dt><dd>${nd(g.material)}</dd>
+          </dl></div>`).join('') : NO_DATA;
+      pager('garPager', data.total, data.page, data.size, (pg) => run('garments', (sig) => loadGarments(pg, sig)));
+    }
+    loaders.garments = () => run('garments', (sig) => loadGarments(1, sig));
+    document.getElementById('garFilters').addEventListener('submit', (e) => { e.preventDefault(); loaders.garments(); });
+
+    function fillSelect(id, values, allLabel) {
+      const sel = document.getElementById(id);
+      const keep = sel.value;
+      const opts = [...new Set(values.filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
+      sel.innerHTML = '<option value="">' + esc(allLabel) + '</option>'
+        + opts.map(v => '<option value="' + esc(v) + '"' + (String(v) === keep ? ' selected' : '') + '>' + esc(v) + '</option>').join('');
+    }
+    function rows(tbody, data, cols) {
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="' + cols.length + '">' + NO_DATA + '</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(r => '<tr>' + cols.map(([fn, kind]) => {
+        const v = fn(r);
+        if (kind === 'num') return '<td class="num">' + fmt(v) + '</td>';
+        if (kind === 'mono') return '<td><span class="mono" title="' + esc(v.full) + '">' + esc(v.text) + '</span></td>';
+        return '<td>' + esc(v ?? '—') + '</td>';
+      }).join('') + '</tr>').join('');
+    }
+    let uniqSeq = 0;
+    async function loadUnique() {
+      const seq = ++uniqSeq;
+      const status = document.getElementById('uniqStatus');
+      const err = document.getElementById('uniqErr');
+      status.textContent = 'Loading…';
+      err.classList.add('hidden');
+      const pin = document.getElementById('uniqPin').value;
+      const brand = document.getElementById('uniqBrand').value;
+      try {
+        const [summary, list] = await Promise.all([
+          api('/v1/admin/unique-summary', { pin, brand }),
+          api('/v1/admin/unique-garments', { pin, brand, limit: 200 }).catch(() => null),
+        ]);
+        if (seq !== uniqSeq) return; // a newer Apply is in flight
+        const k = summary.kpis || {};
+        document.getElementById('kpiUnique').textContent = fmt(k.unique_garments);
+        document.getElementById('kpiObs').textContent = fmt(k.total_observations);
+        document.getElementById('kpiUsers').textContent = fmt(k.unique_users);
+        const opts = summary.options || {};
+        fillSelect('uniqPin', opts.pin_codes || [], 'All PINs');
+        fillSelect('uniqBrand', opts.brands || [], 'All brands');
+        const pinCols = [[r => r.pin_code], [r => r.unique_garments, 'num'], [r => r.observations, 'num']];
+        const brandCols = [[r => r.brand], [r => r.unique_garments, 'num'], [r => r.observations, 'num']];
+        clientPage('byPinPager', summary.by_pin || [], (chunk) => rows(document.getElementById('byPin'), chunk, pinCols));
+        clientPage('byBrandPager', summary.by_brand || [], (chunk) => rows(document.getElementById('byBrand'), chunk, brandCols));
+        if (list) {
+          const listCols = [
+            [r => ({ text: (r.garment_id || '').slice(0, 8) + '…', full: r.garment_id || '' }), 'mono'],
+            [r => r.brand_name || '—'],
+            [r => ({ text: r.gcs_object_key || '—', full: r.gcs_object_key || '' }), 'mono'],
+            [r => r.observation_count_total, 'num'],
+            [r => (r.created_at || '—').toString().slice(0, 19).replace('T', ' ')],
+          ];
+          clientPage('listPager', list.items || [], (chunk) => rows(document.getElementById('listBody'), chunk, listCols));
+        } else {
+          document.getElementById('listBody').innerHTML = '<tr><td colspan="5" class="muted">Recent garments are unavailable right now.</td></tr>';
+          document.getElementById('listPager').innerHTML = '';
+        }
+        status.textContent = 'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      } catch (e) {
+        if (seq !== uniqSeq) return;
+        err.textContent = 'Could not load garment stats: ' + (e.message || e);
+        err.classList.remove('hidden');
+        status.textContent = '';
+      }
+    }
+    let uniqueLoaded = false;
+    document.getElementById('uniqueSection').addEventListener('toggle', (e) => {
+      if (e.target.open && !uniqueLoaded) { uniqueLoaded = true; loadUnique(); }
+    });
+    document.getElementById('uniqFilters').addEventListener('submit', (e) => { e.preventDefault(); loadUnique(); });
+
+    // ---------------- Tab 3: brands ----------------
+    async function loadBrands(signal) {
+      const d = await api('/v1/admin/intel/brands', {
+        brands: msCsv('brBrands'), pin: msCsv('brPin'), rfm: msCsv('brRfm'), commodity: msCsv('brCommodity'), menu: msCsv('brMenu'),
+      }, { signal });
+      const o = d.options;
+      msRender('brBrands', 'brands', o.brands);
+      msRender('brPin', 'hubs', o.pin_codes);
+      msRender('brRfm', 'tiers', o.rfm_segments);
+      msRender('brCommodity', 'commodities', o.commodities);
+      msRender('brMenu', 'menus', o.menus);
+      document.getElementById('brMenuNote').textContent = d.menu_note || '';
+      document.getElementById('kBrItems').textContent = fmt(d.total_items);
+      document.getElementById('kBrCount').textContent = fmt(d.brand_count);
+      document.getElementById('kBrLeader').innerHTML = d.ranking.length ? esc(d.ranking[0].brand) + ' <span class="muted">' + esc(d.ranking[0].share) + '%</span>' : '<span class="muted">No data</span>';
+      const rank = d.ranking.slice(0, 15).reverse();
+      chart('chShare', rank.length ? {
+        tooltip: { trigger: 'axis', formatter: (p) => esc(p[0].name) + ': ' + p[0].value + '% share' }, grid: { left: 110, right: 24, top: 8, bottom: 24 },
+        xAxis: { type: 'value', axisLabel: { formatter: '{value}%' } }, yAxis: { type: 'category', data: rank.map(r => r.brand) },
+        series: [{ type: 'bar', data: rank.map(r => r.share) }],
+      } : null);
+      chart('chTreemap', d.treemap.length ? {
+        tooltip: {}, series: [{ type: 'treemap', roam: false, breadcrumb: { show: false }, data: d.treemap,
+          levels: [{ itemStyle: { borderColor: '#fff', borderWidth: 3, gapWidth: 3 } }, { itemStyle: { borderColor: '#fff', borderWidth: 1, gapWidth: 1 }, colorSaturation: [0.35, 0.6] }],
+          label: { show: true, formatter: '{b}' }, upperLabel: { show: true, height: 22, color: '#fff' } }],
+      } : null);
+      const ov = d.overlap;
+      const heat = [];
+      ov.matrix.forEach((row, i) => row.forEach((v, j) => heat.push([j, i, v])));
+      const ovMax = Math.max(1, ...heat.map(h => h[2]));
+      chart('chOverlap', ov.brands.length ? {
+        tooltip: { formatter: (p) => esc(ov.brands[p.value[1]]) + ' × ' + esc(ov.brands[p.value[0]]) + ': ' + p.value[2] + ' customers' },
+        grid: { left: 110, right: 24, top: 8, bottom: 90 },
+        xAxis: { type: 'category', data: ov.brands, axisLabel: { rotate: 40, interval: 0 } }, yAxis: { type: 'category', data: ov.brands },
+        visualMap: { min: 0, max: ovMax, orient: 'horizontal', left: 'center', bottom: 0, inRange: { color: ['#faf6ee', '#c59fb0', '#6b3a55'] } },
+        series: [{ type: 'heatmap', data: heat, label: { show: ov.brands.length <= 8 } }],
+      } : null);
+      chart('chSunburst', d.sunburst.length ? {
+        tooltip: {}, series: [{ type: 'sunburst', data: d.sunburst, radius: ['12%', '92%'], label: { rotate: 'radial', fontSize: 10, minAngle: 9 } }],
+      } : null);
+      const sm = d.size_matrix;
+      const smRows = Object.keys(sm.series || {});
+      const smHeat = [];
+      smRows.forEach((c, i) => sm.series[c].forEach((v, j) => smHeat.push([j, i, v])));
+      chart('chSizeMatrix', sm.sizes.length && smRows.length ? {
+        tooltip: { formatter: (p) => esc(smRows[p.value[1]]) + ' · ' + esc(sm.sizes[p.value[0]]) + ': ' + p.value[2] },
+        grid: { left: 136, right: 24, top: 8, bottom: 64 },
+        xAxis: { type: 'category', data: sm.sizes }, yAxis: { type: 'category', data: smRows, axisLabel: { width: 126, overflow: 'truncate' } },
+        visualMap: { min: 0, max: Math.max(1, ...smHeat.map(h => h[2])), orient: 'horizontal', left: 'center', bottom: 0, inRange: { color: ['#faf6ee', '#c59fb0', '#6b3a55'] } },
+        series: [{ type: 'heatmap', data: smHeat, label: { show: true } }],
+      } : null);
+      const rg = d.regional;
+      const rgBrands = Object.keys(rg.series || {});
+      chart('chRegional', rg.pins.length && rgBrands.length ? {
+        tooltip: { trigger: 'axis' }, legend: { bottom: 0, type: 'scroll' }, grid: { left: 48, right: 16, top: 16, bottom: 64 },
+        xAxis: { type: 'category', data: rg.pins, axisLabel: { rotate: 30, interval: 0 } }, yAxis: { type: 'value' },
+        series: rgBrands.map(b => ({ name: b, type: 'bar', stack: 'r', data: rg.series[b] })),
+      } : null);
+      clientPage('brPager', d.brands, (chunk) => { document.getElementById('brCards').innerHTML = chunk.length ? chunk.map(b => `<div class="item-card">
+          <div class="flex justify-between items-start mb-2"><div class="font-semibold">${esc(b.brand)}</div><span class="badge" style="background:#f6eef0;color:#6b3a55">${esc(b.share)}% share</span></div>
+          <dl class="kv mb-2">
+            <dt>Wardrobe Items</dt><dd>${fmt(b.items_in_wardrobes)}</dd>
+            <dt>Unique Customers</dt><dd>${fmt(b.unique_customers)}</dd>
+            <dt>Catalogue Size</dt><dd>${fmt(b.catalog_size)} commodity types</dd>
+            <dt>Top Commodities</dt><dd>${b.top_commodities.length ? esc(b.top_commodities.join(', ')) : '<span class="muted">No data</span>'}</dd>
+            <dt>Top Colours</dt><dd>${b.top_colors.length ? esc(b.top_colors.join(', ')) : '<span class="muted">No data</span>'}</dd>
+          </dl>
+          ${b.catalog.length ? '<details><summary class="muted" style="cursor:pointer">Catalogue Breakdown</summary><table class="mt-1"><tbody>' + b.catalog.slice(0, PAGE_SIZE).map(c => `<tr><td>${esc(c.commodity)}</td><td class="num">${fmt(c.count)}</td></tr>`).join('') + '</tbody></table>' + (b.catalog.length > PAGE_SIZE ? '<div class="muted">+' + (b.catalog.length - PAGE_SIZE) + ' more</div>' : '') + '</details>' : ''}
+        </div>`).join('') : NO_DATA; });
+    }
+    loaders.brands = () => run('brands', loadBrands);
+    document.getElementById('brFilters').addEventListener('submit', (e) => { e.preventDefault(); run('brands', loadBrands); });
+
+    // ---------------- Tab 4: campaigns ----------------
+    const fixed1 = (v, unit) => (v == null || v === '' || !Number.isFinite(Number(v)) ? '—' : Number(v).toFixed(1) + unit);
+    function campaignTableRow(c) {
+      const pins = c.pin_codes || [];
+      const aud = [
+        pins.length ? (pins.length <= 2 ? pins.join(', ') : pins.length + ' PINs') : 'No PIN',
+        c.age_group || 'All ages', c.gender || 'All genders', c.rfm_segment || 'All RFM',
+      ].join(' × ');
+      const i = c.impact || {};
+      return `<tr>
+        <td class="mono">${esc((c.created_at || '').replace('T', ' ').slice(0, 16))}</td>
+        <td>${esc(c.brand_name)}</td>
+        <td style="white-space:normal;max-width:180px">${esc(c.campaign_name || '—')}</td>
+        <td>${esc(c.status)}</td>
+        <td>${esc(c.run_mode === '1p' ? 'SuffAI (1P)' : c.run_mode === '3p' ? 'External (3P)' : '—')}</td>
+        <td>${esc((c.channels || []).map(ch => ({ in_app: 'In-app', whatsapp: 'WhatsApp', sms: 'SMS' }[ch] || ch)).join(', ') || '—')}</td>
+        <td>${esc(c.objective || '—')}</td>
+        <td class="mono">${esc(money(c.budget_inr))}</td>
+        <td class="mono">${esc((c.launched_at || '').replace('T', ' ').slice(0, 16) || '—')}</td>
+        <td style="white-space:normal;max-width:220px">${esc(aud)}</td>
+        <td>${esc(c.sku_count ?? '—')}</td>
+        <td>${esc(c.eligible_users ?? 0)}</td>
+        <td>${esc(c.recommendations_computed ?? 0)}</td>
+        <td>${esc(c.style_feed_serves ?? 0)}</td>
+        <td title="Simulated">${fmt(i.reach)}</td>
+        <td title="Simulated">${fmt(i.impressions)}</td>
+        <td title="Simulated">${fixed1(i.ctr, '%')}</td>
+        <td title="Simulated">${fmt(i.conversions)}</td>
+        <td title="Simulated">${esc(money(i.revenue))}</td>
+        <td title="Simulated">${fixed1(i.lift, '%')}</td>
+        <td title="Simulated">${fixed1(i.roas, 'x')}</td>
+        <td class="mono">${c.status === 'launched' ? `<a href="./index.html?tab=campaigns&amp;campaign_id=${encodeURIComponent(c.campaign_id)}" target="_top">${esc(c.campaign_id)}</a>` : esc(c.campaign_id || '')}</td>
+      </tr>`;
+    }
+    async function loadCampaigns(signal) {
+      const d = await api('/v1/admin/intel/campaigns', { brand: msCsv('cmpBrand'), status: msCsv('cmpStatus'), pin: msCsv('cmpPin'), rfm: msCsv('cmpRfm') }, { signal });
+      const o = d.options;
+      msRender('cmpBrand', 'brands', o.brands);
+      msRender('cmpStatus', 'statuses', o.statuses);
+      msRender('cmpPin', 'PINs', o.pin_codes);
+      msRender('cmpRfm', 'segments', o.rfm_segments);
+      const s = d.summary;
+      document.getElementById('kCmpTotal').textContent = fmt(d.total);
+      document.getElementById('kCmpActive').textContent = fmt(s.active);
+      document.getElementById('kCmpConv').textContent = s.avg_conversion_rate == null ? '—' : Number(s.avg_conversion_rate).toFixed(2) + '%';
+      document.getElementById('kCmpRed').textContent = fmt(s.total_redemptions);
+      document.getElementById('cmpNote').textContent = d.note || '';
+      const brands = Object.keys(s.by_brand || {});
+      const red = brands.map(b => [b, s.by_brand[b].redemptions]).sort((a, b) => b[1] - a[1]);
+      chart('chRedemptions', red.length ? {
+        tooltip: { trigger: 'axis' }, grid: { left: 48, right: 16, top: 16, bottom: 56 },
+        xAxis: { type: 'category', data: red.map(r => r[0]), axisLabel: { rotate: 20, interval: 0 } }, yAxis: { type: 'value' },
+        series: [{ type: 'bar', name: 'Redemptions (Simulated)', data: red.map(r => r[1]) }],
+      } : null);
+      chart('chStatus', brands.length ? {
+        tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 48, right: 16, top: 16, bottom: 64 },
+        xAxis: { type: 'category', data: brands, axisLabel: { rotate: 20, interval: 0 } }, yAxis: { type: 'value', minInterval: 1 },
+        series: o.statuses.map(st => ({ name: st, type: 'bar', stack: 's', itemStyle: { color: (STATUS_COLORS[st] || [])[1] }, data: brands.map(b => s.by_brand[b].status[st] || 0) })),
+      } : null);
+      clientPage('cmpPager', d.items, (chunk) => {
+      document.getElementById('cmpCards').innerHTML = chunk.length ? chunk.map(c => `<div class="item-card">
+          <div class="flex justify-between items-start gap-2 mb-2"><div><div class="font-semibold">${esc(c.title)}</div><div class="muted">${esc(c.brand)}</div></div>${statusBadge(c.status)}</div>
+          <dl class="kv">
+            <dt>Campaign</dt><dd class="mono" title="${esc(c.campaign_id)}">${esc((c.campaign_id || '').slice(0, 8))}</dd>
+            <dt>Target PINs</dt><dd>${c.target_pins.length ? esc(c.target_pins.length <= 3 ? c.target_pins.join(', ') : c.target_pins.slice(0, 3).join(', ') + ' +' + (c.target_pins.length - 3)) : '<span class="muted">No data</span>'}</dd>
+            <dt>Target RFM</dt><dd>${esc(c.target_rfm)}</dd>
+            <dt>Commodities</dt><dd>${c.featured_commodities.length ? esc(c.featured_commodities.join(', ')) : '<span class="muted">No data</span>'}</dd>
+            <dt>Conversion</dt><dd>${c.conversion_rate == null ? '<span class="muted">No data</span>' : Number(c.conversion_rate).toFixed(2) + '% <span class="sim">Simulated</span>'}</dd>
+            <dt>Redemptions</dt><dd>${c.redemptions == null ? '<span class="muted">No data</span>' : fmt(c.redemptions) + ' <span class="sim">Simulated</span>'}</dd>
+          </dl></div>`).join('') : NO_DATA;
+      document.getElementById('campaignBody').innerHTML = chunk.length ? chunk.map(c => campaignTableRow(c.raw)).join('') : '<tr><td colspan="22" class="muted">No campaigns for these filters</td></tr>';
+      });
+    }
+    loaders.campaigns = () => run('campaigns', loadCampaigns);
+    document.getElementById('cmpFilters').addEventListener('submit', (e) => { e.preventDefault(); run('campaigns', loadCampaigns); });
+    document.getElementById('btnAllCols').addEventListener('click', (e) => {
+      const wrap = document.getElementById('cmpTableWrap');
+      wrap.hidden = !wrap.hidden;
+      e.target.setAttribute('aria-expanded', String(!wrap.hidden));
+      e.target.textContent = wrap.hidden ? 'All Columns' : 'Hide Table';
+    });
+
+    // ---------------- Tab 5: customers & orders ----------------
+    const recMsg = (form, text, kind) => {
+      const el = form.querySelector('[data-msg]');
+      el.textContent = text || '';
+      el.className = 'rec-msg' + (kind ? ' ' + kind : '');
+    };
+    const shortId = (id) => String(id || '').slice(0, 8);
+    function fillOptions(sel, values, selected) {
+      sel.innerHTML = values.map(v => '<option value="' + esc(v) + '"' + (v === selected ? ' selected' : '') + '>' + esc(v) + '</option>').join('');
+    }
+    function fillDatalist(id, values) {
+      document.getElementById(id).innerHTML = values.map(v => '<option value="' + esc(v) + '"></option>').join('');
+    }
+    async function loadRecordOptions(signal) {
+      const d = await api('/v1/admin/records/options', null, { signal });
+      const o = d.options;
+      const cf = document.getElementById('custCreate');
+      fillOptions(cf.elements.gender, o.genders, cf.elements.gender.value || o.genders[0]);
+      if (d.new_segment) document.getElementById('recNewSeg').textContent = d.new_segment;
+      fillDatalist('recPins', o.pin_codes);
+      fillDatalist('recServices', o.services);
+      if (d.photo_pattern) document.getElementById('recPattern').textContent = d.photo_pattern;
+    }
+    function photoProgress(o) {
+      if (o.photo_state === 'legacy') return '<span class="badge" style="background:#f1eef0;color:#6f6070" title="' + fmt(o.legacy_items) + ' items from the CSV; the first photo replaces them">Legacy items (no photos)</span>';
+      const done = o.photos_expected > 0 && o.photos_received >= o.photos_expected;
+      const [bg, fg] = done ? ['#e8f3e6', '#2f6b2a'] : o.photos_received ? ['#fdf4dc', '#8a6a12'] : ['#f1eef0', '#6f6070'];
+      return '<span class="badge" style="background:' + bg + ';color:' + fg + '">' + fmt(o.photos_received) + ' / ' + fmt(o.photos_expected) + '</span>';
+    }
+    const copyBtn = (text) => '<button type="button" class="ghost" data-copy="' + esc(text) + '" aria-label="Copy photo name"><i class="fa-regular fa-copy" aria-hidden="true"></i></button>';
+    async function loadOrders(page, signal) {
+      const d = await api('/v1/admin/orders', { pending: document.getElementById('recPending').checked ? 'true' : '', page: page || 1, size: PAGE_SIZE }, { signal });
+      document.getElementById('recBody').innerHTML = d.items.length ? d.items.map(o => `<tr>
+          <td class="mono" title="${esc(o.order_id)}">${esc(shortId(o.order_id))}${o.source === 'admin' ? ' <span class="badge" style="background:#e6eef8;color:#2b5a8f">New</span>' : ''}</td>
+          <td><div class="font-semibold">${nd(o.customer_name)}</div><div class="mono">${esc(shortId(o.customer_id))}</div></td>
+          <td>${nd(o.pin_code)}</td>
+          <td>${nd(o.date)}</td>
+          <td>${nd(o.service)}</td>
+          <td class="num">${photoProgress(o)}</td>
+          <td><span class="photo-name"><code class="mono" title="${esc(o.photo_name)}">${esc(o.photo_name)}</code>${copyBtn(o.photo_name)}</span></td>
+        </tr>`).join('') : '<tr><td colspan="7">' + NO_DATA + '</td></tr>';
+      pager('recPager', d.total, d.page, d.size, (pg) => run('records', (sig) => loadOrders(pg, sig)));
+    }
+    loaders.records = () => run('records', async (sig) => { await loadRecordOptions(sig); await loadOrders(1, sig); });
+    document.getElementById('recPending').addEventListener('change', () => run('records', (sig) => loadOrders(1, sig)));
+    document.getElementById('tab-records').addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-copy]');
+      if (!b) return;
+      try { await navigator.clipboard.writeText(b.dataset.copy); b.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>'; }
+      catch (_) { b.title = 'Copy failed: select the name and copy it'; }
+      setTimeout(() => { b.innerHTML = '<i class="fa-regular fa-copy" aria-hidden="true"></i>'; }, 1500);
+    });
+    // New records change every tab's numbers; reload the others next time they open.
+    const staleOtherTabs = () => ['customers', 'garments', 'brands', 'campaigns'].forEach(t => loaded.delete(t));
+
+    function pickCustomer(c) {
+      const of = document.getElementById('orderCreate');
+      of.elements.customer_id.value = c ? c.customer_id : '';
+      document.getElementById('recCustPick').innerHTML = c
+        ? '<button type="button" aria-selected="true" data-clear><i class="fa-solid fa-user-check" aria-hidden="true"></i>' + esc(c.name) + ' · <span class="mono">' + esc(c.short_id || shortId(c.customer_id)) + '</span>' + (c.pin_code ? ' · ' + esc(c.pin_code) : '') + ' <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>'
+        : '';
+    }
+    let pickTimer = null, pickCtl = null, pickHits = [];
+    document.getElementById('recCustQ').addEventListener('input', (e) => {
+      clearTimeout(pickTimer);
+      const q = e.target.value.trim();
+      pickCustomer(null);
+      if (q.length < 2) return;
+      pickTimer = setTimeout(async () => {
+        if (pickCtl) pickCtl.abort();
+        pickCtl = new AbortController();
+        try {
+          const d = await api('/v1/admin/intel/customers', { q, page: 1, size: 6 }, { signal: pickCtl.signal });
+          pickHits = d.items;
+          document.getElementById('recCustPick').innerHTML = d.items.length
+            ? d.items.map((c, i) => '<button type="button" role="option" aria-selected="false" data-hit="' + i + '">' + esc(c.name) + ' · <span class="mono">' + esc(c.short_id) + '</span>' + (c.pin_code ? ' · ' + esc(c.pin_code) : '') + '</button>').join('')
+            : '<span class="muted">No customer matches. Create one on the left first.</span>';
+        } catch (err) { if (err.name !== 'AbortError') document.getElementById('recCustPick').innerHTML = '<span class="rec-msg bad">' + esc(err.message) + '</span>'; }
+      }, 250);
+    });
+    document.getElementById('recCustPick').addEventListener('click', (e) => {
+      const hit = e.target.closest('[data-hit]');
+      if (hit) { pickCustomer(pickHits[Number(hit.dataset.hit)]); return; }
+      if (e.target.closest('[data-clear]')) { pickCustomer(null); document.getElementById('recCustQ').focus(); }
+    });
+
+    // The generated password lives only in this box until it's dismissed; it is never stored or re-fetched.
+    function showLogin(login) {
+      const box = document.getElementById('recLogin');
+      document.getElementById('recLoginUser').textContent = login ? login.username : '';
+      document.getElementById('recLoginPass').textContent = login ? login.password : '';
+      box.hidden = !login;
+    }
+    async function copyText(btn, text) {
+      try { await navigator.clipboard.writeText(text); btn.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>'; }
+      catch (_) { btn.title = 'Copy failed: select the text and copy it'; }
+      setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy" aria-hidden="true"></i>'; }, 1500);
+    }
+    document.getElementById('recLoginCopyUser').addEventListener('click', (e) => copyText(e.currentTarget, document.getElementById('recLoginUser').textContent));
+    document.getElementById('recLoginCopyPass').addEventListener('click', (e) => copyText(e.currentTarget, document.getElementById('recLoginPass').textContent));
+    document.getElementById('recLoginDone').addEventListener('click', () => showLogin(null));
+
+    const numOrNull = (v) => (v === '' || v == null ? null : Number(v));
+    async function submitRecord(form, path, body, onDone) {
+      const btn = form.querySelector('button[type=submit]');
+      btn.disabled = true;
+      recMsg(form, 'Saving…');
+      try { onDone(await apiPost(path, body)); staleOtherTabs(); }
+      catch (err) { recMsg(form, err.message || String(err), 'bad'); }
+      finally { btn.disabled = false; }
+    }
+    document.getElementById('custCreate').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = e.target, v = f.elements;
+      const body = {
+        name: v.name.value.trim(), phone: v.phone.value.trim(), address: v.address.value.trim(),
+        age: numOrNull(v.age.value), gender: v.gender.value, pin_code: v.pin_code.value.trim(),
+        create_login: v.create_login.checked,
+      };
+      if (!body.name || !body.phone || !body.address || body.age == null || !body.pin_code) { recMsg(f, 'Fill in every field.', 'bad'); return; }
+      showLogin(null);
+      submitRecord(f, '/v1/admin/customers', body, (d) => {
+        ['name', 'phone', 'address', 'age', 'pin_code'].forEach(k => { v[k].value = ''; });
+        v.create_login.checked = false;
+        recMsg(f, 'Customer ' + d.short_id + ' created' + (d.area_label ? ' in ' + d.area_label : '') + ' (segment ' + (d.rfm_segment || 'New') + '). '
+          + (d.login_error ? d.login_error + ' ' : '') + 'Now add their order on the right.', d.login_error ? 'bad' : 'good');
+        showLogin(d.login || null);
+        document.getElementById('recCustQ').value = body.name;
+        pickCustomer({ customer_id: d.customer_id, short_id: d.short_id, name: body.name, pin_code: d.pin_code });
+      });
+    });
+    document.getElementById('orderCreate').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = e.target, v = f.elements;
+      const body = {
+        customer_id: v.customer_id.value, scheduled_date: v.scheduled_date.value || null, service: v.service.value.trim(),
+        total_number_of_clothes: numOrNull(v.total_number_of_clothes.value), amount: numOrNull(v.amount.value),
+      };
+      if (!body.customer_id) { recMsg(f, 'Search and pick a customer first.', 'bad'); return; }
+      if (!body.service || body.total_number_of_clothes == null) { recMsg(f, 'Service and number of clothes are required.', 'bad'); return; }
+      submitRecord(f, '/v1/admin/orders', body, (d) => {
+        ['scheduled_date', 'service', 'total_number_of_clothes', 'amount'].forEach(k => { v[k].value = ''; });
+        recMsg(f, 'Order ' + shortId(d.order_id) + ' created for ' + d.photos_expected + (d.photos_expected === 1 ? ' garment' : ' garments') + '. Upload each photo as ' + (d.upload_prefix || '') + d.photo_name + ', with <item_id> set to 1, 2, 3…', 'good');
+        run('records', (sig) => loadOrders(1, sig));
+      });
+    });
+
+    // Filters render "All" until their options arrive (and stay usable if the load fails).
+    document.querySelectorAll('details.ms:empty').forEach(d => { d.innerHTML = '<summary>All</summary><div class="ms-pop"><div class="muted p-2">No options yet</div></div>'; });
+
+    // Reset clears a tab's filters and reloads it.
+    document.querySelectorAll('form.filters [data-reset]').forEach(b => b.addEventListener('click', () => {
+      const form = b.closest('form');
+      form.querySelectorAll('input[type=checkbox]').forEach(i => { i.checked = false; i.indeterminate = false; });
+      form.querySelectorAll('input[type=text]').forEach(i => { i.value = ''; });
+      form.querySelectorAll('details.ms').forEach(d => { d.removeAttribute('open'); if (d.dataset.label) msSummary(d); });
+      form.requestSubmit();
+    }));
+
+    showTab((location.hash || '#customers').slice(1));
+  </script>
+</body>
+</html>

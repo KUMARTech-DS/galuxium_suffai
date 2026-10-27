@@ -1,0 +1,302 @@
+openapi: 3.1.0
+info:
+  title: Suffai Fashion Intelligence API
+  version: 1.0.0
+  description: |
+    Governed B2B analytics API. Laundry service observations are not garment purchases.
+    Brand share requires verified consented garment observations.
+servers:
+  - url: http://localhost:8080
+    description: Local
+paths:
+  /health:
+    get:
+      summary: Liveness
+      operationId: health
+      responses:
+        "200":
+          description: OK
+  /v1/auth/brands:
+    get:
+      summary: List demo brand accounts
+      operationId: listBrands
+      responses:
+        "200":
+          description: Brand list
+  /v1/auth/brand/login:
+    post:
+      summary: Brand tenant login (demo JWT; Identity Platform in prod)
+      operationId: brandLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [brand, password]
+              properties:
+                brand: { type: string }
+                password: { type: string }
+      responses:
+        "200":
+          description: Access token
+  /v1/integrity/report:
+    get:
+      summary: Source referential integrity report
+      operationId: integrityReport
+      responses:
+        "200":
+          description: Integrity report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+  /v1/segments/summary:
+    get:
+      summary: RFM and service preference distributions
+      operationId: segmentsSummary
+      parameters:
+        - $ref: "#/components/parameters/AsOf"
+      responses:
+        "200":
+          description: Segment summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+  /v1/geo/query:
+    post:
+      summary: Geo intelligence query
+      operationId: geoQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeoQueryRequest"
+      responses:
+        "200":
+          description: Geo tiles and breakdowns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+        "422":
+          $ref: "#/components/responses/Error"
+  /v1/geo/tiles:
+    get:
+      summary: Privacy-safe choropleth aggregates
+      operationId: geoTiles
+      parameters:
+        - name: metric
+          in: query
+          schema:
+            type: string
+            enum: [active_customers]
+      responses:
+        "200":
+          description: Tiles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+  /v1/brands/{brand_id}/benchmarks:
+    get:
+      summary: Own brand vs approved competitors (verified garments only)
+      operationId: brandBenchmarks
+      parameters:
+        - name: brand_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Benchmarks or insufficient data empty state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+        "403":
+          $ref: "#/components/responses/Error"
+  /v1/product-opportunities:
+    post:
+      summary: Ranked product research recommendations
+      operationId: productOpportunities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [brand_id]
+              properties:
+                brand_id: { type: string }
+                geo_ids:
+                  type: array
+                  items: { type: string }
+                target_segment: { type: string }
+      responses:
+        "200":
+          description: Opportunities or insufficient data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+  /v1/campaigns:
+    post:
+      summary: Create campaign
+      operationId: createCampaign
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "201":
+          description: Created
+  /v1/campaigns/{id}/evaluate:
+    post:
+      summary: Evaluate campaign fit (async job)
+      operationId: evaluateCampaign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "202":
+          description: Job accepted
+  /v1/chat/query:
+    post:
+      summary: Read-only governed analytics chat
+      operationId: chatQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+                filter_context: { type: object }
+      responses:
+        "200":
+          description: Grounded answer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+  /v1/garments/images:initiate:
+    post:
+      summary: Initiate garment image upload (signed URL)
+      operationId: initiateImageUpload
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "200":
+          description: Upload session
+  /v1/garments/extractions:
+    post:
+      summary: Start idempotent extraction job
+      operationId: startExtraction
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "202":
+          description: Job queued
+  /v1/garments/extractions/{job_id}:
+    get:
+      summary: Extraction job status
+      operationId: getExtraction
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Status
+  /v1/garments/{id}/attributes:
+    patch:
+      summary: Human attribute corrections with audit
+      operationId: patchGarmentAttributes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated
+components:
+  parameters:
+    AsOf:
+      name: as_of
+      in: query
+      schema: { type: string, format: date }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string }
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Envelope"
+  schemas:
+    Envelope:
+      type: object
+      required: [data, meta, errors]
+      properties:
+        data: {}
+        meta:
+          type: object
+          properties:
+            request_id: { type: string }
+            as_of: { type: string }
+            source_watermark: { type: string }
+            metric_version: { type: string }
+            coverage: { type: object }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                enum:
+                  - UNAUTHORIZED
+                  - FORBIDDEN
+                  - NOT_FOUND
+                  - INSUFFICIENT_DATA
+                  - CONSENT_REQUIRED
+                  - INVALID_FILTER
+                  - JOB_PENDING
+              message: { type: string }
+    GeoQueryRequest:
+      type: object
+      properties:
+        geo_level: { type: string, enum: [pin, city] }
+        geo_ids:
+          type: array
+          items: { type: string }
+        date_from: { type: string, format: date }
+        date_to: { type: string, format: date }
+        age_bands:
+          type: array
+          items: { type: string }
+        gender:
+          type: array
+          items: { type: string }
+        rfm_segments:
+          type: array
+          items: { type: string }
+        service_ids:
+          type: array
+          items: { type: string }
+        metrics:
+          type: array
+          items: { type: string }

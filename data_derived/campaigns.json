@@ -1,0 +1,62 @@
+[
+  {
+    "campaign_id": "77bbc203-0774-4c10-a5ca-a069cbf93132",
+    "id": "77bbc203-0774-4c10-a5ca-a069cbf93132",
+    "tenant_id": "tenant-peterengland",
+    "image_object_key": "campaigns/tenant-peterengland/0cd3355b3b324cc59ee15a446e689716.jpg",
+    "metadata": {
+      "attributes": {
+        "commodity_type": "shirt",
+        "primary_color": "white",
+        "material_type": "cotton"
+      }
+    },
+    "created_at": "2026-10-13T15:07:40.909545+00:00",
+    "deleted_at": null
+  },
+  {
+    "campaign_id": "59ff39b4-0a02-49ef-a2ec-38003fe696d7",
+    "id": "59ff39b4-0a02-49ef-a2ec-38003fe696d7",
+    "tenant_id": "tenant-peterengland",
+    "image_object_key": "campaigns/tenant-peterengland/50cac325e6554f61b08bcb727a494a44.jpg",
+    "metadata": {
+      "attributes": {
+        "commodity_type": "shirt",
+        "primary_color": "white",
+        "material_type": "cotton"
+      }
+    },
+    "created_at": "2026-10-13T15:41:55.449370+00:00",
+    "deleted_at": null
+  },
+  {
+    "campaign_id": "17c769e6-1d50-4fe3-b71d-400b9c7ab86f",
+    "id": "17c769e6-1d50-4fe3-b71d-400b9c7ab86f",
+    "tenant_id": "tenant-peterengland",
+    "image_object_key": "campaigns/tenant-peterengland/0889bfba91174b329e4d890084fbca0c.jpg",
+    "metadata": {
+      "attributes": {
+        "commodity_type": "shirt",
+        "primary_color": "white",
+        "material_type": "cotton"
+      }
+    },
+    "created_at": "2026-10-13T15:42:23.627937+00:00",
+    "deleted_at": null
+  },
+  {
+    "campaign_id": "f236dbcd-97f3-4417-b000-cefd89fd8e82",
+    "id": "f236dbcd-97f3-4417-b000-cefd89fd8e82",
+    "tenant_id": "tenant-peterengland",
+    "image_object_key": "campaigns/tenant-peterengland/ff5f55a8afe6490588e428985418f89c.jpg",
+    "metadata": {
+      "attributes": {
+        "commodity_type": "shirt",
+        "primary_color": "white",
+        "material_type": "cotton"
+      }
+    },
+    "created_at": "2026-10-13T15:46:47.164110+00:00",
+    "deleted_at": null
+  }
+]

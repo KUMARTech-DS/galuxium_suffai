@@ -1,0 +1,22 @@
+# Build & push Cloud Run Job image (bq_sync / cdc_ingest)
+substitutions:
+  _REGION: asia-south1
+  _REPO: suffai
+  _IMAGE: suffai-job
+  _TAG: latest
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - Dockerfile.job
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:${_TAG}
+      - .
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:${_TAG}
+
+options:
+  logging: CLOUD_LOGGING_ONLY

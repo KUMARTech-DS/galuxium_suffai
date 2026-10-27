@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="prefetch" href="./index.html" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>SuffAI · Sign In</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--plum:#6b3a55;--mauve:#c59fb0;--sage:#9cb09d;--cream:#faf6ee}
+body{background:var(--cream);overflow:hidden;height:100vh;height:100dvh;display:flex;justify-content:center;align-items:center;font-family:Outfit,system-ui,sans-serif}
+input,button{font-family:inherit}
+.stage{position:fixed;inset:0;overflow:hidden;perspective:1000px}
+.tilt{position:absolute;inset:0;transition:transform .2s ease-out}
+.art{position:absolute;left:0;bottom:0;width:max(100vw,179.17vh);aspect-ratio:1376/768;animation:breathe 6s ease-in-out 2s infinite}
+@keyframes breathe{50%{transform:scale(1.012) translateY(-4px)}}
+/* figure slices: staggered pop-up entry */
+.slice{position:absolute;inset:0;background:url('login-bg.png') center/cover;opacity:0;transform-origin:50% 100%;
+  animation:pop 1s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:calc(var(--i)*.22s + .2s)}
+.s0{clip-path:inset(0 85.1% 0 0)}.s1{clip-path:inset(0 75.6% 0 14.9%)}.s2{clip-path:inset(0 63.7% 0 24.4%)}.s3{clip-path:inset(0 0 0 36.3%)}
+@keyframes pop{from{opacity:0;transform:translateY(80px) scaleY(.85)}to{opacity:1;transform:none}}
+/* sunglasses colour shift + glint */
+.lens{position:absolute;top:calc((169/768)*100%);width:calc((15.5/1376)*100%);height:calc((15.5/768)*100%);border-radius:50%;overflow:hidden;
+  background:linear-gradient(135deg,#ff4fa3,#4fb6ff);opacity:.5;animation:hue 4s linear infinite}
+.lens.l{left:calc((541/1376)*100%)}.lens.r{left:calc((564.5/1376)*100%);top:calc((169.5/768)*100%)}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+.lens::after{content:"";position:absolute;inset:-20%;background:linear-gradient(110deg,transparent 42%,#fff 50%,transparent 58%);transform:translateX(-120%);animation:glint 3.5s 2.5s infinite}
+@keyframes glint{40%,100%{transform:translateX(120%)}}
+/* drifting leaves + twinkling sparkles + floating blobs */
+.leaf{position:absolute;left:-5%;opacity:0;animation:drift 8s linear infinite;animation-delay:calc(var(--d)*1s + 1.5s)}
+.sage{width:30px;height:15px;background:var(--sage);border-radius:0 100% 0 100%}
+.mauve{width:16px;height:16px;background:#d1b3c4;border-radius:50%}
+@keyframes drift{0%{transform:translate(0,0) rotate(0);opacity:0}10%,90%{opacity:.7}25%{transform:translate(25vw,-30px) rotate(90deg)}50%{transform:translate(55vw,30px) rotate(200deg)}75%{transform:translate(85vw,-20px) rotate(290deg)}100%{transform:translate(110vw,40px) rotate(360deg);opacity:0}}
+.spark{position:absolute;width:8px;height:8px;background:var(--mauve);border-radius:50%;animation:twinkle 3s ease-in-out infinite;animation-delay:calc(var(--d)*.4s)}
+@keyframes twinkle{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1.4);opacity:.8}}
+.blob{position:absolute;border-radius:50%;filter:blur(30px);opacity:.35;animation:float 9s ease-in-out infinite}
+@keyframes float{50%{transform:translate(30px,-40px) scale(1.15)}}
+/* login card */
+.card{position:absolute;right:7%;top:50%;width:30%;min-width:260px;max-height:94dvh;overflow-y:auto;padding:32px 28px;border-radius:22px;background:rgba(255,255,255,.65);backdrop-filter:blur(12px);
+  box-shadow:0 20px 50px rgba(107,58,85,.18);--cx:0px;transform:translate(var(--cx),-50%);opacity:0;animation:cardIn .9s cubic-bezier(.2,.8,.2,1) 1.2s forwards}
+@keyframes cardIn{from{opacity:0;transform:translate(calc(var(--cx) + 60px),-50%)}to{opacity:1;transform:translate(var(--cx),-50%)}}
+.card h1{font-weight:600;letter-spacing:-.01em;color:var(--plum);font-size:28px;margin-bottom:6px}.card p{color:#8a7480;font-size:14px;margin-bottom:20px}
+.card>*,.card form>*{opacity:0;animation:up .6s ease forwards;animation-delay:calc(1.6s + var(--k,0)*.12s)}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+input{width:100%;padding:12px 14px;margin-bottom:14px;border:1.5px solid #e4d6dc;border-radius:12px;background:#fff;font-size:15px;outline:0;transition:.2s}
+input:focus{border-color:var(--plum);box-shadow:0 0 0 4px rgba(197,159,176,.35);transform:translateY(-2px)}
+button[type=submit]{position:relative;overflow:hidden;width:100%;padding:13px;border:0;border-radius:12px;background:var(--plum);color:#fff;font-size:16px;cursor:pointer;transition:.2s}
+button[type=submit]:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(107,58,85,.35)}
+button[type=submit]::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);transform:translateX(-100%);animation:shine 3.5s 3s infinite}
+@keyframes shine{to{transform:translateX(100%)}}
+
+label{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8a7480;font-weight:600;margin-bottom:.4rem}
+label .req{color:#a03a3a;margin-left:2px}
+.logo{display:block;height:64px;margin:0 0 .6rem -4px;transform-origin:50% 6%;animation:sway 3s ease-in-out 2.5s infinite}
+/* the hanger hangs: idle sway, big pendulum swing on a failed login */
+@keyframes sway{50%{transform:rotate(2.5deg)}0%,100%{transform:rotate(-2.5deg)}}
+@keyframes swing{0%{transform:rotate(0)}15%{transform:rotate(16deg)}35%{transform:rotate(-11deg)}55%{transform:rotate(6deg)}75%{transform:rotate(-3deg)}100%{transform:rotate(0)}}
+.logo.swing{animation:swing .65s ease-out}
+/* successful login: the models strut off, the hanger lifts the card away */
+/* explicit 'from' frames: base styles are opacity:0, so a to-only keyframe would start invisible */
+@keyframes exit{from{opacity:1;transform:none}to{opacity:0;transform:translate3d(-38vw,0,0) rotate(-3deg)}}
+@keyframes cardOut{from{opacity:1;transform:translate3d(var(--cx),-50%,0)}to{opacity:0;transform:translate3d(var(--cx),-185%,0)}}
+@keyframes veil{from{opacity:0}to{opacity:1}}
+.slice,.card{will-change:transform,opacity}
+.leaving .slice{animation:exit .8s cubic-bezier(.65,0,.35,1) forwards;animation-delay:calc(var(--i)*.1s)}
+.leaving .card{animation:cardOut .75s cubic-bezier(.65,0,.35,1) .1s forwards;backdrop-filter:none;background:rgba(255,255,255,.92)}
+/* free the GPU/main thread during the exit: stop every ambient animation */
+.leaving .leaf,.leaving .spark,.leaving .blob{opacity:0;transition:opacity .25s;animation-play-state:paused}
+.leaving .art,.leaving .logo,.leaving .lens,.leaving .lens::after{animation-play-state:paused}
+.veil{position:fixed;inset:0;background:var(--cream);opacity:0;pointer-events:none;z-index:9}
+.leaving .veil{animation:veil .35s ease-in .95s forwards}
+/* privacy shades: lenses go solid while the password is hidden */
+.priv .lens{opacity:.95;background:#14141a;animation:none}
+.caps{display:none;margin:-.5rem 0 .8rem;font-size:12px;color:#b07a2a}
+.card>.err{opacity:0;animation:none;max-height:0;padding-top:0;padding-bottom:0;margin-bottom:0;border-width:0;overflow:hidden;transition:opacity .3s,max-height .3s,padding .3s,margin .3s,border-width .3s}
+.card>.err.show{opacity:1;max-height:80px;padding-top:.65rem;padding-bottom:.65rem;margin-bottom:.85rem;border-width:1px;animation:shake .35s}
+.err{margin-bottom:.85rem;padding:.65rem .75rem;border-radius:8px;background:rgba(180,60,60,.12);border:1px solid rgba(180,60,60,.35);color:#a03a3a;font-size:13px}
+.card .hint{margin-top:1rem;margin-bottom:0;font-size:12px;line-height:1.45}.card .hint code{color:var(--plum)}
+.pw{position:relative}.pw input{padding-right:46px}
+.pw .eye{position:absolute;right:6px;top:6px;width:auto;padding:6px 8px;display:flex;border:0;border-radius:8px;background:none;color:var(--plum);cursor:pointer;opacity:1;animation:none;transition:opacity .2s,visibility .2s}
+.pw input:placeholder-shown+.eye{opacity:0;visibility:hidden}
+.eye .slash{display:none}.eye[aria-pressed=true] .slash{display:inline}
+button:focus-visible{outline:3px solid rgba(197,159,176,.7);outline-offset:2px}
+input[aria-invalid=true]{border-color:#c45a5a}
+/* keep browser autofill on-palette instead of the default yellow/blue fill */
+input:-webkit-autofill{-webkit-text-fill-color:#3b2733;-webkit-box-shadow:0 0 0 40px #fff inset;caret-color:#3b2733}
+input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 40px #fff inset,0 0 0 4px rgba(197,159,176,.35)}
+button[type=submit] .spin{display:none;width:14px;height:14px;margin-right:8px;vertical-align:-2px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+button[type=submit].busy .spin{display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+button[type=submit]:disabled{opacity:.7;cursor:wait;transform:none;box-shadow:none}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .slice,.card,.card>*,.card form>*{opacity:1!important;transform:none}
+  .card>.err:not(.show){opacity:0!important}.card{transform:translate(var(--cx),-50%)}.leaf,.spark,.blob{display:none}
+}
+@media(max-width:700px){.card{right:auto;left:50%;--cx:-50%;width:88%}.art{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="veil"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--mauve);left:62%;top:-6%"></div>
+  <div class="blob" style="width:220px;height:220px;background:var(--sage);left:44%;bottom:-8%;animation-delay:-4s"></div>
+  <div class="tilt" id="tilt"><div class="art">
+    <div class="slice s0" style="--i:0"></div><div class="slice s1" style="--i:1"></div>
+    <div class="slice s2" style="--i:2"></div>
+    <div class="slice s3" style="--i:3"><div class="lens l"></div><div class="lens r"></div></div>
+  </div></div>
+  <div class="leaf sage" style="top:10%;--d:0"></div><div class="leaf mauve" style="top:35%;--d:1.5;animation-duration:6s"></div>
+  <div class="leaf sage" style="top:60%;--d:3;animation-duration:9s"></div><div class="leaf mauve" style="top:80%;--d:4.5;animation-duration:5.5s"></div>
+  <div class="leaf sage" style="top:22%;--d:5"></div><div class="leaf sage" style="top:48%;--d:2.2;animation-duration:7s"></div>
+  <i class="spark" style="left:8%;top:30%;--d:0"></i><i class="spark" style="left:46%;top:8%;--d:2"></i><i class="spark" style="left:58%;top:88%;--d:4"></i>
+  <i class="spark" style="left:93%;top:28%;--d:1"></i><i class="spark" style="left:30%;top:92%;--d:3"></i>
+  <div class="card">
+    <div style="--k:0"><img class="logo" id="logo" src="logo.png" alt="SuffAI" /></div>
+    <h1 style="--k:0">Sign In</h1><p style="--k:1"><span id="hello">Hello</span> · Sign in to the SuffAI Command Center.</p>
+    <div id="err" class="err" role="alert"></div>
+    <form id="form" novalidate>
+      <label for="user" style="--k:2">Username<span class="req" aria-hidden="true">*</span></label>
+      <input id="user" name="user" autocomplete="username" autocapitalize="none" spellcheck="false" autofocus required style="--k:2" />
+      <label for="pass" style="--k:3">Password<span class="req" aria-hidden="true">*</span></label>
+      <div class="pw" style="--k:3"><input id="pass" name="pass" type="password" placeholder=" " autocomplete="current-password" required /><button type="button" class="eye" aria-label="Show password" aria-pressed="false" aria-controls="pass"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" d="M3 3l18 18"/></svg></button></div>
+      <div class="caps" id="caps" aria-live="polite">⇪ Caps Lock is on</div>
+      <button type="submit" style="--k:4"><span class="spin" aria-hidden="true"></span><span class="go-txt">Continue</span></button>
+    </form>
+    <p class="hint" style="--k:5">Use the credentials issued for your brand, customer or admin account.</p>
+  </div>
+</div>
+<script>
+    // Served as /login by the Command Center → go to the clean app URL; opened as login.html → index.html
+    const APP_URL = /\.html$/i.test(location.pathname) ? './index.html' : '/';
+    // Already signed in → straight to the shell (index.html re-validates the token)
+    const existing = SuffaiSession.getSession();
+    if (existing && existing.token) location.replace(APP_URL);
+
+    const $ = (id) => document.getElementById(id);
+    const form = $('form'), err = $('err'), user = $('user'), pass = $('pass'), eye = document.querySelector('.eye');
+    const go = form.querySelector('[type=submit]'), goTxt = go.querySelector('.go-txt');
+    const busy = (on) => { go.disabled = on; go.classList.toggle('busy', on); goTxt.textContent = on ? 'Signing in…' : 'Continue'; form.setAttribute('aria-busy', on); };
+
+    const clearErr = () => {
+      err.classList.remove('show');
+      user.removeAttribute('aria-invalid'); pass.removeAttribute('aria-invalid');
+    };
+    // error stays while either field is empty; goes away once both have text
+    form.addEventListener('input', () => { if (user.value && pass.value) clearErr(); });
+
+    const stage = $('stage'), caps = $('caps');
+    const h = new Date().getHours();
+    $('hello').textContent = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+
+    // privacy shades: her sunglasses go solid while you type a hidden password
+    const shades = () => stage.classList.toggle('priv', document.activeElement === pass && pass.type === 'password');
+    pass.addEventListener('focus', shades); pass.addEventListener('blur', shades);
+
+    // caps lock warning on the password field
+    pass.addEventListener('keyup', (e) => { caps.style.display = e.getModifierState?.('CapsLock') ? 'block' : 'none'; });
+    pass.addEventListener('blur', () => { caps.style.display = 'none'; });
+
+    eye.addEventListener('mousedown', (e) => e.preventDefault()); // keep focus in the field
+    eye.addEventListener('click', () => {
+      const show = pass.type === 'password';
+      pass.type = show ? 'text' : 'password';
+      eye.setAttribute('aria-pressed', show); // fixed label + pressed state (changing both double-announces)
+      shades();
+    });
+
+    function fail(msg, field) {
+      err.textContent = msg;
+      err.classList.remove('show'); void err.offsetWidth; // restart shake on every failed attempt
+      err.classList.add('show');
+      const logo = $('logo');
+      logo.classList.remove('swing'); void logo.offsetWidth; logo.classList.add('swing');
+      logo.addEventListener('animationend', () => logo.classList.remove('swing'), { once: true });
+      // flag only the field(s) at fault and put the caret where the fix goes
+      const bad = field ? [field] : [user, pass];
+      bad.forEach((f) => f.setAttribute('aria-invalid', 'true'));
+      if (field) field.focus(); else pass.select();
+    }
+
+    let redirecting = false;
+    function leave() {
+      redirecting = true; // keep the button locked until the page is gone
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (still) { location.href = APP_URL; return; }
+      stage.onmousemove = stage.onmouseleave = null; tilt.style.transform = ''; // stop the 3D tilt repainting mid-exit
+      if (document.activeElement) document.activeElement.blur(); stage.classList.remove('priv');
+      // run the exit; navigate once the veil has covered the page
+      stage.classList.add('leaving');
+      setTimeout(() => { location.href = APP_URL; }, 1350);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const u = user.value.trim(), p = pass.value;
+      if (go.disabled) return; // a sign-in is already in flight
+      if (!u || !p) { fail(!u && !p ? 'Enter both username and password.' : !u ? 'Enter your username.' : 'Enter your password.', !u ? user : pass); return; }
+      if (pass.type !== 'password') eye.click(); // hide it again before the browser offers to save it
+      busy(true);
+      try {
+        const res = await fetch(SuffaiSession.apiBase() + '/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ username: u, password: p }),
+          signal: AbortSignal.timeout ? AbortSignal.timeout(20000) : undefined, // never leave the button spinning forever
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.token) {
+          fail(res.status === 401
+            ? 'Invalid username or password.'
+            : SuffaiSession.formatApiDetail(data.detail, 'Sign-in is unavailable right now (HTTP ' + res.status + ').'));
+          return;
+        }
+        if (!(data.allowed_tabs || []).length) {
+          // the shell would clear this session and bounce straight back here; say why instead
+          fail('This account has no Command Center access yet. Contact your admin.');
+          return;
+        }
+        try {
+          SuffaiSession.setSession({
+            token: data.token,
+            role: data.role,
+            username: data.username,
+            brand_name: data.brand_name || null,
+            customer_id: data.customer_id || null,
+            display_name: data.display_name || data.username,
+            allowed_tabs: data.allowed_tabs || [],
+          });
+        } catch (storageErr) { // storage blocked (private mode / full): say so, not "server unreachable"
+          fail(storageErr.message);
+          return;
+        }
+        leave();
+        return;
+      } catch (ex) {
+        fail(ex && ex.name === 'TimeoutError'
+          ? 'The server is taking too long to respond. Try again in a moment.'
+          : 'Could not reach the server. Check your connection and try again.');
+      } finally {
+        if (!redirecting) busy(false);
+      }
+    });
+
+    // gentle 3D tilt toward the cursor
+    const tilt = $('tilt');
+    stage.onmousemove = (e) => {
+      const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      tilt.style.transform = `rotateY(${x * 4}deg) rotateX(${-y * 3}deg)`;
+    };
+    stage.onmouseleave = () => { tilt.style.transform = ''; };
+</script>
+</body>
+</html>

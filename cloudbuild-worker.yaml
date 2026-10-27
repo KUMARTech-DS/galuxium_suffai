@@ -1,0 +1,11 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile.worker'
+      - '-t'
+      - 'asia-south1-docker.pkg.dev/suffai-dev/suffai/suffai-extraction:psycopg-fix'
+      - '.'
+images:
+  - 'asia-south1-docker.pkg.dev/suffai-dev/suffai/suffai-extraction:psycopg-fix'

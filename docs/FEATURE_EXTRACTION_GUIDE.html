@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SuffAI - How we read garment images</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 16mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: #1d2433; font-size: 10.5pt; line-height: 1.5; margin: 0; }
+  h1 { font-size: 24pt; margin: 0 0 4px; color: #14213d; }
+  h2 { font-size: 15pt; color: #14213d; margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid #e4e8f0; }
+  h3 { font-size: 11.5pt; margin: 14px 0 6px; color: #23345c; }
+  p { margin: 0 0 8px; }
+  .sub { color: #5b6478; font-size: 11pt; margin-bottom: 14px; }
+  .meta { color: #8a92a5; font-size: 9pt; }
+  .page-break { page-break-before: always; }
+  .callout { background: #f3f6fc; border-left: 4px solid #3b5bdb; padding: 10px 14px; border-radius: 6px; margin: 10px 0 12px; }
+  .callout.green { background: #eefaf2; border-color: #2f9e44; }
+  .callout.amber { background: #fff8e6; border-color: #f08c00; }
+  .two { display: flex; gap: 12px; }
+  .two > div { flex: 1; }
+  .card { border: 1px solid #dfe4ee; border-radius: 10px; padding: 10px 12px; background: #fff; }
+  .card h3 { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.6pt; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e6e9f0; vertical-align: top; }
+  th { background: #f5f7fb; color: #3a4459; font-weight: 600; }
+  tr { page-break-inside: avoid; }
+  .flow { display: flex; align-items: stretch; gap: 0; margin: 8px 0 14px; }
+  .step { flex: 1; border: 1px solid #cdd6ea; background: #f8faff; border-radius: 8px; padding: 8px 9px; font-size: 9.2pt; }
+  .step b { display: block; color: #23345c; margin-bottom: 2px; font-size: 9.6pt; }
+  .arrow { width: 18px; display: flex; align-items: center; justify-content: center; color: #8a96b5; font-size: 14pt; }
+  .num { display: inline-block; width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 50%; background: #3b5bdb; color: #fff; font-size: 8.5pt; margin-right: 4px; }
+  .formula { font-family: Menlo, Consolas, monospace; background: #14213d; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 9pt; margin: 8px 0; white-space: nowrap; }
+  h2, h3 { break-after: avoid; page-break-after: avoid; }
+  .flow, .callout, .card, .formula, ul, .keep { break-inside: avoid; page-break-inside: avoid; }
+  .bar { height: 14px; border-radius: 4px; display: inline-block; vertical-align: middle; }
+  ul { margin: 4px 0 10px 18px; padding: 0; }
+  li { margin-bottom: 3px; }
+  .label-card { font-family: Menlo, Consolas, monospace; font-size: 9pt; background: #fbfbfd; border: 1px dashed #b9c2d6; border-radius: 8px; padding: 8px 10px; }
+  .muted { color: #6b7389; }
+  .small { font-size: 9pt; }
+  .figure { text-align: center; break-inside: avoid; page-break-inside: avoid; }
+  .figure img { width: 100%; max-height: 248mm; object-fit: contain; }
+  .caption { font-size: 9pt; color: #5b6478; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>How SuffAI reads garment images</h1>
+<div class="sub">Feature extraction from images: what we extract, how it works, and where it is used</div>
+<div class="meta">Audience: business and commercial teams &middot; Prepared October 2026</div>
+
+<h2>1. The short version</h2>
+<p>Every garment photo that enters SuffAI, whether it is a customer's item photographed during a laundry order or a product image uploaded by a brand, is turned into two things by Google's AI models:</p>
+<div class="two">
+  <div class="card">
+    <h3>A "label card" (readable attributes)</h3>
+    <p>Plain facts about the garment such as type, colour, pattern, material, size and brand. These are read from the photo and from any care or brand labels visible in it.</p>
+    <div class="label-card">type: shirt<br>colour: navy blue<br>pattern: checked<br>material: cotton<br>size: L<br>brand: unknown</div>
+  </div>
+  <div class="card">
+    <h3>A "visual fingerprint" (embedding)</h3>
+    <p>A long list of numbers that captures how the garment <i>looks</i> overall: cut, texture, colour mix and style. Two garments that look alike have similar fingerprints, even if their label cards differ.</p>
+    <p class="muted small">Lets us answer "how similar is this brand's shirt to what customers in this PIN code already wear?" as a number between 0 and 1.</p>
+  </div>
+</div>
+<div class="callout">
+  <b>Why both?</b> The label card is precise but limited to the fields we ask for. The fingerprint captures overall look and style that words cannot. SuffAI combines them when ranking brand products for an audience.
+</div>
+
+<div class="page-break"></div>
+<div class="figure">
+  <img src="assets/feature_extraction_flow.svg" alt="End-to-end flow from garment photo to business insight" />
+  <div class="caption">Figure 1. End-to-end flow: where images are stored, which Google Cloud services process them, what is extracted, and where the results are used.</div>
+</div>
+
+<div class="page-break"></div>
+<h2>2. What we extract from each image</h2>
+<table>
+  <thead><tr><th style="width:22%">Attribute</th><th style="width:38%">Possible values (examples)</th><th>How it is read</th></tr></thead>
+  <tbody>
+    <tr><td>Garment type</td><td>shirt, t-shirt, trouser, jeans, kurta, saree, dress, jacket, hoodie, home linen</td><td>Visual, or brand label if visible</td></tr>
+    <tr><td>Primary colour</td><td>navy blue, white, maroon ... plus secondary colours</td><td>Visual</td></tr>
+    <tr><td>Pattern</td><td>solid, striped, checked, printed</td><td>Visual</td></tr>
+    <tr><td>Material</td><td>cotton, polyester, silk, wool, linen, denim, blend (with % blend when printed)</td><td>Care label first; visual guess only as fallback, at lower confidence</td></tr>
+    <tr><td>Size</td><td>S / M / L / XL or numeric, with sizing system (IN / US / EU)</td><td>Size label only</td></tr>
+    <tr><td>Brand and SKU</td><td>Brand name; SKU only if clearly printed</td><td>Brand label only. Never guessed. For brand uploads, the brand is set to the uploading brand.</td></tr>
+    <tr><td>Style tags</td><td>casual, formal, ethnic ...</td><td>Visual</td></tr>
+    <tr><td>Confidence per field</td><td>0.0 to 1.0, plus where it came from (label vs visual)</td><td>Reported by the model for every key field</td></tr>
+  </tbody>
+</table>
+<div class="callout green">
+  <b>What we never extract:</b> the model is explicitly instructed never to infer a person's gender, age or income from an image. "Unknown" is always an acceptable answer, and the model is told not to invent brands or SKUs.
+</div>
+
+<h2>3. How it works</h2>
+<p>Images enter through two doors. The extraction step is the same for both; what happens afterwards differs.</p>
+
+<h3>Door A: Customer garments (from laundry orders)</h3>
+<div class="flow">
+  <div class="step"><b><span class="num">1</span>Photo stored</b>Garment photo is saved securely in Google Cloud Storage, tagged with the customer and order.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">2</span>Label card</b>Gemini AI reads type, colour, pattern, material, size and brand, with a confidence for each.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">3</span>Fingerprint</b>Google's multimodal model creates the visual fingerprint.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">4</span>Same garment?</b>Compared with the customer's wardrobe, then with all known garments. 92% or higher similarity counts as the same item.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">5</span>Wardrobe updated</b>Matched items get their PIN-code count increased; new items are added as a new unique garment.</div>
+</div>
+<p>Over time this builds a de-duplicated digital wardrobe for each customer and a picture of <b>which garments are worn, and how often, in each PIN code</b>, without counting the same shirt twice when it is washed again.</p>
+
+<h3>Door B: Brand products (Ads Lab campaigns)</h3>
+<div class="flow">
+  <div class="step"><b><span class="num">1</span>Brand uploads SKUs</b>Brand selects target PIN codes and audience (age, gender, RFM tier) and uploads product images.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">2</span>Label card</b>Same Gemini extraction. Brand name is forced to the uploading brand.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">3</span>Fingerprint</b>Same multimodal model, so brand and customer garments are directly comparable.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">4</span>Compare with PINs</b>Fingerprint is compared with garments seen in each chosen PIN code; the top 5 closest are kept per PIN.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b><span class="num">5</span>Rank</b>Visual match, local popularity and attribute fit are blended into a 0 to 100 score.</div>
+</div>
+<div class="callout amber">
+  <b>Brand images never become customer data.</b> Brand product images are compared read-only. They are never added to any customer's wardrobe or to PIN-code counts.
+</div>
+
+<h3>Quality checks built into extraction</h3>
+<ul>
+  <li><b>Confidence gate:</b> if every key field is 90% confident or more, the result is accepted automatically; otherwise it is marked <i>Needs review</i>. A detected brand with low confidence always goes to review.</li>
+  <li><b>Labels beat guesses:</b> material, size and brand come from printed labels when readable. Visual guesses are flagged as such and given lower confidence.</li>
+  <li><b>Ranking still completes:</b> if extraction or comparison fails for one product, the product is still scored on the parts that worked and is marked as failed, so one bad image does not stop the campaign.</li>
+  <li><b>Safe retries:</b> each image is processed once even if the cloud delivers the notification twice.</li>
+</ul>
+
+<h2>4. How a brand product is ranked</h2>
+<p>For each uploaded product, the Ads Lab combines three signals into one score out of 100:</p>
+<div class="formula">Rank score = 100 &times; ( 55% Visual match + 15% Local popularity + 30% Attribute fit )</div>
+<table>
+  <thead><tr><th style="width:22%">Signal</th><th style="width:10%">Weight</th><th>What it means</th><th style="width:20%">Comes from</th></tr></thead>
+  <tbody>
+    <tr><td><b>Visual match</b></td><td>55%</td><td>How closely the product's look resembles the garments customers in the chosen PIN codes already own. PINs with more observed garments count for more.</td><td>Visual fingerprint</td></tr>
+    <tr><td><b>Local popularity</b></td><td>15%</td><td>How much of the PIN's observed wardrobe is made up of the product's closest look-alikes, i.e. whether those similar garments are common or rare locally.</td><td>Fingerprint + PIN counts</td></tr>
+    <tr><td><b>Attribute fit</b></td><td>30%</td><td>How well the product's label card matches the selected audience's known preferences for colour, pattern, garment type, material, size and brand.</td><td>Label card + audience preferences</td></tr>
+  </tbody>
+</table>
+
+<h3>Inside attribute fit</h3>
+<table>
+  <thead><tr><th>Attribute</th><th style="width:12%">Weight</th><th style="width:55%"></th></tr></thead>
+  <tbody>
+    <tr><td>Colour</td><td>25</td><td><span class="bar" style="width:100%;background:#3b5bdb"></span></td></tr>
+    <tr><td>Pattern</td><td>20</td><td><span class="bar" style="width:80%;background:#4c6ef5"></span></td></tr>
+    <tr><td>Garment type</td><td>20</td><td><span class="bar" style="width:80%;background:#4c6ef5"></span></td></tr>
+    <tr><td>Material</td><td>15</td><td><span class="bar" style="width:60%;background:#748ffc"></span></td></tr>
+    <tr><td>Size</td><td>10</td><td><span class="bar" style="width:40%;background:#91a7ff"></span></td></tr>
+    <tr><td>Brand</td><td>10</td><td><span class="bar" style="width:40%;background:#91a7ff"></span></td></tr>
+  </tbody>
+</table>
+<p class="small muted">If a field is unknown for a product (for example size was not readable), that field is left out rather than counted against the product. If the audience filter is too narrow to have preference data, it relaxes to the PIN codes alone.</p>
+
+<div class="keep">
+<h3>Worked example</h3>
+<p>A brand uploads a navy checked cotton shirt targeting two Bengaluru PIN codes, age 25&ndash;34.</p>
+<table>
+  <thead><tr><th>Signal</th><th>Result</th><th>Contribution</th></tr></thead>
+  <tbody>
+    <tr><td>Visual match</td><td>0.80 (looks very like shirts customers in these PINs own)</td><td>0.55 &times; 0.80 = 0.44</td></tr>
+    <tr><td>Local popularity</td><td>0.60 (those look-alikes are fairly common)</td><td>0.15 &times; 0.60 = 0.09</td></tr>
+    <tr><td>Attribute fit</td><td>0.70 (navy and checked are popular with this audience)</td><td>0.30 &times; 0.70 = 0.21</td></tr>
+    <tr><td colspan="2"><b>Rank score</b></td><td><b>100 &times; 0.74 = 74 / 100</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>5. Where the extracted features are used</h2>
+<table>
+  <thead><tr><th style="width:24%">Product area</th><th>How it uses image features</th><th style="width:22%">Who sees it</th></tr></thead>
+  <tbody>
+    <tr><td><b>Ads Lab: SKU ranking</b></td><td>Ranks a brand's uploaded products for the chosen PIN codes and audience using the score above. Shows each product's label card and score breakdown.</td><td>Brand users, Admin</td></tr>
+    <tr><td><b>Campaigns</b></td><td>The ranked products become the campaign's selection; their attributes and match scores carry into the campaign view and its analysis section.</td><td>Brand users, Admin</td></tr>
+    <tr><td><b>Customer wardrobe</b></td><td>Fingerprints de-duplicate repeat washes of the same garment into one unique item per customer, with the attributes from its label card.</td><td>Internal (powers other features)</td></tr>
+    <tr><td><b>PIN-code garment counts</b></td><td>How many times similar garments are seen in each PIN. Feeds the "local popularity" signal and geographic insight.</td><td>Brands (aggregated), Admin</td></tr>
+    <tr><td><b>Style Assistant</b></td><td>Builds a taste profile from a customer's wardrobe (colours, patterns, materials) and uses fingerprints to suggest brand products that pair with what they own ("Complete the look").</td><td>Customers</td></tr>
+    <tr><td><b>AURA assistant</b></td><td>Summarises ranking results in chat after a campaign's extraction and ranking finish, and suggests the next step.</td><td>Brand users</td></tr>
+    <tr><td><b>Admin intelligence</b></td><td>Garment attribute tables, colour preference and top garment types on customer profiles.</td><td>Admin only</td></tr>
+  </tbody>
+</table>
+
+<h2>6. Privacy and trust</h2>
+<ul>
+  <li>The AI sees garment images only. It is told never to infer a person's gender, age or income from them.</li>
+  <li>Brand users see aggregated, PIN-level insight only. Individual customers are not identifiable, and competitor brands are masked.</li>
+  <li>Brand catalogue images are compared read-only and never mixed into customer data.</li>
+  <li>Low-confidence results are flagged for review rather than silently trusted.</li>
+</ul>
+
+<div class="keep">
+<h2>7. Glossary</h2>
+<table>
+  <tbody>
+    <tr><td style="width:24%"><b>Feature extraction</b></td><td>Turning an image into structured information a system can use: here, a label card and a visual fingerprint.</td></tr>
+    <tr><td><b>Label card / attributes</b></td><td>Human-readable facts about a garment (type, colour, pattern, material, size, brand).</td></tr>
+    <tr><td><b>Visual fingerprint / embedding</b></td><td>A list of 1,408 numbers describing a garment's overall look. Similar-looking garments have similar fingerprints.</td></tr>
+    <tr><td><b>Similarity</b></td><td>A 0 to 1 score of how alike two fingerprints are (1 = identical look).</td></tr>
+    <tr><td><b>Confidence</b></td><td>The model's own 0 to 1 estimate of how sure it is about each attribute.</td></tr>
+    <tr><td><b>SKU</b></td><td>A single product in a brand's catalogue.</td></tr>
+    <tr><td><b>RFM tier</b></td><td>Customer segment based on how Recently, how Frequently and how Much they spend.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Technical appendix (for reference)</h3>
+<table class="small">
+  <tbody>
+    <tr><td style="width:30%">Attribute extraction model</td><td>Google Gemini 2.0 Flash on Vertex AI (region asia-south1), JSON output, low temperature for consistency</td></tr>
+    <tr><td>Fingerprint model</td><td>Google Vertex AI multimodal embedding (multimodalembedding@001), 1,408 dimensions</td></tr>
+    <tr><td>Auto-accept confidence</td><td>0.90 (below this the result is marked Needs review)</td></tr>
+    <tr><td>Same-garment threshold</td><td>0.92 similarity</td></tr>
+    <tr><td>PIN comparison</td><td>Top 5 closest garments per PIN, up to 2,000 candidates per PIN, up to 50 PINs per campaign</td></tr>
+    <tr><td>Services</td><td>Extraction worker and Similarity service on Google Cloud Run; images in Cloud Storage; results in Cloud SQL and BigQuery</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

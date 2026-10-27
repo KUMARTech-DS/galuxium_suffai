@@ -1,0 +1,24 @@
+# Cloud Run Job image: BigQuery sync + CDC ingest
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DATA_DIR=/app/data_offline \
+    DERIVED_DIR=/app/data_derived
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY config ./config
+COPY services ./services
+COPY suffai ./suffai
+COPY jobs ./jobs
+COPY data_offline ./data_offline
+COPY data_derived ./data_derived
+
+# Default: full warehouse sync. Override args for CDC:
+#   gcloud run jobs execute suffai-cdc --args=python,-m,jobs.cdc_ingest
+ENTRYPOINT ["python", "-m"]
+CMD ["jobs.bq_sync"]

@@ -1,0 +1,80 @@
+username,password,role,brand_name,customer_id,display_name
+admin1,123@admin,admin,,,Central Admin
+brand_adidas,6jQel8Wc2V,brand,Adidas,,Adidas
+brand_h_m,XCmIaHM1uy,brand,H&M,,H&M
+brand_levi_s,aAB4uq6xcc,brand,Levi's,,Levi's
+brand_mango,GrV5XJtSsY,brand,Mango,,Mango
+brand_nike,mnFZ8SPvoR,brand,Nike,,Nike
+brand_tommy_hilfiger,5JTYKiVHbI,brand,Tommy Hilfiger,,Tommy Hilfiger
+brand_uniqlo,ExC2mkHeFc,brand,Uniqlo,,Uniqlo
+brand_zara,7leC8aED8A,brand,Zara,,Zara
+cust_68cb71fa,ahjlebPFnW,customer,,68cb71fa5598cb80a1608446,Jacob
+cust_68c28f57,C0ywVRul1D,customer,,68c28f57e76fdb959ea2e934,Raaghav Raaj
+cust_68eb28e5,qndYBqN9nk,customer,,68eb28e500eff7f08fb1ca26,Ramesh
+cust_69bbda5b,TIzZkr425w,customer,,69bbda5b60acf99095d2b924,Hemanth Mandava
+cust_6a3ba22b,N1z2dR1k4I,customer,,6a3ba22b082cda0d9ef286e9,Ashwini Kal
+cust_69ae8f4f,vnRwEFIY5m,customer,,69ae8f4f9d15e656894a9f5c,Arjun
+cust_68d41198,ofsXHgcR1H,customer,,68d41198cdcb9b36f28adfd1,Sankalp prabhakar
+cust_6a60dfa8,7qOWbrJ6EC,customer,,6a60dfa8fc06a244361402ed,Prashant Raizada
+cust_6abb9bd8,ilyfML9b7Z,customer,,6abb9bd8c0212a6a3d46bf37,Priya Mishra
+cust_6a37fbed,yuux7Qu5Pk,customer,,6a37fbed082cda0d9ed645b1,Amit Raj
+cust_6a9404be,FKB31gdMdD,customer,,6a9404beed28cd6d6d885f86,Vivek Raj
+cust_6a0813a7,FpxrDOPXVJ,customer,,6a0813a74eb1fd59c747d8c8,Abhilash
+cust_69429ceb,99wIYKCy3M,customer,,69429ceb4a4347899444bd63,Geetha
+cust_69a6c5ce,TJledKnyxI,customer,,69a6c5cec8eb3156e5af23a3,Hanna Abraham
+cust_68e9ecd8,rSoL14YptP,customer,,68e9ecd800eff7f08f9fe48a,Rishabh
+cust_6a9e996e,SBaEGu208F,customer,,6a9e996ea32605cbd3ce3a47,Nishtha
+cust_691309a2,Miqu2N2qkF,customer,,691309a27f622bfb85479b3c,Bhavana
+cust_6a40f96a,1GjbyaO4JC,customer,,6a40f96a1b222aba8a23fd4e,Anil
+cust_6a116881,Z8Oz6gGDWE,customer,,6a1168811fe48dfdb8d5d475,Siddhant
+cust_6a9a36c0,Qd7HnH0DHA,customer,,6a9a36c0a32605cbd382639c,Prajyothi
+cust_6a28476e,bPN9VHndo1,customer,,6a28476e5396dbc5db848eb1,Vamsi Krishna
+cust_6a0f1ec0,XlL0EvJRV7,customer,,6a0f1ec0c8936b1e68c9ab93,Shriya Singh
+cust_6a1abf8e,16jy5cQf9U,customer,,6a1abf8ed38c0f95dbefe419,Abhishikta Das
+cust_6a9da521,kh1Y4uWJTT,customer,,6a9da521a32605cbd3c2b319,Abhimanyu
+cust_6abf7c9c,egWcYCZN96,customer,,6abf7c9cf803cdf90bfeb159,Vishal
+cust_69a63db6,hQZXIaP5l3,customer,,69a63db6c8eb3156e5a4d591,Manu Thiyyas
+cust_6a817120,D2hkWmXgMH,customer,,6a8171206499935b166fdb6f,Don
+cust_6a5b3e0c,6279w08og9,customer,,6a5b3e0c1b222aba8a14e53c,Gaurav
+cust_6a3676e8,RI61loBwYW,customer,,6a3676e8082cda0d9ebf115b,Harshita
+cust_68fb4b39,eWyFZGfQwB,customer,,68fb4b397074d4bed3dbe745,Pragya
+cust_6a9d5239,E7zqot23rk,customer,,6a9d5239a32605cbd3b86d1a,Sarthak
+cust_699f2ddb,aqBesfYa7A,customer,,699f2ddbdb7fe5e345d9ea0f,Ambar
+cust_691310aa,j4g36adeWH,customer,,691310aa7f622bfb854a035d,Neel Aryan Gupta
+cust_6a9e6fd9,eOVgijU9To,customer,,6a9e6fd9a32605cbd3cb0897,Meghna Parwani
+cust_6ab0af90,nlraOh5kYH,customer,,6ab0af9093c4653a0d7cc53b,Surya
+cust_6aa780ad,Vg2CV6WuXH,customer,,6aa780add23653d72c1ccfb8,Pooja Singh
+cust_6a491adc,RcTacHr6ie,customer,,6a491adc1b222aba8a726e87,Prashant Kolambekar
+cust_6a6b5682,7z6JuPBn4L,customer,,6a6b56821e06ed06803df77b,Ishit
+cust_6aa3be13,Ahzu9Vjt7k,customer,,6aa3be13c73a37e647c7e6b8,Neha Gupta
+cust_6a8a8a5c,1Mn430wdQ7,customer,,6a8a8a5c1d7521daf7b5b2a5,Lavin
+cust_68d618c3,w0PmashzYZ,customer,,68d618c3cb5c52515958a48b,Neetu
+cust_6aa6c363,Lbg8bPuziI,customer,,6aa6c363d23653d72c078fbd,Nishtha TRIPATHI
+cust_6a01a895,xBEuoeCbNG,customer,,6a01a8954eb1fd59c7064982,Deeksha Tandon
+cust_6aae7e8d,GjJX42wiug,customer,,6aae7e8dd23653d72c9d641a,Neha Jha
+cust_69f49248,Kmtnomhh67,customer,,69f49248fcc39c90e8660fce,sharthak
+cust_6a794a33,Pp3sxBnZOS,customer,,6a794a336499935b1615be83,Pushkar Anand
+cust_69dbb4d2,ZkOYdPaeMY,customer,,69dbb4d265a5f15ab049f73f,Sharvani Shastry
+cust_6aa11c2b,IJtbl9r1OG,customer,,6aa11c2ba32605cbd3f2480e,User5341
+cust_693a908e,uWcR3u20tg,customer,,693a908efc20aabdc3654bfe,Polly
+cust_68b2ed4c,KnU2RDpJEh,customer,,68b2ed4ca5c22a8fd96acf7c,Sandeep
+cust_6a13bc0f,iL2VrTl9k2,customer,,6a13bc0f5c53b8dcace7138f,Jayanta Chakrabarty
+cust_6a8ee1b2,GBhfS5BGAd,customer,,6a8ee1b2ed28cd6d6d550a00,Sonal Choudhary
+cust_68bc3fe0,kfDEG7ogtm,customer,,68bc3fe073c9d2e2f08b5e01,Vipul
+cust_69d3c209,fZgwT7axP0,customer,,69d3c209c6bbec7d9d5df1e1,Vipasha Sharma
+cust_6ab11c68,VhmYOnMHRE,customer,,6ab11c68fadbd06eb39a4915,Adrija
+cust_6a9e97c0,JzTg53TGAD,customer,,6a9e97c0a32605cbd3ce033b,Gaurav
+cust_6977176d,HjAqdaiXPs,customer,,6977176dfc13dbb6be1d8ff8,User6525
+cust_6ac0bbf0,hN3QlSkmo8,customer,,6ac0bbf0e8c5c9a8bea80d26,Satikant
+cust_6a24f184,3O8RSfgiAj,customer,,6a24f1845c4d4256a1af59e2,Himanshi
+cust_67384002,HYLHOqeSsj,customer,,673840021be5a05c83d2cec8,Aman Choudhary
+cust_6a83e2e7,f34m08eSFo,customer,,6a83e2e75aa6b9820cfd852f,Noopur Singh
+cust_69ec8701,kGAkitrAgf,customer,,69ec8701d4282b21f0698b83,Likith
+cust_6a4b10a9,aBvl4RA8LL,customer,,6a4b10a91b222aba8a888119,Abhinay Varsh
+cust_69d21825,ohzBu2sfkY,customer,,69d21825c6bbec7d9d42bd8d,Rohan
+cust_69e1d5fe,w4FNBB2Cz9,customer,,69e1d5feb2db82e0604b701d,Preethi reddy
+cust_6ac1141c,46Pu6ZXfjM,customer,,6ac1141ce8c5c9a8beb24ad1,Aman Sabat
+cust_69de35e8,nqP2N6PiFJ,customer,,69de35e865a5f15ab064cd4d,Gautam
+cust_684552a3,ykRpTPEZ4F,customer,,684552a3bb907bed273ca79c,Sathvik Tony
+cust_6ac31df6,fwazw0Xtb6,customer,,6ac31df6e8c5c9a8bed96a70,Arpit Farkya
+cust_6a9d022f,xtZxBeAIu9,customer,,6a9d022fa32605cbd3ab09fc,Amrita

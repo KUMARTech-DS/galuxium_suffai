@@ -1,0 +1,11 @@
+[
+  {
+    "brand_id": "peterengland",
+    "sku": "PE-001",
+    "on_hand": 42,
+    "warehouse": "default",
+    "as_of": null,
+    "inventory_id": "2ced9808-f7d0-4212-9229-bf7259026a24",
+    "updated_at": "2026-10-13T15:46:47.262276+00:00"
+  }
+]

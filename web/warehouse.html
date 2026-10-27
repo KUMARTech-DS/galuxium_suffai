@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuffAI · Warehouse</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="./retail.js"></script>
+  <script src="./pilot.js"></script>
+  <link rel="stylesheet" href="./retail.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .rp-store { margin-top: 14px; }
+    .rp-store .card-h .check { margin-left: auto; }
+    .mix { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .mix h4 { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .mix-row { display: grid; grid-template-columns: 1fr 90px 44px; gap: 8px; align-items: center; font-size: 12px; padding: 3px 0; }
+    .mix-row .r { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+    .copy-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .copy-row .secret { flex: 1; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-in">
+      <div class="hero-row">
+        <div class="hero-title">
+          <div class="eyebrow">Warehouse</div>
+          <h1>Supply &amp; distribution</h1>
+          <p class="hero-sub">AURA Stock Pilot reads your POS sales and stock every time you open it, then drafts the transfers and purchase orders you confirm. Buy, receive, ship and plan new stores here too.</p>
+        </div>
+        <div class="hero-meta" data-rt-context></div>
+      </div>
+      <nav class="subnav" id="nav" aria-label="Warehouse sections">
+        <button type="button" data-sec="pilot" class="ai"><i class="fa-solid fa-wand-magic-sparkles"></i>Stock Pilot</button>
+        <button type="button" data-sec="po"><i class="fa-solid fa-file-invoice"></i>Purchase orders</button>
+        <button type="button" data-sec="transfers"><i class="fa-solid fa-truck"></i>Transfers</button>
+        <button type="button" data-sec="replen" data-perm="replenish"><i class="fa-solid fa-arrows-rotate"></i>Replenishment</button>
+        <button type="button" data-sec="plan" data-perm="plan.write"><i class="fa-solid fa-map-location-dot"></i>New store plan</button>
+        <button type="button" data-sec="locations"><i class="fa-solid fa-warehouse"></i>Locations</button>
+        <button type="button" data-sec="suppliers"><i class="fa-solid fa-industry"></i>Suppliers</button>
+        <button type="button" data-sec="team" data-perm="staff.manage"><i class="fa-solid fa-id-badge"></i>Team logins</button>
+        <button type="button" data-sec="settings"><i class="fa-solid fa-gear"></i>Settings</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" data-rt-main>
+    <div class="notice" data-rt-setup hidden><i class="fa-solid fa-circle-exclamation"></i>
+      <div>Start with <b>Settings</b> (legal name and GSTIN), then add a warehouse and stores under <b>Locations</b> and your styles in <b>Inventory › Catalog</b>.</div></div>
+
+    <!-- AURA Stock Pilot -->
+    <section data-sec="pilot" hidden><div id="pilotRoot"></div></section>
+
+    <!-- Purchase orders -->
+    <section data-sec="po" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f">Status<select class="in" id="poStatus"><option value="">All</option><option value="draft">Draft</option><option value="ordered">Ordered</option><option value="partial">Partly received</option><option value="received">Received</option><option value="cancelled">Cancelled</option></select></label>
+          <button type="button" class="btn" id="poGo"><i class="fa-solid fa-rotate"></i>Refresh</button>
+          <span style="flex:1"></span>
+          <button type="button" class="btn primary" id="poNew" data-perm="purchase.write"><i class="fa-solid fa-plus"></i>New purchase order</button>
+        </div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>PO</th><th>Supplier</th><th>Deliver to</th><th>Status</th><th>Expected</th><th class="r">Received / ordered</th><th class="r">Value (cost)</th><th>Created</th></tr></thead>
+          <tbody id="poBody"></tbody></table><div class="empty" id="poEmpty" hidden>No purchase orders yet.</div></div>
+        <div class="pager" id="poPager"></div>
+      </div>
+    </section>
+
+    <!-- Transfers -->
+    <section data-sec="transfers" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f">Status<select class="in" id="trStatus"><option value="">All</option><option value="draft">Draft</option><option value="in_transit">In transit</option><option value="received">Received</option><option value="cancelled">Cancelled</option></select></label>
+          <label class="f" id="trDirWrap" hidden>Direction<select class="in" id="trDir"><option value="">Both</option><option value="out">Outgoing</option><option value="in">Incoming</option></select></label>
+          <button type="button" class="btn" id="trGo"><i class="fa-solid fa-rotate"></i>Refresh</button>
+          <span style="flex:1"></span>
+          <button type="button" class="btn primary" id="trNew" data-perm="transfer.write"><i class="fa-solid fa-plus"></i>New transfer</button>
+        </div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Transfer</th><th>Route</th><th>Status</th><th>Source</th><th class="r">Requested</th><th class="r">Sent</th><th>Created</th><th>Dispatched</th></tr></thead>
+          <tbody id="trBody"></tbody></table><div class="empty" id="trEmpty" hidden>No transfers yet.</div></div>
+        <div class="pager" id="trPager"></div>
+      </div>
+    </section>
+
+    <!-- Replenishment -->
+    <section data-sec="replen" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f">From warehouse<select class="in" id="rpWh"></select></label>
+          <label class="f">Store<select class="in" id="rpStore"></select></label>
+          <label class="f">Cover (days)<input class="in" type="number" id="rpCover" min="1" max="90" value="14" style="width:90px"></label>
+          <label class="f">Sales lookback (days)<input class="in" type="number" id="rpLook" min="7" max="180" value="28" style="width:110px"></label>
+          <button type="button" class="btn primary" id="rpGo"><i class="fa-solid fa-wand-magic-sparkles"></i>Suggest</button>
+        </div>
+        <p class="hint" style="margin-top:0">SKUs with par levels are topped up to max once they fall below min. Other SKUs get enough for the cover days at their recent POS sales rate. Units already in transit count as on hand. Suggestions are capped by what the warehouse holds, most urgent stores first.</p>
+      </div>
+      <div id="rpOut"></div>
+    </section>
+
+    <!-- New store plan -->
+    <section data-sec="plan" hidden>
+      <div class="card">
+        <div class="card-h"><h2>Opening stock for a new store</h2><span class="sub">The mix follows Geo demand at the store’s PIN code</span></div>
+        <div class="toolbar">
+          <label class="f">PIN code<input class="in mono" id="plPin" maxlength="6" inputmode="numeric" placeholder="560034" style="width:120px"></label>
+          <label class="f grow">Area<input class="in" id="plArea" maxlength="80" placeholder="Optional label, e.g. Koramangala"></label>
+          <label class="f">Units<input class="in" type="number" id="plUnits" min="1" value="1500" style="width:110px"></label>
+          <label class="f">From warehouse<select class="in" id="plWh"></select></label>
+          <button type="button" class="btn primary" id="plGo"><i class="fa-solid fa-wand-magic-sparkles"></i>Build plan</button>
+        </div>
+      </div>
+      <div id="plOut"></div>
+    </section>
+
+    <!-- Locations -->
+    <section data-sec="locations" hidden>
+      <div class="card">
+        <div class="card-h"><h2>Warehouses &amp; stores</h2><span class="sub">The location code starts every invoice number at that store</span>
+          <div class="end"><label class="check"><input type="checkbox" id="locInactive">Show closed</label>
+            <button type="button" class="btn primary" id="locNew" data-perm="locations.write"><i class="fa-solid fa-plus"></i>New location</button></div></div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>City · PIN</th><th>GST state</th><th>GSTIN</th><th class="r">Units</th><th>Status</th><th></th></tr></thead>
+          <tbody id="locBody"></tbody></table><div class="empty" id="locEmpty" hidden>No locations yet. Add your warehouse first, then each store.</div></div>
+      </div>
+    </section>
+
+    <!-- Suppliers -->
+    <section data-sec="suppliers" hidden>
+      <div class="card">
+        <div class="card-h"><h2>Suppliers</h2><div class="end"><button type="button" class="btn primary" id="supNew" data-perm="purchase.write"><i class="fa-solid fa-plus"></i>New supplier</button></div></div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>GSTIN</th><th>Phone</th><th>Email</th><th>Address</th></tr></thead>
+          <tbody id="supBody"></tbody></table><div class="empty" id="supEmpty" hidden>No suppliers yet.</div></div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section data-sec="team" hidden>
+      <div class="card">
+        <div class="card-h"><h2>Warehouse &amp; store logins</h2><span class="sub">Each login works at one location. Passwords are shown once and stored only as a hash.</span>
+          <div class="end"><button type="button" class="btn primary" id="tmNew"><i class="fa-solid fa-user-plus"></i>New login</button></div></div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Location</th><th>Status</th><th>Created</th><th></th></tr></thead>
+          <tbody id="tmBody"></tbody></table><div class="empty" id="tmEmpty" hidden>No staff logins yet.</div></div>
+        <p class="hint">Warehouse staff can receive purchase orders, count, put away and ship transfers at their warehouse. Store staff can bill, take returns, count and receive transfers at their store. Neither sees Geo, Ads Lab or Campaigns.</p>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section data-sec="settings" hidden>
+      <div class="card">
+        <div class="card-h"><h2>Billing settings</h2><span class="sub">Printed on every tax invoice and credit note</span></div>
+        <form class="fields" id="setForm" onsubmit="return false">
+          <label class="f">Legal name <span class="req">*</span><input class="in" name="legal_name" maxlength="120"></label>
+          <label class="f">GSTIN <span class="req">*</span><input class="in mono" name="gstin" maxlength="15" placeholder="Head office GSTIN"></label>
+          <label class="f">Return window (days)<input class="in" name="return_days" type="number" min="0" max="365"></label>
+          <label class="f full">Registered address<input class="in" name="address" maxlength="300"></label>
+          <label class="f full">Invoice footer<input class="in" name="invoice_footer" maxlength="300" placeholder="e.g. Exchange within 30 days with the bill and tags intact."></label>
+          <label class="check full"><input type="checkbox" name="allow_negative_stock">Allow billing items the system shows as out of stock (stock goes negative until it is counted)</label>
+        </form>
+        <p class="hint">Each store bills under its own GSTIN (set on the location). A store in the same state as the head office can use the head office GSTIN.</p>
+        <div style="text-align:right;margin-top:10px" data-perm="settings.write"><button type="button" class="btn primary" id="setSave">Save settings</button></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="printArea"></div>
+
+  <script>
+  (function () {
+    const R = window.Retail;
+    const $ = R.$, esc = R.esc;
+    const PO_STATUS = { draft: ['Draft', ''], ordered: ['Ordered', 'gold'], partial: ['Partly received', 'warn'], received: ['Received', 'ok'], cancelled: ['Cancelled', 'bad'] };
+    const SOURCES = R.SOURCES;
+    const st = { locs: [], suppliers: [], poPage: 1, trPage: 1, plan: null };
+    const own = () => (R.me.location ? R.me.location.location_id : null);
+    const locLabel = (l) => l.code + ' · ' + l.name;
+    const warehouses = () => st.locs.filter((l) => l.kind === 'warehouse' && l.active);
+    const stores = () => st.locs.filter((l) => l.kind === 'store' && l.active);
+
+    async function loadLocs() {
+      st.locs = (await R.api('/locations', { params: { include_inactive: R.can('locations.write') || undefined } })).locations || [];
+      const whs = R.me.location ? [R.me.location] : warehouses();
+      ['#rpWh', '#plWh'].forEach((s) => { R.options($(s), whs, (l) => l.location_id, locLabel); $(s).disabled = !!R.me.location; });
+      R.options($('#rpStore'), stores(), (l) => l.location_id, locLabel, 'All stores');
+    }
+
+    /* ---------- Purchase orders ---------- */
+    async function loadPOs(page) {
+      st.poPage = page || 1;
+      try {
+        const data = await R.api('/purchase-orders', { params: { status: $('#poStatus').value, page: st.poPage } });
+        const rows = data.purchase_orders || [];
+        $('#poEmpty').hidden = rows.length > 0;
+        $('#poBody').innerHTML = rows.map((p) => '<tr class="click" data-id="' + esc(p.po_id) + '"><td class="mono"><b>' + esc(p.po_number) + '</b></td><td>' + esc(p.supplier_name) + '</td>' +
+          '<td class="mono">' + esc(p.location_code) + '</td><td>' + R.statusBadge(PO_STATUS, p.status) + '</td><td>' + R.day(p.expected_date) + '</td>' +
+          '<td class="r">' + R.num(p.units_received) + ' / ' + R.num(p.units_ordered) + '</td><td class="r num-cell">' + R.rupees(p.value) + '</td><td>' + R.dateTime(p.created_at) + '</td></tr>').join('');
+        R.pager($('#poPager'), data, loadPOs);
+      } catch (e) { R.fail(e); }
+    }
+    $('#poBody').addEventListener('click', (e) => { const tr = e.target.closest('tr[data-id]'); if (tr) openPO(tr.dataset.id); });
+    $('#poGo').addEventListener('click', () => loadPOs(1));
+    $('#poStatus').addEventListener('change', () => loadPOs(1));
+
+    async function loadSuppliers() {
+      st.suppliers = (await R.api('/suppliers')).suppliers || [];
+      return st.suppliers;
+    }
+
+    $('#poNew').addEventListener('click', async () => {
+      try { await loadSuppliers(); } catch (e) { R.fail(e); return; }
+      if (!st.suppliers.length) { R.toast('Add a supplier first (Suppliers).', 'bad'); nav.show('suppliers'); return; }
+      if (!warehouses().length) { R.toast('Add a warehouse first (Locations).', 'bad'); nav.show('locations'); return; }
+      let ed = null;
+      const m = R.modal({ title: 'New purchase order', wide: true,
+        html: '<div class="fields"><label class="f">Supplier<select class="in" id="poSup"></select></label><label class="f">Deliver to<select class="in" id="poWh"></select></label>' +
+          '<label class="f">Expected on<input class="in" type="date" id="poDate"></label><label class="f">Note<input class="in" id="poNote" maxlength="300"></label></div>' +
+          '<div id="poLines" style="margin-top:12px"></div><p class="hint">Leave unit cost blank to use the SKU’s current average cost. The PO starts as a draft; mark it ordered when it goes to the supplier.</p>',
+        actions: [{ label: 'Cancel' }, { label: 'Create draft PO', kind: 'primary', onClick: async (close, el) => {
+          if (!ed.size()) { R.toast('Add the SKUs to order.', 'bad'); return false; }
+          const po = await R.api('/purchase-orders', { body: { supplier_id: $('#poSup', el).value, location_id: $('#poWh', el).value,
+            expected_date: $('#poDate', el).value || undefined, note: $('#poNote', el).value.trim(), lines: ed.lines() } });
+          R.toast(po.po_number + ' created.', 'ok'); loadPOs(1); close(); openPO(po.po_id);
+        } }] });
+      R.options($('#poSup', m.el), st.suppliers, (s) => s.supplier_id, (s) => s.name);
+      R.options($('#poWh', m.el), warehouses(), (l) => l.location_id, locLabel);
+      $('#poDate', m.el).value = R.addDays(R.todayIST(), 14);
+      ed = R.lineEditor($('#poLines', m.el), [{ key: 'qty', label: 'Qty', start: '10', min: 1 }, { key: 'unit_cost', label: 'Unit cost ₹', decimal: true }],
+        () => $('#poWh', m.el).value);
+    });
+
+    function poDoc(po) {
+      return '<div class="doc"><h2>Purchase order</h2><div class="dhead"><div><b>' + esc(R.me.settings.legal_name || R.me.brand_name) + '</b>' +
+        (R.me.settings.gstin ? '<br>GSTIN: ' + esc(R.me.settings.gstin) : '') + '<br>Deliver to: ' + esc(po.location_code) + ' · ' + esc(po.location_name) +
+        '</div><div style="text-align:right">PO no: <b>' + esc(po.po_number) + '</b><br>Date: ' + R.dateTime(po.created_at) + (po.expected_date ? '<br>Expected: ' + R.day(po.expected_date) : '') +
+        '<br>Supplier: <b>' + esc(po.supplier_name) + '</b></div></div><table><thead><tr><th>#</th><th>SKU</th><th>Item</th><th>Colour / size</th><th class="r">Qty</th><th class="r">Unit cost</th><th class="r">Amount</th></tr></thead><tbody>' +
+        po.lines.map((l) => '<tr><td>' + l.line_no + '</td><td>' + esc(l.sku) + '</td><td>' + esc(l.name) + '</td><td>' + esc(l.color) + ' / ' + esc(l.size) + '</td><td class="r">' + l.qty_ordered +
+          '</td><td class="r">' + R.rupees(l.unit_cost) + '</td><td class="r">' + R.rupees(l.unit_cost * l.qty_ordered) + '</td></tr>').join('') +
+        '</tbody></table><table class="totals"><tbody><tr class="grand"><td>Total (before GST)</td><td class="r">' + R.rupees(po.value) + '</td></tr></tbody></table>' +
+        (po.note ? '<div>Note: ' + esc(po.note) + '</div>' : '') + '<div class="foot">Raised by ' + esc(po.created_by) + '. Please quote the PO number on your invoice and delivery challan.</div></div>';
+    }
+
+    async function openPO(id) {
+      let po, bins = [];
+      try { po = await R.api('/purchase-orders/' + encodeURIComponent(id)); } catch (e) { R.fail(e); return; }
+      const canRecv = R.can('purchase.receive') && ['ordered', 'partial'].includes(po.status) && (!own() || own() === po.location_id);
+      if (canRecv) {
+        try { bins = ((await R.api('/locations/' + encodeURIComponent(po.location_id) + '/bins')).bins || []).filter((b) => b.bin_code !== 'DMG'); } catch (e) { R.fail(e); }
+      }
+      const binSel = '<select class="in sm" data-b>' + bins.map((b) => '<option value="' + esc(b.bin_code) + '">' + esc(b.bin_code || 'Unassigned') + '</option>').join('') + '</select>';
+      const html = '<div class="tiles" style="margin-bottom:12px"><div class="tile"><span>Supplier</span><b style="font-size:15px">' + esc(po.supplier_name) + '</b></div>' +
+        '<div class="tile"><span>Deliver to</span><b style="font-size:15px">' + esc(po.location_code) + '</b><small>' + esc(po.location_name) + '</small></div>' +
+        '<div class="tile"><span>Status</span><b style="font-size:15px">' + R.statusBadge(PO_STATUS, po.status) + '</b><small>' + (po.expected_date ? 'Expected ' + R.day(po.expected_date) : '') + '</small></div>' +
+        '<div class="tile"><span>Received</span><b style="font-size:15px">' + R.num(po.units_received) + ' / ' + R.num(po.units_ordered) + '</b><small>' + R.rupees(po.value) + ' at cost</small></div></div>' +
+        '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>SKU</th><th>Item</th><th class="r">Ordered</th><th class="r">Received</th><th class="r">Open</th><th class="r">Unit cost</th>' +
+        (canRecv ? '<th class="r">Receive now</th><th>Into bin</th>' : '') + '</tr></thead><tbody>' +
+        po.lines.map((l) => '<tr data-no="' + l.line_no + '"><td class="mono">' + esc(l.sku) + '</td><td>' + esc(l.name) + '<div class="hint" style="margin:0">' + esc(l.color) + ' / ' + esc(l.size) + '</div></td>' +
+          '<td class="r">' + l.qty_ordered + '</td><td class="r">' + l.qty_received + '</td><td class="r">' + (l.open_qty ? '<b>' + l.open_qty + '</b>' : '0') + '</td><td class="r num-cell">' + R.rupees(l.unit_cost) + '</td>' +
+          (canRecv ? '<td class="r"><input class="in sm qty" type="number" min="0" max="' + l.open_qty + '" value="' + l.open_qty + '" data-q' + (l.open_qty ? '' : ' disabled') + ' aria-label="Receive quantity"></td><td>' + binSel + '</td>' : '') + '</tr>').join('') +
+        '</tbody></table></div>' +
+        (canRecv ? '<div class="fields" style="margin-top:12px"><label class="f">Supplier invoice no.<input class="in" id="grnInv" maxlength="40"></label><label class="f">Note<input class="in" id="grnNote" maxlength="300"></label></div>' : '') +
+        (po.grns.length ? '<h4 style="margin:14px 0 6px;font-size:12px;color:var(--plum)">Goods receipts</h4><div class="tbl-wrap"><table class="tbl"><thead><tr><th>GRN</th><th>Supplier invoice</th><th>Received by</th><th>When</th></tr></thead><tbody>' +
+          po.grns.map((g) => '<tr><td class="mono">' + esc(g.grn_number) + '</td><td>' + esc(g.supplier_invoice || '') + '</td><td>' + esc(g.received_by) + '</td><td>' + R.dateTime(g.created_at) + '</td></tr>').join('') + '</tbody></table></div>' : '');
+      const status = (action, msg) => async (close) => {
+        await R.api('/purchase-orders/' + encodeURIComponent(po.po_id) + '/' + action, { body: {} });
+        R.toast(po.po_number + ' ' + msg, 'ok'); loadPOs(st.poPage); close(); openPO(po.po_id);
+      };
+      const actions = [{ label: '<i class="fa-solid fa-print"></i>Print PO', onClick: () => { R.print(poDoc(po)); return false; } }];
+      if (R.can('purchase.write')) {
+        if (po.status === 'draft') actions.push({ label: 'Mark as ordered', kind: 'gold', onClick: status('order', 'sent to the supplier.') });
+        if (['draft', 'ordered'].includes(po.status) && !po.units_received) actions.push({ label: 'Cancel PO', kind: 'danger', onClick: status('cancel', 'cancelled.') });
+        if (po.status === 'partial') actions.push({ label: 'Close short', onClick: status('close', 'closed; the rest will not be delivered.') });
+      }
+      if (canRecv) actions.push({ label: '<i class="fa-solid fa-dolly"></i>Receive goods', kind: 'primary', onClick: async (close, el) => {
+        const lines = R.$$('tr[data-no]', el).map((r) => ({ line_no: +r.dataset.no, qty: parseInt($('[data-q]', r).value, 10) || 0, bin_code: $('[data-b]', r).value })).filter((l) => l.qty > 0);
+        if (!lines.length) { R.toast('Enter what arrived on at least one line.', 'bad'); return false; }
+        const r = await R.api('/purchase-orders/' + encodeURIComponent(po.po_id) + '/receive', { body: { lines, supplier_invoice: $('#grnInv', el).value.trim(), note: $('#grnNote', el).value.trim() } });
+        R.toast(r.grn_number + ': ' + R.count(r.units, 'unit') + ' received.', 'ok'); loadPOs(st.poPage); close(); openPO(po.po_id);
+      } });
+      actions.push({ label: 'Close' });
+      R.modal({ title: 'Purchase order ' + po.po_number, wide: true, html, actions });
+    }
+
+    /* ---------- Transfers ---------- */
+    async function loadTransfers(page) {
+      st.trPage = page || 1;
+      try {
+        const data = await R.api('/transfers', { params: { status: $('#trStatus').value, direction: $('#trDir').value, page: st.trPage } });
+        const rows = data.transfers || [];
+        $('#trEmpty').hidden = rows.length > 0;
+        $('#trBody').innerHTML = rows.map((t) => '<tr class="click" data-id="' + esc(t.transfer_id) + '"><td class="mono"><b>' + esc(t.transfer_number) + '</b></td>' +
+          '<td class="mono">' + esc(t.from_code) + ' → ' + esc(t.to_code) + '</td><td>' + R.statusBadge(R.TRANSFER_STATUS, t.status) + '</td><td>' + esc(SOURCES[t.source] || t.source) + '</td>' +
+          '<td class="r">' + R.num(t.units_requested) + '</td><td class="r">' + R.num(t.units_sent) + '</td><td>' + R.dateTime(t.created_at) + '</td><td>' + R.dateTime(t.dispatched_at) + '</td></tr>').join('');
+        R.pager($('#trPager'), data, loadTransfers);
+      } catch (e) { R.fail(e); }
+    }
+    $('#trBody').addEventListener('click', (e) => { const tr = e.target.closest('tr[data-id]'); if (tr) R.openTransfer(tr.dataset.id, () => loadTransfers(st.trPage)); });
+    $('#trGo').addEventListener('click', () => loadTransfers(1));
+    $('#trStatus').addEventListener('change', () => loadTransfers(1));
+    $('#trDir').addEventListener('change', () => loadTransfers(1));
+
+    $('#trNew').addEventListener('click', () => {
+      const from = R.me.location ? [R.me.location] : st.locs.filter((l) => l.active);
+      let ed = null;
+      const m = R.modal({ title: 'New transfer', wide: true,
+        html: '<div class="fields"><label class="f">From<select class="in" id="tFrom"></select></label><label class="f">To<select class="in" id="tTo"></select></label>' +
+          '<label class="f full">Note<input class="in" id="tNote" maxlength="300"></label></div><div id="tLines" style="margin-top:12px"></div>' +
+          '<p class="hint">The transfer starts as a draft with a pick list. Stock leaves the source when it is dispatched and arrives when the destination receives it.' +
+          (R.me.location ? '' : ' Only brand admins can send stock out of a store (e.g. back to the warehouse).') + '</p>',
+        actions: [{ label: 'Cancel' }, { label: 'Create draft', kind: 'primary', onClick: async (close, el) => {
+          if (!ed.size()) { R.toast('Add the SKUs to send.', 'bad'); return false; }
+          const t = await R.api('/transfers', { body: { from_location_id: $('#tFrom', el).value, to_location_id: $('#tTo', el).value, note: $('#tNote', el).value.trim(), lines: ed.lines() } });
+          R.toast(t.transfer_number + ' created.', 'ok'); loadTransfers(1); close(); R.openTransfer(t.transfer_id, () => loadTransfers(st.trPage));
+        } }] });
+      R.options($('#tFrom', m.el), from, (l) => l.location_id, (l) => locLabel(l) + ' (' + l.kind + ')');
+      const syncTo = () => R.options($('#tTo', m.el), st.locs.filter((l) => l.active && l.location_id !== $('#tFrom', m.el).value), (l) => l.location_id, (l) => locLabel(l) + ' (' + l.kind + ')');
+      $('#tFrom', m.el).addEventListener('change', syncTo); syncTo();
+      $('#tFrom', m.el).disabled = !!R.me.location;
+      ed = R.lineEditor($('#tLines', m.el), [{ key: 'qty', label: 'Qty', start: '1', min: 1 }], () => $('#tFrom', m.el).value);
+    });
+
+    /* ---------- Replenishment ---------- */
+    let rp = null;
+    async function suggest() {
+      if (!$('#rpWh').value) { R.toast('Add a warehouse first (Locations).', 'bad'); return; }
+      rp = await R.busy($('#rpGo'), () => R.api('/replenishment', { params: { warehouse_id: $('#rpWh').value, store_id: $('#rpStore').value,
+        cover_days: $('#rpCover').value, lookback_days: $('#rpLook').value } }));
+      if (!rp) return;
+      const out = $('#rpOut');
+      if (!rp.stores.length) { out.innerHTML = '<div class="card"><div class="empty">Every store is above its min and covered for ' + rp.cover_days + ' days of sales. Nothing to send.</div></div>'; return; }
+      out.innerHTML = '<div class="tiles" style="margin-top:14px"><div class="tile"><span>Stores</span><b>' + rp.stores.length + '</b></div><div class="tile"><span>Units to send</span><b>' + R.num(rp.units) + '</b><small>from ' + esc(rp.warehouse.code) + '</small></div>' +
+        '<div class="tile' + (rp.stores.some((g) => g.lines.some((l) => l.short)) ? ' warn' : '') + '"><span>Short at warehouse</span><b>' + R.num(rp.stores.reduce((a, g) => a + g.lines.reduce((b, l) => b + l.short, 0), 0)) + '</b><small>Consider a purchase order</small></div></div>' +
+        rp.stores.map((g, gi) => '<div class="card rp-store" data-g="' + gi + '"><div class="card-h"><h2>' + esc(g.store_code) + '</h2><span class="sub">' + R.count(g.units, 'unit') + ' · ' + R.count(g.lines.length, 'SKU') + '</span>' +
+          '<label class="check"><input type="checkbox" data-inc checked>Include</label></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>SKU</th><th>Item</th><th class="r">On hand</th><th class="r">In transit</th><th>Basis</th><th class="r">Sales / day</th><th class="r">Need</th><th class="r">Send</th></tr></thead><tbody>' +
+          g.lines.map((l, li) => '<tr data-l="' + li + '"><td class="mono">' + esc(l.sku) + '</td><td>' + esc(l.name) + '<div class="hint" style="margin:0">' + esc(l.color) + ' / ' + esc(l.size) + '</div></td><td class="r">' + l.on_hand + '</td><td class="r">' + (l.in_transit || '') + '</td>' +
+            '<td>' + (l.basis === 'par' ? '<span class="badge">Par level</span>' : '<span class="badge gold">Sales rate</span>') + '</td><td class="r">' + l.daily_sales + '</td><td class="r">' + l.need + (l.short ? ' <span class="badge warn">' + l.short + ' short</span>' : '') + '</td>' +
+            '<td class="r"><input class="in sm qty" type="number" min="0" value="' + l.qty + '" data-q aria-label="Units to send"></td></tr>').join('') + '</tbody></table></div></div>').join('') +
+        '<div style="display:flex;justify-content:flex-end;margin-top:14px"><button type="button" class="btn primary lg" id="rpCreate"><i class="fa-solid fa-truck"></i>Create draft transfers</button></div>';
+      $('#rpCreate').addEventListener('click', () => R.busy($('#rpCreate'), async () => {
+        const storesBody = R.$$('.rp-store', out).filter((c) => $('[data-inc]', c).checked).map((c) => {
+          const g = rp.stores[+c.dataset.g];
+          return { store_id: g.store_id, lines: R.$$('tr[data-l]', c).map((r) => ({ variant_id: g.lines[+r.dataset.l].variant_id, qty: parseInt($('[data-q]', r).value, 10) || 0 })) };
+        });
+        if (!storesBody.length) { R.toast('Include at least one store.', 'bad'); return; }
+        const r = await R.api('/replenishment', { body: { warehouse_id: rp.warehouse.location_id, stores: storesBody } });
+        R.toast(r.transfers.length + ' draft transfers created: ' + r.transfers.map((t) => t.transfer_number).join(', '), 'ok');
+        out.innerHTML = '';
+        $('#trStatus').value = 'draft';
+        nav.show('transfers');
+      }));
+    }
+    $('#rpGo').addEventListener('click', suggest);
+
+    /* ---------- New store plan ---------- */
+    async function buildPlan() {
+      const pin = $('#plPin').value.trim();
+      if (!/^\d{6}$/.test(pin)) { R.toast('Enter the store’s 6-digit PIN code.', 'bad'); return; }
+      if (!$('#plWh').value) { R.toast('Add a warehouse first (Locations).', 'bad'); return; }
+      const plan = await R.busy($('#plGo'), () => R.api('/opening-plan', { body: { pin_code: pin, units: $('#plUnits').value, source_location_id: $('#plWh').value } }));
+      if (!plan) return;
+      st.plan = plan;
+      renderPlan();
+    }
+    function mixList(title, items, key) {
+      return '<div><h4>' + title + '</h4>' + (items.length ? items.map((x) => '<div class="mix-row"><span>' + esc(x[key]) + '</span><div class="share"><i style="width:' + Math.round(x.share * 100) + '%"></i></div><span class="r">' + Math.round(x.share * 100) + '%</span></div>').join('')
+        : '<div class="hint">No signal</div>') + '</div>';
+    }
+    function renderPlan() {
+      const p = st.plan, d = p.demand, area = $('#plArea').value.trim();
+      const storeOpts = stores();
+      $('#plOut').innerHTML = '<div class="notice ' + (d.basis === 'none' ? '' : 'info') + '" style="margin-top:14px"><i class="fa-solid fa-map-location-dot"></i><div><b>' + esc(area || 'PIN ' + p.pin_code) + '</b> · ' + esc(d.note) +
+        (d.garments ? ' Based on ' + R.num(d.garments) + ' garments recorded in Geo.' : '') + '</div></div>' +
+        '<div class="tiles"><div class="tile"><span>Units planned</span><b>' + R.num(p.units_planned) + '</b><small>of ' + R.num(p.units_requested) + ' requested</small></div>' +
+        '<div class="tile' + (p.units_short ? ' warn' : '') + '"><span>Short at ' + esc(p.source.code) + '</span><b>' + R.num(p.units_short) + '</b><small>Not enough stock in the warehouse</small></div>' +
+        '<div class="tile"><span>SKUs</span><b>' + R.num(p.lines.length) + '</b><small>' + p.categories.filter((c) => c.units).length + ' categories</small></div></div>' +
+        '<div class="card" style="margin-top:14px"><div class="card-h"><h2>Area demand</h2><span class="sub">From Geo</span></div><div class="mix">' +
+          mixList('Garment types', d.top_commodities, 'value') + mixList('Colours', d.top_colors, 'value') + mixList('Size curve', d.size_curve, 'size') +
+          '<div><h4>Your categories</h4>' + p.categories.map((c) => '<div class="mix-row"><span>' + esc(c.category) + (c.demand_seen ? '' : ' <span class="badge" title="No demand signal; kept at a small floor share">floor</span>') + '</span><div class="share"><i style="width:' + Math.round(c.share * 100) + '%"></i></div><span class="r">' + R.num(c.units) + '</span></div>').join('') + '</div>' +
+        '</div><p class="hint">' + esc(p.method) + '</p></div>' +
+        '<div class="card"><div class="card-h"><h2>Plan</h2><span class="sub">Edit quantities before creating the transfer</span></div><div class="tbl-wrap" style="max-height:480px;overflow:auto"><table class="tbl"><thead><tr><th>Category</th><th>SKU</th><th>Item</th><th>Colour / size</th><th class="r">MRP</th><th class="r">At warehouse</th><th class="r">Plan</th></tr></thead><tbody>' +
+          p.lines.map((l, i) => '<tr data-i="' + i + '"><td>' + esc(l.category) + '</td><td class="mono">' + esc(l.sku) + '</td><td>' + esc(l.name) + '</td><td>' + esc(l.color) + ' / ' + esc(l.size) + '</td><td class="r num-cell">' + R.rupees(l.mrp) + '</td>' +
+            '<td class="r">' + R.num(l.available) + '</td><td class="r"><input class="in sm qty" type="number" min="0" max="' + l.available + '" value="' + l.qty + '" data-q aria-label="Planned units"></td></tr>').join('') + '</tbody></table></div>' +
+          '<div class="toolbar" style="margin:12px 0 0;justify-content:flex-end">' +
+            (storeOpts.length ? '<label class="f">Send to store<select class="in" id="plStore"></select></label>' : '') +
+            '<button type="button" class="btn" id="plNewStore"' + (R.can('locations.write') ? '' : ' hidden') + '><i class="fa-solid fa-store"></i>Add the store</button>' +
+            '<button type="button" class="btn" id="plCsv"><i class="fa-solid fa-download"></i>CSV</button>' +
+            (storeOpts.length ? '<button type="button" class="btn primary" id="plCreate"><i class="fa-solid fa-truck"></i>Create opening transfer</button>' : '') + '</div>' +
+          (p.store ? '' : '<p class="hint" style="text-align:right">No store at PIN ' + esc(p.pin_code) + ' yet. Add it, then send the opening stock.</p>') + '</div>';
+      if (storeOpts.length) {
+        R.options($('#plStore'), storeOpts, (l) => l.location_id, (l) => locLabel(l) + (l.pin_code ? ' · ' + l.pin_code : ''));
+        if (p.store) $('#plStore').value = p.store.location_id;
+        $('#plCreate').addEventListener('click', () => R.busy($('#plCreate'), async () => {
+          const lines = R.$$('#plOut tr[data-i]').map((r) => ({ variant_id: p.lines[+r.dataset.i].variant_id, qty: parseInt($('[data-q]', r).value, 10) || 0 })).filter((l) => l.qty > 0);
+          const t = await R.api('/opening-plan/transfer', { body: { store_id: $('#plStore').value, source_location_id: p.source.location_id, lines,
+            note: 'Opening stock' + (area ? ' · ' + area : '') + ' (PIN ' + p.pin_code + ')' } });
+          R.toast(t.transfer_number + ' created as a draft. Dispatch it from Transfers.', 'ok');
+          nav.show('transfers');
+          R.openTransfer(t.transfer_id, () => loadTransfers(st.trPage));
+        }));
+      }
+      $('#plNewStore').addEventListener('click', () => locationForm(null, { kind: 'store', pin_code: p.pin_code, name: area }, () => renderPlan()));
+      $('#plCsv').addEventListener('click', () => R.csvDownload('opening_plan_' + p.pin_code + '.csv', ['category', 'sku', 'name', 'color', 'size', 'mrp', 'available', 'qty'],
+        R.$$('#plOut tr[data-i]').map((r) => { const l = p.lines[+r.dataset.i]; return [l.category, l.sku, l.name, l.color, l.size, l.mrp, l.available, $('[data-q]', r).value]; })));
+    }
+    $('#plGo').addEventListener('click', buildPlan);
+    $('#plPin').addEventListener('keydown', (e) => { if (e.key === 'Enter') buildPlan(); });
+
+    /* ---------- Locations ---------- */
+    async function loadLocations() {
+      try { await loadLocs(); } catch (e) { R.fail(e); return; }
+      const show = st.locs.filter((l) => l.active || $('#locInactive').checked);
+      $('#locEmpty').hidden = show.length > 0;
+      $('#locBody').innerHTML = show.map((l) => '<tr data-id="' + esc(l.location_id) + '"><td class="mono"><b>' + esc(l.code) + '</b></td><td>' + esc(l.name) + '</td>' +
+        '<td>' + (l.kind === 'warehouse' ? '<span class="badge gold">Warehouse</span>' : '<span class="badge">Store</span>') + '</td><td>' + esc(l.city || '') + (l.pin_code ? ' · <span class="mono">' + esc(l.pin_code) + '</span>' : '') + '</td>' +
+        '<td>' + esc(l.state) + '</td><td class="mono">' + esc(l.gstin || '—') + '</td><td class="r">' + R.num(l.units) + '</td><td>' + (l.active ? '<span class="badge ok">Open</span>' : '<span class="badge">Closed</span>') + '</td>' +
+        '<td style="white-space:nowrap"><button type="button" class="btn sm" data-bins>Bins</button>' + (R.can('locations.write') ? ' <button type="button" class="btn sm" data-edit>Edit</button>' : '') + '</td></tr>').join('');
+    }
+    $('#locBody').addEventListener('click', (e) => {
+      const tr = e.target.closest('tr[data-id]'); if (!tr) return;
+      const l = st.locs.find((x) => x.location_id === tr.dataset.id);
+      if (e.target.closest('[data-edit]')) locationForm(l, null, loadLocations);
+      if (e.target.closest('[data-bins]')) openBins(l);
+    });
+    $('#locInactive').addEventListener('change', loadLocations);
+    $('#locNew').addEventListener('click', () => locationForm(null, null, loadLocations));
+
+    function locationForm(l, preset, done) {
+      const x = l || preset || {};
+      const states = (R.me.states || []).map((s) => '<option value="' + s.code + '"' + (s.code === x.state_code ? ' selected' : '') + '>' + esc(s.name) + ' (' + s.code + ')</option>').join('');
+      R.modal({ title: l ? 'Edit ' + l.code : 'New location', wide: true,
+        html: '<form class="fields" onsubmit="return false">' +
+          (l ? '' : '<label class="f">Type<select class="in" name="kind"><option value="store"' + (x.kind === 'store' ? ' selected' : '') + '>Store</option><option value="warehouse"' + (x.kind === 'warehouse' ? ' selected' : '') + '>Warehouse</option></select></label>' +
+                    '<label class="f">Code <span class="req">*</span><input class="in mono" name="code" maxlength="5" placeholder="BLR01" style="text-transform:uppercase"></label>') +
+          '<label class="f">Name <span class="req">*</span><input class="in" name="name" maxlength="80" value="' + esc(x.name) + '"></label>' +
+          '<label class="f">GST state <span class="req">*</span><select class="in" name="state_code"><option value="">Pick…</option>' + states + '</select></label>' +
+          '<label class="f">GSTIN<input class="in mono" name="gstin" maxlength="15" value="' + esc(x.gstin) + '"></label>' +
+          '<label class="f">PIN code<input class="in mono" name="pin_code" maxlength="6" value="' + esc(x.pin_code) + '" placeholder="Required for stores"></label>' +
+          '<label class="f">City<input class="in" name="city" maxlength="60" value="' + esc(x.city) + '"></label>' +
+          '<label class="f">Phone<input class="in" name="phone" maxlength="14" value="' + esc(x.phone) + '"></label>' +
+          '<label class="f full">Address<input class="in" name="address" maxlength="300" value="' + esc(x.address) + '"></label>' +
+          (l ? '<label class="check full"><input type="checkbox" name="active"' + (l.active ? ' checked' : '') + '>Open (closed locations can’t bill, receive or send)</label>' : '') +
+          '</form><p class="hint">The code is fixed once created: it begins every invoice number at a store (e.g. BLR012627-000001). The GST state decides CGST + SGST vs IGST on bills.</p>',
+        actions: [{ label: 'Cancel' }, { label: l ? 'Save' : 'Create', kind: 'primary', onClick: async (close, el) => {
+          const f = R.formData($('form', el));
+          const r = l ? await R.api('/locations/' + encodeURIComponent(l.location_id), { method: 'PATCH', body: f })
+                      : await R.api('/locations', { body: f });
+          R.toast(r.code + (l ? ' saved.' : ' created.'), 'ok');
+          await loadLocs();
+          if (done) done(r);
+        } }] });
+    }
+
+    async function openBins(l) {
+      let bins;
+      try { bins = (await R.api('/locations/' + encodeURIComponent(l.location_id) + '/bins')).bins; } catch (e) { R.fail(e); return; }
+      const canAdd = R.can('stock.write') && (!own() || own() === l.location_id);
+      R.modal({ title: 'Bins at ' + l.code, html: '<div class="tbl-wrap" style="max-height:340px;overflow:auto"><table class="tbl"><thead><tr><th>Bin</th><th>Zone</th><th class="r">Units</th></tr></thead><tbody>' +
+          bins.map((b) => '<tr><td class="mono">' + esc(b.bin_code || '—') + '</td><td>' + esc(b.zone || '') + '</td><td class="r">' + R.num(b.units) + '</td></tr>').join('') + '</tbody></table></div>' +
+          (canAdd ? '<div class="fields" style="margin-top:12px"><label class="f full">New bin codes<input class="in mono" id="nbCodes" placeholder="A-01, A-02, A-03"></label><label class="f">Zone<input class="in" id="nbZone" maxlength="40" placeholder="Optional"></label></div>' : ''),
+        actions: canAdd ? [{ label: 'Close' }, { label: 'Add bins', kind: 'primary', onClick: async (close, el) => {
+          const codes = $('#nbCodes', el).value.trim();
+          if (!codes) { R.toast('Type the bin codes, separated by commas.', 'bad'); return false; }
+          await R.api('/locations/' + encodeURIComponent(l.location_id) + '/bins', { body: { bin_codes: codes, zone: $('#nbZone', el).value.trim() } });
+          R.toast('Bins added.', 'ok'); close(); openBins(l);
+        } }] : undefined });
+    }
+
+    /* ---------- Suppliers ---------- */
+    async function renderSuppliers() {
+      try { await loadSuppliers(); } catch (e) { R.fail(e); return; }
+      $('#supEmpty').hidden = st.suppliers.length > 0;
+      $('#supBody').innerHTML = st.suppliers.map((s) => '<tr><td><b>' + esc(s.name) + '</b></td><td class="mono">' + esc(s.gstin || '—') + '</td><td>' + esc(s.phone || '') + '</td><td>' + esc(s.email || '') + '</td><td>' + esc(s.address || '') + '</td></tr>').join('');
+    }
+    $('#supNew').addEventListener('click', () => R.modal({ title: 'New supplier',
+      html: '<form class="fields" onsubmit="return false"><label class="f full">Name <span class="req">*</span><input class="in" name="name" maxlength="120"></label>' +
+        '<label class="f">GSTIN<input class="in mono" name="gstin" maxlength="15"></label><label class="f">Phone<input class="in" name="phone" maxlength="20"></label>' +
+        '<label class="f full">Email<input class="in" name="email" maxlength="120"></label><label class="f full">Address<input class="in" name="address" maxlength="300"></label></form>',
+      actions: [{ label: 'Cancel' }, { label: 'Create', kind: 'primary', onClick: async (_, el) => {
+        const s = await R.api('/suppliers', { body: R.formData($('form', el)) });
+        R.toast(s.name + ' added.', 'ok'); renderSuppliers();
+      } }] }));
+
+    /* ---------- Team ---------- */
+    const ROLE_LABEL = { warehouse_staff: 'Warehouse staff', store_staff: 'Store staff' };
+    async function loadTeam() {
+      try {
+        const rows = (await R.api('/staff')).staff || [];
+        $('#tmEmpty').hidden = rows.length > 0;
+        $('#tmBody').innerHTML = rows.map((s) => '<tr data-u="' + esc(s.username) + '"><td class="mono"><b>' + esc(s.username) + '</b></td><td>' + esc(s.display_name || '') + '</td><td>' + esc(ROLE_LABEL[s.role] || s.role) + '</td>' +
+          '<td class="mono">' + esc(s.location_code || '—') + '</td><td>' + (s.active ? '<span class="badge ok">Active</span>' : '<span class="badge">Disabled</span>') + '</td><td>' + R.dateTime(s.created_at) + '</td>' +
+          '<td style="white-space:nowrap"><button type="button" class="btn sm" data-act="' + (s.active ? 'off' : 'on') + '">' + (s.active ? 'Disable' : 'Enable') + '</button> <button type="button" class="btn sm" data-act="reset">Reset password</button></td></tr>').join('');
+      } catch (e) { R.fail(e); }
+    }
+    function showPassword(username, password, intro) {
+      R.modal({ title: 'Password for ' + username, html: '<p>' + esc(intro) + '</p><div class="copy-row"><div class="secret" id="pwBox">' + esc(password) + '</div>' +
+        '<button type="button" class="btn" id="pwCopy"><i class="fa-regular fa-copy"></i>Copy</button></div>' +
+        '<div class="notice" style="margin-top:12px"><i class="fa-solid fa-eye-slash"></i><div>This is the only time the password is shown. Only a hash is stored, so nobody can look it up later; reset it if it’s lost.</div></div>',
+        actions: [{ label: 'Done', kind: 'primary' }] });
+      $('#pwCopy').addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(password); R.toast('Copied.', 'ok'); } catch (_) { R.toast('Select the password and copy it.', 'bad'); }
+      });
+    }
+    $('#tmBody').addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-act]'); if (!b) return;
+      const u = b.closest('tr').dataset.u, act = b.dataset.act;
+      if (act === 'reset') {
+        if (!(await R.confirm('Reset password?', u + ' will be signed out and needs the new password to sign in again.', 'Reset'))) return;
+        const r = await R.busy(b, () => R.api('/staff/' + encodeURIComponent(u) + '/reset-password', { body: {} }));
+        if (r) showPassword(r.username, r.password, 'Share the new password with ' + u + ' in person or over a trusted channel.');
+        return;
+      }
+      if (act === 'off' && !(await R.confirm('Disable ' + u + '?', 'They are signed out and can’t sign in until enabled again.', 'Disable'))) return;
+      const r = await R.busy(b, () => R.api('/staff/' + encodeURIComponent(u) + '/active', { body: { active: act === 'on' } }));
+      if (r) { R.toast(u + (r.active ? ' enabled.' : ' disabled.'), 'ok'); loadTeam(); }
+    });
+    $('#tmNew').addEventListener('click', async () => {
+      try { await loadLocs(); } catch (e) { R.fail(e); return; }
+      if (!st.locs.some((l) => l.active)) { R.toast('Add a warehouse or store first (Locations).', 'bad'); return; }
+      const m = R.modal({ title: 'New staff login',
+        html: '<form class="fields" onsubmit="return false"><label class="f">Name <span class="req">*</span><input class="in" name="display_name" maxlength="80"></label>' +
+          '<label class="f">Username <span class="req">*</span><input class="in mono" name="username" maxlength="32" placeholder="blr01.priya" autocomplete="off"></label>' +
+          '<label class="f">Role<select class="in" name="role"><option value="store_staff">Store staff (billing)</option><option value="warehouse_staff">Warehouse staff</option></select></label>' +
+          '<label class="f">Location<select class="in" name="location_code"></select></label></form>',
+        actions: [{ label: 'Cancel' }, { label: 'Create login', kind: 'primary', onClick: async (close, el) => {
+          const r = await R.api('/staff', { body: R.formData($('form', el)) });
+          close(); loadTeam();
+          showPassword(r.username, r.password, r.display_name + ' can now sign in as ' + r.username + ' at ' + r.location_code + '.');
+        } }] });
+      const role = $('[name="role"]', m.el);
+      const sync = () => R.options($('[name="location_code"]', m.el), st.locs.filter((l) => l.active && l.kind === (role.value === 'store_staff' ? 'store' : 'warehouse')), (l) => l.code, locLabel);
+      role.addEventListener('change', sync); sync();
+    });
+
+    /* ---------- Settings ---------- */
+    function fillSettings() {
+      const s = R.me.settings || {}, f = $('#setForm');
+      ['legal_name', 'gstin', 'address', 'invoice_footer', 'return_days'].forEach((k) => { $('[name="' + k + '"]', f).value = s[k] === null || s[k] === undefined ? '' : s[k]; });
+      $('[name="allow_negative_stock"]', f).checked = !!s.allow_negative_stock;
+      if (!R.can('settings.write')) R.$$('input', f).forEach((i) => { i.disabled = true; });
+    }
+    $('#setSave').addEventListener('click', () => R.busy($('#setSave'), async () => {
+      R.me.settings = await R.api('/settings', { method: 'PUT', body: R.formData($('#setForm')) });
+      R.toast('Settings saved.', 'ok');
+      fillSettings();
+      const n = document.querySelector('[data-rt-setup]'); if (n) n.hidden = true;
+    }));
+
+    /* ---------- Commands from the shell (Geo › Plan opening stock) ---------- */
+    function startPlan(cmd) {
+      const pin = String(cmd.pin_code || '').replace(/\D/g, '').slice(0, 6);
+      if (!pin) return;
+      $('#plPin').value = pin;
+      $('#plArea').value = String(cmd.area_label || '').slice(0, 80);
+      nav.show('plan');
+      if ($('#plWh').value) buildPlan();
+    }
+    /* ---------- AURA Stock Pilot ---------- */
+    let pilot = null, section = '';
+    function mountPilot() {
+      if (pilot) return pilot;
+      pilot = window.StockPilot.mount($('#pilotRoot'), {
+        onLoad: (p) => R.navCount('pilot', p.kpis.actions, p.kpis.urgent ? 'bad' : ''),
+      });
+      return pilot;
+    }
+    R.addCommands([
+      { group: 'Stock Pilot', icon: 'fa-solid fa-rotate', label: 'Refresh Stock Pilot', run: () => { nav.show('pilot'); mountPilot().refresh(); } },
+      { group: 'Create', icon: 'fa-solid fa-file-invoice', label: 'New purchase order', hint: 'Purchase orders', perm: 'purchase.write', run: () => { nav.show('po'); $('#poNew').click(); } },
+    ]);
+    function refreshAll() {
+      if (pilot) pilot.refresh();
+      if (section === 'po') loadPOs(st.poPage);
+      if (section === 'transfers') loadTransfers(st.trPage);
+    }
+    R.onAgentCommand({
+      opening_plan: (cmd) => { if (R.can('plan.write')) startPlan(cmd); },
+      refresh: refreshAll,
+    });
+
+    let nav = null;
+    R.boot('warehouse', async () => {
+      try { await loadLocs(); } catch (e) { R.fail(e); return; }
+      if (R.isStaff()) $('#trDirWrap').hidden = false;
+      fillSettings();
+      nav = R.sections($('#nav'), (sec) => {
+        section = sec;
+        if (sec === 'pilot') { if (pilot) pilot.refresh(); else mountPilot(); }
+        if (sec === 'po') loadPOs(st.poPage);
+        if (sec === 'transfers') loadTransfers(st.trPage);
+        if (sec === 'locations') loadLocations();
+        if (sec === 'suppliers') renderSuppliers();
+        if (sec === 'team') loadTeam();
+      });
+      nav.start();
+      mountPilot();
+    });
+  })();
+  </script>
+</body>
+</html>

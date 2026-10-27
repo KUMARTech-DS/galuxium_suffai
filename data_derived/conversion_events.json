@@ -1,0 +1,38 @@
+[
+  {
+    "event_id": "ec515c37-e65c-4482-8e69-da5e57b699f9",
+    "tenant_id": "tenant-peterengland",
+    "brand": "Peter England",
+    "campaign_id": "camp-adv-test",
+    "segment_key": "Champions",
+    "converted": true,
+    "revenue": 120.0,
+    "channel": "unknown",
+    "observed_at": "2026-10-13T15:41:53.838753+00:00",
+    "created_at": "2026-10-13T15:41:53.838757+00:00"
+  },
+  {
+    "event_id": "e7e1e07b-a58b-4cca-a619-9df0c733ef28",
+    "tenant_id": "tenant-peterengland",
+    "brand": "Peter England",
+    "campaign_id": "camp-adv-test",
+    "segment_key": "Champions",
+    "converted": true,
+    "revenue": 120.0,
+    "channel": "unknown",
+    "observed_at": "2026-10-13T15:42:23.721322+00:00",
+    "created_at": "2026-10-13T15:42:23.721325+00:00"
+  },
+  {
+    "event_id": "79f15b81-e9c9-437e-ab99-e5f5d3bd5167",
+    "tenant_id": "tenant-peterengland",
+    "brand": "Peter England",
+    "campaign_id": "camp-adv-test",
+    "segment_key": "Champions",
+    "converted": true,
+    "revenue": 120.0,
+    "channel": "unknown",
+    "observed_at": "2026-10-13T15:46:47.257684+00:00",
+    "created_at": "2026-10-13T15:46:47.257686+00:00"
+  }
+]

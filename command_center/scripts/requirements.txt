@@ -1,0 +1,5 @@
+# Needed for: python3 aggregate_metrics.py --bq --project YOUR_PROJECT, load_to_bq.sh (load_csv_bq.py),
+# recompute_rfm.py and reconcile_data.py (Cloud SQL part: psycopg2).
+# backfill_pin_areas.py also needs the Command Center requirements (Vertex AI).
+google-cloud-bigquery>=3.11.0
+psycopg2-binary>=2.9.9

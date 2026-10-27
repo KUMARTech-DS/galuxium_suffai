@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SuffAI — Deployment Guide for the 19–20 October 2026 changes</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: #1f2937; font-size: 10.5pt; line-height: 1.45; }
+  h1 { font-size: 20pt; margin: 0 0 4px; color: #111827; }
+  .sub { color: #6b7280; margin-bottom: 14px; }
+  h2 { font-size: 13.5pt; margin: 22px 0 6px; padding-bottom: 4px; border-bottom: 2px solid #e5e7eb; color: #111827; page-break-after: avoid; }
+  h3 { font-size: 11pt; margin: 14px 0 4px; page-break-after: avoid; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 10px 12px; border-radius: 6px; font-size: 8.4pt; line-height: 1.4; white-space: pre-wrap; word-break: break-word; page-break-inside: avoid; }
+  code { font-family: Menlo, Consolas, monospace; }
+  p code, li code, td code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9.5pt; page-break-inside: avoid; }
+  th, td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f9fafb; }
+  .warn { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+  .note { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+  .order { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+  ol li, ul li { margin: 3px 0; }
+  .pb { page-break-before: always; }
+  .keep { page-break-inside: avoid; }
+  .opts td:nth-child(2) code { white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<h1>SuffAI — Deployment Guide</h1>
+<div class="sub">Changes from Monday 19 October (evening) to Tuesday 20 October 2026, deployed to the live project in one pass. Run every command from <code>~/Downloads/AI_CUP/AI_CUP-main_Updated</code> (not <code>AI_CUP_latest</code>). Appendix A covers deploying everything into a brand-new GCP project with <code>deploy/bootstrap_new_project.sh</code>.</div>
+
+<h2>What changed</h2>
+<table>
+  <tr><th style="width:24%">Release</th><th>What it does</th><th style="width:22%">Needs</th></tr>
+  <tr><td><b>1. Unified BigQuery tables, fresh campaigns, AURA New chat</b> (19 Oct)</td>
+      <td>Customer photos named <code>{customer_id}_{order_id}_{item_id}.jpg</code> become rows in BigQuery <code>commodities</code>, and the <code>garment_items</code> view counts each garment once. Admin can create customers and orders before any photo exists. <b>New Campaign</b> and <b>Create Another Campaign</b> start a fresh Ads Lab session. AURA gets a New chat button and can move between tabs.</td>
+      <td>BigQuery migration; BigQuery access for extraction; all three services</td></tr>
+  <tr><td><b>2. One consistent dataset</b> (19–20 Oct)</td>
+      <td>PIN area names, population and buffers come from Gemini with Google Search (<code>pin_areas</code>). Each brand, colour, garment and gender has one spelling (<code>ref_values</code>). RFM is recomputed from orders. Similarity links photos exactly like extraction. Ads Lab and Admin show one garment count. Admin can create a Style Assistant login. Dashboards pick up new data within about 30 s.</td>
+      <td>BigQuery migration; BigQuery access for similarity; all three services; three data scripts</td></tr>
+  <tr><td><b>3. Private data out of deploys, shared SKU values, one garment count</b> (20 Oct)</td>
+      <td>Raw customer data and plaintext logins never enter images or Cloud Build uploads. Brand SKUs use the same attribute values as customer garments. BigQuery is the only garment count: Command Center sends each PIN's garments to similarity. Similarity retries failed BigQuery writes instead of dropping them.</td>
+      <td>Cloud SQL migration 011; all three services</td></tr>
+  <tr><td><b>4. One Geo store scorer</b> (20 Oct)</td>
+      <td>The server scores stores for the Geo map, the Market brief, the market check and AURA. The browser only draws the results, so all four always agree.</td>
+      <td>Command Center only</td></tr>
+</table>
+
+<h2>What gets deployed</h2>
+<table>
+  <tr><th>Piece</th><th>Action</th><th>Notes</th></tr>
+  <tr><td>BigQuery <code>suffai_ops</code></td><td>Two migrations</td><td>Unified tables, then consistent dataset (Step 2)</td></tr>
+  <tr><td>Cloud SQL</td><td>Migration 011</td><td>Adds columns only; the current similarity keeps working (Step 3)</td></tr>
+  <tr><td>IAM</td><td>BigQuery Data Editor + Job User for the extraction, similarity and Command Center accounts; Vertex AI User for Command Center</td><td>Step 4</td></tr>
+  <tr><td><code>suffai-extraction</code>, <code>suffai-command-center</code>, <code>suffai-similarity</code></td><td>Redeploy, in this order</td><td>Step 5</td></tr>
+  <tr><td>Data scripts</td><td>RFM, PIN areas, reconcile</td><td>Run from your machine (Step 6)</td></tr>
+  <tr><td>Pub/Sub, Cloud Tasks, Scheduler</td><td>No change</td><td>No new environment variables either</td></tr>
+</table>
+<div class="note">Every step is safe to re-run. If part of this is already live, run the guide from the top anyway.</div>
+
+<h2>Before you start</h2>
+<ul>
+  <li>Use Cloud Shell, or a machine with <code>gcloud</code>, <code>bq</code> and Docker. <code>deploy_command_center.sh</code> and <code>deploy_similarity.sh</code> build with local Docker, and Cloud Run only runs <code>linux/amd64</code> images (an Apple Silicon Mac builds <code>arm64</code> by default).</li>
+  <li>For Step 3 you need <code>cloud-sql-proxy</code> and <code>psql</code>, or Cloud SQL Studio in the Console.</li>
+  <li>For Step 6 you need Python with <code>pip install -r command_center/requirements.txt</code> and Application Default Credentials: <code>gcloud auth application-default login</code>.</li>
+</ul>
+
+<h2>Step 0 — Set variables and snapshot the current settings</h2>
+<pre><code>cd ~/Downloads/AI_CUP/AI_CUP-main_Updated
+export GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
+export GCP_REGION=asia-south1
+gcloud config set project "$GOOGLE_CLOUD_PROJECT"
+gcloud config set run/region "$GCP_REGION"
+
+# Save every service's settings (env vars, Cloud SQL, account) first
+for s in suffai-command-center suffai-similarity suffai-extraction; do
+  gcloud run services describe $s --format=export &gt; /tmp/$s-before.yaml
+done
+
+# The bucket whose uploads feed extraction
+export GCS_IMAGE_BUCKET="${GOOGLE_CLOUD_PROJECT}-suffai-garment-images"
+ANNOTATION='run.googleapis.com/cloudsql-instances'
+export CLOUD_SQL_INSTANCE=$(gcloud run services describe suffai-command-center \
+  --format="value(spec.template.metadata.annotations[$ANNOTATION])")
+
+PROJECT_NUMBER=$(gcloud projects describe "$GOOGLE_CLOUD_PROJECT" \
+  --format='value(projectNumber)')
+sa_of() {
+  local sa
+  sa=$(gcloud run services describe "$1" \
+    --format='value(spec.template.spec.serviceAccountName)')
+  echo "${sa:-${PROJECT_NUMBER}-compute@developer.gserviceaccount.com}"
+}
+EXTRACT_SA=$(sa_of suffai-extraction)
+SIM_SA=$(sa_of suffai-similarity)
+CC_SA=$(sa_of suffai-command-center)
+echo "$CLOUD_SQL_INSTANCE  $EXTRACT_SA  $SIM_SA  $CC_SA"</code></pre>
+<div class="warn">Don't export <code>DATABASE_URL</code> in this shell. The deploy scripts use <code>--update-env-vars</code>, so the services keep their current value. If you export it, the scripts copy it onto the services.</div>
+
+<h2>Step 1 — Check that no private files are uploaded</h2>
+<pre><code>gcloud meta list-files-for-upload \
+  | grep -E 'data_offline|plaintext|brand_logins_summary|customers\.csv|\.zip$|\.env$'
+# no output: Cloud Build uploads none of the private files</code></pre>
+<p><code>.gcloudignore</code> (Cloud Build) and <code>.dockerignore</code> (local Docker) now exclude <code>data_offline/</code>, the sample zips and CSVs, <code>captured_garments/</code>, <code>archive/</code>, <code>.env</code> and the plaintext / summary login CSVs. The Command Center image carries only <code>login_cred_db.csv</code> (password hashes, used as a login fallback).</p>
+
+<h2>Step 2 — BigQuery migrations</h2>
+<pre><code>./command_center/scripts/migrate_bq_unified.sh "$GOOGLE_CLOUD_PROJECT"
+./command_center/scripts/migrate_bq_consistency.sh "$GOOGLE_CLOUD_PROJECT"</code></pre>
+<ul>
+  <li><b>Unified:</b> adds <code>source</code> / <code>created_at</code> to customers and orders; adds <code>item_id</code>, <code>gcs_object_key</code>, <code>image_status</code>, <code>source</code>, <code>model_version</code> and <code>extracted_at</code> to commodities; tags existing rows <code>legacy</code>; adds customer / order / item ids to <code>garment_similarity_observations</code>; creates the <code>garment_items</code> view.</li>
+  <li><b>Consistency:</b> creates <code>pin_areas</code> and <code>ref_values</code>, rewrites brand / colour / garment / gender values to one spelling, and recreates <code>garment_items</code> without superseded CSV rows.</li>
+</ul>
+<div class="order">Run both, in this order, every time. Each one rewrites the <code>garment_items</code> view, and the second has the final definition.</div>
+<pre><code>DS="${GOOGLE_CLOUD_PROJECT}.suffai_ops"
+bq query --use_legacy_sql=false "SELECT source, image_status, COUNT(*) n
+  FROM \`$DS.commodities\` GROUP BY 1, 2"
+bq query --use_legacy_sql=false "SELECT kind, COUNT(*) n
+  FROM \`$DS.ref_values\` GROUP BY kind"
+bq query --use_legacy_sql=false "SELECT COUNTIF(is_repeat) repeats, COUNT(*) items
+  FROM \`$DS.garment_items\`"</code></pre>
+<div class="warn"><b>Don't reload the CSVs after this.</b> <code>load_to_bq.sh</code> replaces whole tables, so it refuses any table that holds Admin-created or photo-pipeline rows. <code>FORCE=1</code> overrides that and deletes those rows. Use <code>APPEND=1</code> to add only rows with new ids.</div>
+
+<h2>Step 3 — Cloud SQL migration 011</h2>
+<p>Option A, through the Cloud SQL Auth Proxy (keep it running for Step 6):</p>
+<pre><code>cloud-sql-proxy "$CLOUD_SQL_INSTANCE" --port 5433 &amp;
+psql "postgresql://DB_USER:DB_PASSWORD@127.0.0.1:5433/DB_NAME" -v ON_ERROR_STOP=1 \
+  -f db/migrations/011_similarity_bq_sync.sql</code></pre>
+<p>Option B: open Cloud SQL Studio in the Console, paste <code>db/migrations/011_similarity_bq_sync.sql</code> and run it.</p>
+<p>It adds <code>order_id</code>, <code>item_id</code> and <code>bq_synced_at</code> to <code>garment_similarity_events</code>, plus an index on events not yet sent to BigQuery. Older events are marked as sent. Check:</p>
+<pre><code>SELECT column_name FROM information_schema.columns
+WHERE table_name = 'garment_similarity_events'
+  AND column_name IN ('order_id', 'item_id', 'bq_synced_at');
+-- 3 rows</code></pre>
+
+<h2>Step 4 — IAM</h2>
+<pre><code>for SA in "$EXTRACT_SA" "$SIM_SA" "$CC_SA"; do
+  bq add-iam-policy-binding --member="serviceAccount:${SA}" \
+    --role=roles/bigquery.dataEditor "${GOOGLE_CLOUD_PROJECT}:suffai_ops"
+  gcloud projects add-iam-policy-binding "$GOOGLE_CLOUD_PROJECT" --condition=None \
+    --member="serviceAccount:${SA}" --role=roles/bigquery.jobUser
+done
+gcloud projects add-iam-policy-binding "$GOOGLE_CLOUD_PROJECT" --condition=None \
+  --member="serviceAccount:${CC_SA}" --role=roles/aiplatform.user</code></pre>
+<table>
+  <tr><th>Account</th><th>Why</th></tr>
+  <tr><td>extraction</td><td>Looks up the order, supersedes its CSV items and <code>MERGE</code>s the photo's item into <code>commodities</code></td></tr>
+  <tr><td>similarity</td><td>Looks up the photo's owner (orders joined to customers) and inserts the observation</td></tr>
+  <tr><td>Command Center</td><td>Admin creates customers, orders and Style Assistant logins; writes <code>pin_areas</code> and RFM; grounded PIN lookups need Vertex AI</td></tr>
+</table>
+<p>If your <code>bq</code> version rejects a dataset binding, grant <b>BigQuery Data Editor</b> on <code>suffai_ops</code> in the Console (BigQuery → <code>suffai_ops</code> → Sharing → Permissions). If all three services use the default Compute account, the loop grants the same account three times, which is harmless.</p>
+
+<h2>Step 5 — Deploy extraction, then Command Center, then similarity</h2>
+<pre><code>./deploy/deploy_extraction.sh             # USE_CLOUD_BUILD=1: build with Cloud Build
+./deploy/04_integrate_command_center.sh   # uses the live extraction / similarity URLs
+./deploy/deploy_similarity.sh             # also re-points its Pub/Sub push subscription
+
+CC_URL=$(gcloud run services describe suffai-command-center \
+  --format='value(status.url)')
+curl -sS "$CC_URL/health" | python3 -m json.tool
+# use_bq, database_url, extraction_url, similarity_url: true
+# admin_unique_garments: "bigquery"</code></pre>
+<div class="order"><b>Why this order:</b> each deploy keeps the services that are still on the old version working.
+<ul>
+  <li>The new extraction returns <code>item_attributes</code>, which the current Command Center ignores.</li>
+  <li>The new Command Center sends each PIN's garment list (<code>candidates</code>), which the current similarity ignores.</li>
+  <li>The new similarity requires <code>candidates</code> and uses the columns from migration 011.</li>
+</ul></div>
+<div class="warn">Don't use <code>deploy/deploy_cloud_run.sh</code>: it recreates the retired <code>suffai-api</code> and replaces every service's env vars.</div>
+
+<div class="keep">
+<h2>Step 6 — Data scripts</h2>
+<p>Each script is a dry run unless you pass <code>--apply</code>. Read the dry-run output first.</p>
+<pre><code>pip install -r command_center/requirements.txt
+
+# RFM segments from orders (rule rfm-v1)
+python3 command_center/scripts/recompute_rfm.py \
+  --project "$GOOGLE_CLOUD_PROJECT"
+python3 command_center/scripts/recompute_rfm.py \
+  --project "$GOOGLE_CLOUD_PROJECT" --apply
+
+# PIN areas: one billed Gemini + Google Search prompt per PIN; saved PINs are skipped
+export ENABLE_VERTEX=true GEO_GROUNDING_LOCATION=global GEO_CITY=Bengaluru
+python3 command_center/scripts/backfill_pin_areas.py \
+  --project "$GOOGLE_CLOUD_PROJECT"
+python3 command_center/scripts/backfill_pin_areas.py \
+  --project "$GOOGLE_CLOUD_PROJECT" --apply
+
+# Reconcile leftovers (Cloud SQL through the proxy from Step 3)
+DATABASE_URL='postgresql://DB_USER:DB_PASSWORD@127.0.0.1:5433/DB_NAME' \
+  python3 command_center/scripts/reconcile_data.py \
+  --project "$GOOGLE_CLOUD_PROJECT"
+DATABASE_URL='postgresql://DB_USER:DB_PASSWORD@127.0.0.1:5433/DB_NAME' \
+  python3 command_center/scripts/reconcile_data.py \
+  --project "$GOOGLE_CLOUD_PROJECT" --apply
+
+kill %1   # stop the proxy</code></pre>
+</div>
+<ul>
+  <li><b>Reconcile</b> deletes orders, items and observations whose customer is missing. It also deactivates those customers' logins, fixes wardrobe PINs, and queues matched photos that never reached BigQuery so similarity resends them. If you deleted customers by hand (as on 19 October for three PINs), their orders appear in the dry run for deletion.</li>
+  <li>Pass <code>DATABASE_URL</code> on the command line as shown. If you export it, a later deploy script copies the proxy address onto the services.</li>
+  <li><b>Optional:</b> <code>normalize_sku_attributes.py</code> rewrites stored brand SKU values to the shared spelling (dry run, then <code>--apply</code>, with the same <code>DATABASE_URL</code>). Ranking already treats old and new spellings as one value. If you run it, run <b>Extract &amp; Rank</b> again on open campaigns.</li>
+</ul>
+
+<h2>Step 7 — Smoke tests</h2>
+<pre><code># Admin username and password from your offline credentials file
+curl -sS -X POST "$CC_URL/v1/auth/login" -H 'Content-Type: application/json' \
+  -d '{"username":"ADMIN_USER","password":"ADMIN_PASSWORD"}' | python3 -m json.tool
+export ADMIN_TOKEN=PASTE_TOKEN
+
+curl -sS -H "Authorization: Bearer $ADMIN_TOKEN" \
+  "$CC_URL/v1/admin/unique-summary" | python3 -m json.tool
+curl -sS -X POST -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H 'Content-Type: application/json' -d '{"filters":{}}' \
+  "$CC_URL/v1/geo/scores" | python3 -m json.tool | head -40
+./deploy/05_verify_similarity_e2e.sh</code></pre>
+<table>
+  <tr><th style="width:22%">Where</th><th style="width:33%">Action</th><th>Expect</th></tr>
+  <tr><td>Admin → Customers &amp; Orders</td><td>Create a customer with a Bengaluru PIN and tick <b>Create Style Assistant login</b></td><td>"Customer … created in &lt;area&gt; (segment New)"; username and password shown once</td></tr>
+  <tr><td>Admin → Customers &amp; Orders</td><td>Create a customer with PIN 110001</td><td>Blocked: outside Bengaluru; nothing saved</td></tr>
+  <tr><td>Admin → Customers &amp; Orders</td><td>Add an order for 3 clothes</td><td>Shows <code>0 / 3</code>; the copy button gives <code>garments/&lt;customer&gt;_&lt;order&gt;_&lt;item_id&gt;.jpg</code></td></tr>
+  <tr><td>GCS</td><td>Upload <code>…_1.jpg</code> for that order</td><td>A <code>commodities</code> row with <code>source=pipeline</code>, <code>image_status=extracted</code>; the order shows <code>1 / 3</code> within about 30 s; <code>SELECT COUNT(*) FROM garment_similarity_events WHERE bq_synced_at IS NULL</code> stays 0</td></tr>
+  <tr><td>GCS</td><td>Upload a photo for an order that doesn't exist</td><td>Extraction and similarity both log <code>unlinked</code>; nothing written</td></tr>
+  <tr><td>Geo</td><td>Pick a PIN</td><td>Area card with name, population, 1 / 2 / 4 km buffers and sources</td></tr>
+  <tr><td>Geo (admin)</td><td>Change filters and click a few areas</td><td>Each dot's decision matches the Market brief's (unless an external market check lowered it)</td></tr>
+  <tr><td>Geo (brand)</td><td>Open Geo</td><td>Only the own brand and Competitors, including in <code>/v1/geo/scores</code> responses</td></tr>
+  <tr><td>Ads Lab (brand)</td><td>Extract &amp; Rank for a few PINs</td><td>"Photographed garments" equals Admin <b>Unique garments</b> for the same PINs; SKU values use the shared spelling (<code>Navy Blue</code>, <code>T-Shirt</code>)</td></tr>
+  <tr><td>Ads Lab / Campaigns</td><td><b>New Campaign</b>; launch 1P; <b>Create Another Campaign</b></td><td>A fresh Ads Lab each time; the launched campaign stays on Campaigns, marked simulated</td></tr>
+  <tr><td>AURA</td><td>New chat; then "Should we open a store in 560008?"</td><td>Cleared log and a greeting; the same decision as the Geo dot</td></tr>
+  <tr><td>Similarity logs</td><td>During ranking</td><td><code>compare_pins … candidates=N missing=0</code></td></tr>
+</table>
+<p>Map decisions follow the server rule, which is stricter than the old browser rule: footfall under 40 is No. For example, a PIN with brand share 0.25 and footfall 30 moves from Consider to No.</p>
+
+<h2>If something fails</h2>
+<table>
+  <tr><th style="width:42%">Symptom</th><th>Fix</th></tr>
+  <tr><td>Campaign ranking 400 <code>candidates required</code></td><td>Similarity went live before Command Center. Deploy Command Center.</td></tr>
+  <tr><td>Similarity fails every photo with a missing column (<code>order_id</code>, <code>item_id</code>, <code>bq_synced_at</code>)</td><td>Migration 011 has not run on that database (Step 3).</td></tr>
+  <tr><td>Extraction or similarity logs BigQuery <code>403 Access Denied</code></td><td>Step 4 for that account. Pub/Sub keeps retrying, so photos catch up once IAM is fixed.</td></tr>
+  <tr><td>Admin "Create Customer" → "PIN could not be verified right now"</td><td><code>ENABLE_VERTEX=true</code> and Vertex AI User on the Command Center account; retry.</td></tr>
+  <tr><td>Geo shows PIN codes instead of area names</td><td>Run <code>backfill_pin_areas.py --apply</code>, or open the PIN on Geo.</td></tr>
+  <tr><td>Campaign ranking 503 "Garment data unavailable"</td><td>Command Center can't read <code>suffai_ops</code> (Step 4); see its logs.</td></tr>
+  <tr><td>Command Center logs <code>extraction response has no item_attributes</code></td><td>Extraction is older than Command Center; deploy extraction.</td></tr>
+  <tr><td>Env vars disappeared after a deploy</td><td>Something used <code>--set-env-vars</code>. Restore them from <code>/tmp/&lt;service&gt;-before.yaml</code>.</td></tr>
+</table>
+<h3>Rolling back</h3>
+<p>Cloud Run keeps earlier revisions. List them with <code>gcloud run revisions list --service=SERVICE</code>, then send traffic back with <code>gcloud run services update-traffic SERVICE --to-revisions=REVISION=100</code>. Roll back in reverse order: similarity, then Command Center, then extraction. An old Command Center with the new similarity breaks ranking. The migrations aren't rolled back: they add tables and columns and rewrite values to one spelling, and the old services keep working on that data.</p>
+
+<h2 class="pb">Appendix A — A new GCP project from scratch</h2>
+<p><code>deploy/bootstrap_new_project.sh</code> sets up an empty project and deploys everything above, ending with health checks. It is safe to re-run: each step keeps what already exists.</p>
+<pre><code># In Cloud Shell (gcloud, bq, python3 and credentials are ready), from the repo root:
+GOOGLE_CLOUD_PROJECT=my-new-project ./deploy/bootstrap_new_project.sh
+
+# Let it create the project and link billing as well:
+GOOGLE_CLOUD_PROJECT=my-new-project BILLING_ACCOUNT=XXXXXX-XXXXXX-XXXXXX \
+  ./deploy/bootstrap_new_project.sh</code></pre>
+<p>Outside Cloud Shell you need the Google Cloud SDK, python3, curl and openssl, plus <code>gcloud auth login</code> and <code>gcloud auth application-default login</code>. You don't need Docker, <code>psql</code> or the Cloud SQL proxy: Cloud Build builds the images and <code>gcloud sql import</code> applies the migrations. The first run takes about 30–40 minutes, mostly Cloud SQL creation and the three builds.</p>
+
+<h3>What it does</h3>
+<ol>
+  <li>Checks tools, logins and billing. Enables Cloud Run, Cloud Build, Artifact Registry, Compute, IAM, Storage, BigQuery, Cloud SQL Admin, Secret Manager, Pub/Sub, Vertex AI and Cloud Tasks.</li>
+  <li>Starts creating Cloud SQL PostgreSQL <code>suffai-ops</code> in the background. Creates the <code>suffai</code> Artifact Registry repo, one service account per service (<code>suffai-cc</code>, <code>suffai-extraction</code>, <code>suffai-similarity</code>, <code>pubsub-push</code>) and the image and raw buckets. Lets the Compute Engine default account run builds, since new projects build as that account.</li>
+  <li>BigQuery <code>suffai_ops</code>: creates the tables, loads the sample CSVs and the hashed logins (only into empty tables), and runs both migrations. Then recomputes RFM, backfills PIN areas and prints a reconcile dry run (it never applies it).</li>
+  <li>Builds the three images with Cloud Build, after checking that no private file would be uploaded.</li>
+  <li>Cloud SQL: creates database and user <code>suffai</code> with a random password, stores <code>DATABASE_URL</code> in Secret Manager (<code>suffai-database-url</code>) and imports migrations 001–011.</li>
+  <li>IAM: gives each runtime account BigQuery Job User + Data Editor, Vertex AI User, Cloud SQL Client and access to the secret. Command Center gets Object Admin on the image bucket and the right to sign URLs as itself; extraction and similarity get Object Viewer.</li>
+  <li>Deploys extraction and similarity (private), lets <code>pubsub-push</code> and Command Center call them, and wires uploads: bucket notification → <code>garment-image-uploaded</code> → two push subscriptions (300 s ack deadline, retry backoff, dead-letter topic after 5 attempts).</li>
+  <li>Deploys Command Center (public) with the service URLs, sets up the Cloud Tasks queue, checks every <code>/health</code> and prints the login URL.</li>
+</ol>
+
+<h3>Options</h3>
+<table class="opts">
+  <tr><th>Variable</th><th>Default</th><th>Meaning</th></tr>
+  <tr><td><code>GCP_REGION</code></td><td><code>asia-south1</code></td><td>Region for every resource</td></tr>
+  <tr><td><code>GEMINI_MODEL</code></td><td><code>gemini-2.5-flash</code></td><td>Extraction, chat / AURA and grounded Geo lookups</td></tr>
+  <tr><td><code>SQL_TIER</code></td><td><code>db-g1-small</code></td><td>Cloud SQL machine (Enterprise edition, PostgreSQL 15)</td></tr>
+  <tr><td><code>LOAD_SAMPLE_DATA</code></td><td><code>1</code></td><td>Load <code>command_center_data/sample/*.csv</code>. These hold customer names, numbers and addresses; <code>0</code> starts with empty tables</td></tr>
+  <tr><td><code>BACKFILL_PIN_AREAS</code></td><td><code>1</code></td><td>One billed grounded prompt per PIN; <code>0</code> lets Geo look PINs up when opened</td></tr>
+  <tr><td><code>ENABLE_CLOUD_TASKS</code></td><td><code>1</code></td><td>Run Ads Lab ranking jobs on Cloud Tasks</td></tr>
+  <tr><td><code>GEO_CITY</code></td><td><code>Bengaluru</code></td><td>City for PIN checks and store lookups</td></tr>
+</table>
+
+<h3>How the new project differs from the live one</h3>
+<ul>
+  <li><b><code>DATABASE_URL</code> is a Secret Manager secret</b>, not a plain env var. For later redeploys with <code>deploy_extraction.sh</code>, <code>04_integrate_command_center.sh</code> and <code>deploy_similarity.sh</code>, export only <code>GOOGLE_CLOUD_PROJECT</code> and <code>GCP_REGION</code>. Exporting <code>DATABASE_URL</code> makes the deploy fail, because Cloud Run won't turn a secret into a plain value.</li>
+  <li><b>Each service has its own account</b> instead of the default Compute account, so later redeploys keep the account.</li>
+  <li><b>Command Center runs as one instance</b> (<code>--max-instances=1</code>, CPU always allocated), because login sessions and AURA state live in memory.</li>
+  <li><b>Extraction uses <code>GEMINI_MODEL</code></b>. The code default <code>gemini-2.0-flash</code> may not be available to new projects.</li>
+</ul>
+
+<h3>After it finishes</h3>
+<ol>
+  <li>Open the printed <code>/login</code> URL and sign in with an account from <code>login_cred_db.csv</code>. The passwords are in your offline <code>login_creds_plaintext.csv</code>, which is never uploaded.</li>
+  <li>Run the Step 7 smoke tests: create a customer and order in Admin, then upload <code>garments/&lt;customer_id&gt;_&lt;order_id&gt;_1.jpg</code> to the printed bucket.</li>
+  <li>Photos that fail five times land in the <code>garment-image-uploaded-dlq-sub</code> subscription.</li>
+  <li>To apply the reconcile it printed: <code>python3 command_center/scripts/reconcile_data.py --project PROJECT --skip-cloud-sql --apply</code>.</li>
+</ol>
+<div class="warn"><b>Running cost:</b> Cloud SQL runs all the time, and Command Center is billed while its instance is up. Gemini calls are billed per request. To remove everything: <code>gcloud projects delete PROJECT</code>.</div>
+<div class="note"><b>Organization policies:</b> if <code>/health</code> returns 403, a policy is blocking public (<code>allUsers</code>) access to Cloud Run. If Cloud SQL creation fails, a policy may block public IP. Personal accounts without an organization have neither.</div>
+
+</body>
+</html>

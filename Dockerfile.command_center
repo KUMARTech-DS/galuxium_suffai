@@ -1,0 +1,23 @@
+# Cloud Run: suffai-command-center
+# Serves web/ (Geo + Ads Lab UI) + command_center BFF APIs.
+# Does not replace suffai-api or suffai-extraction.
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PORT=8080 \
+    USE_BQ=true
+
+WORKDIR /app
+
+COPY command_center/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY command_center ./command_center
+COPY command_center_data/auth/login_cred_db.csv ./command_center_data/auth/login_cred_db.csv
+COPY web ./web
+
+ENV PYTHONPATH=/app
+
+EXPOSE 8080
+CMD exec uvicorn command_center.main:app --host 0.0.0.0 --port ${PORT}

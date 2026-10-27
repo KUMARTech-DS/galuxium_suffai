@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuffAI · Inventory</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="./retail.js"></script>
+  <script src="./pilot.js"></script>
+  <link rel="stylesheet" href="./retail.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .chips { display: flex; gap: 4px; flex-wrap: wrap; }
+    .chips .badge { font-family: 'IBM Plex Mono', monospace; }
+    .tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; align-items: start; }
+    .tools .card + .card { margin-top: 0; }
+    .lines .in.sm { width: 76px; text-align: right; }
+    .cat-row { display: grid; grid-template-columns: 140px 1fr 90px 110px; gap: 10px; align-items: center; padding: 5px 0; font-size: 12.5px; }
+    .cat-row .r { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+    .labels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; }
+    .tag { border: 1px dashed #999; padding: 3mm; text-align: center; page-break-inside: avoid; font-size: 10px; }
+    .tag b { display: block; font-size: 11px; }
+    .tag .mrp { font-size: 13px; font-weight: 700; margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-in">
+      <div class="hero-row">
+        <div class="hero-title">
+          <div class="eyebrow">Inventory</div>
+          <h1>Catalog &amp; stock</h1>
+          <p class="hero-sub">Styles, SKUs and barcodes; stock by location and bin; every movement in one ledger. AURA Stock Pilot flags what to restock first.</p>
+        </div>
+        <div class="hero-meta" data-rt-context></div>
+      </div>
+      <nav class="subnav" id="nav" aria-label="Inventory sections">
+        <button type="button" data-sec="overview"><i class="fa-solid fa-chart-simple"></i>Overview</button>
+        <button type="button" data-sec="catalog"><i class="fa-solid fa-shirt"></i>Catalog</button>
+        <button type="button" data-sec="stock"><i class="fa-solid fa-boxes-stacked"></i>Stock</button>
+        <button type="button" data-sec="moves"><i class="fa-solid fa-right-left"></i>Movements</button>
+        <button type="button" data-sec="incoming" data-perm="transfer.receive"><i class="fa-solid fa-truck-ramp-box"></i>Receiving</button>
+        <button type="button" data-sec="tools" data-perm="stock.write"><i class="fa-solid fa-sliders"></i>Adjust &amp; count</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" data-rt-main>
+    <!-- Overview -->
+    <section data-sec="overview" hidden>
+      <div id="ovPilot"></div>
+      <div class="kpi-strip" id="ovTiles" style="margin-top:0"></div>
+      <div class="cols">
+        <div class="card"><div class="card-h"><h2><i class="fa-solid fa-chart-column"></i>Sales, last 30 days</h2><span class="label-actual">Actual (POS)</span><span class="sub" id="ovSalesSub"></span></div>
+          <div id="ovBars"></div>
+          <div class="card-h" style="margin:16px 0 6px"><h2><i class="fa-solid fa-tags"></i>Top categories</h2></div>
+          <div id="ovCats"></div></div>
+        <div class="card" style="margin-top:0"><div class="card-h"><h2><i class="fa-solid fa-location-dot"></i>Stock by location</h2><span class="sub">Sellable units; cost at moving average</span></div>
+          <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Location</th><th class="r">Units</th><th style="width:22%">Share</th><th class="r">Damaged</th><th class="r">Value (cost)</th><th class="r">Value (MRP)</th></tr></thead>
+            <tbody id="ovLocs"></tbody></table><div id="ovLocsEmpty" hidden></div></div></div>
+      </div>
+    </section>
+
+    <!-- Catalog -->
+    <section data-sec="catalog" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f grow">Search<input class="in" id="catQ" placeholder="Style code, name, SKU or barcode"></label>
+          <label class="f">Category<select class="in" id="catCat"><option value="">All</option></select></label>
+          <label class="f">Status<select class="in" id="catActive"><option value="">All</option><option value="true" selected>Active</option><option value="false">Inactive</option></select></label>
+          <button type="button" class="btn" id="catGo"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+          <span style="flex:1"></span>
+          <button type="button" class="btn" id="catImport" data-perm="catalog.write"><i class="fa-solid fa-file-csv"></i>Import CSV</button>
+          <button type="button" class="btn primary" id="catNew" data-perm="catalog.write"><i class="fa-solid fa-plus"></i>New style</button>
+        </div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Style</th><th>Name</th><th>Category</th><th>HSN · GST</th><th>Colours / sizes</th><th class="r">SKUs</th><th class="r">Units</th><th class="r">MRP</th><th>Status</th></tr></thead>
+          <tbody id="catBody"></tbody></table><div class="empty" id="catEmpty" hidden>No styles yet. Add one or import your catalog CSV.</div></div>
+        <div class="pager" id="catPager"></div>
+      </div>
+    </section>
+
+    <!-- Stock -->
+    <section data-sec="stock" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f">Location<select class="in" id="stLoc"></select></label>
+          <label class="f grow">Search<input class="in" id="stQ" placeholder="SKU, barcode, style or name"></label>
+          <label class="f">Category<select class="in" id="stCat"><option value="">All</option></select></label>
+          <label class="check" style="margin-bottom:8px"><input type="checkbox" id="stLow">Below min only</label>
+          <button type="button" class="btn" id="stGo"><i class="fa-solid fa-magnifying-glass"></i>Show</button>
+          <button type="button" class="btn" id="stCsv"><i class="fa-solid fa-download"></i>CSV</button>
+        </div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Location</th><th>SKU</th><th>Item</th><th>Colour / size</th><th class="r">Sellable</th><th class="r">Damaged</th><th class="r">Min / max</th><th class="r">MRP</th><th class="r">Value (cost)</th></tr></thead>
+          <tbody id="stBody"></tbody></table><div class="empty" id="stEmpty" hidden>No stock rows match.</div></div>
+        <div class="pager" id="stPager"></div>
+      </div>
+    </section>
+
+    <!-- Movements -->
+    <section data-sec="moves" hidden>
+      <div class="card">
+        <div class="toolbar">
+          <label class="f">Location<select class="in" id="mvLoc"></select></label>
+          <label class="f grow">SKU / barcode<input class="in" id="mvQ"></label>
+          <label class="f">Type<select class="in" id="mvReason"><option value="">All</option></select></label>
+          <label class="f">From<input class="in" type="date" id="mvFrom"></label>
+          <label class="f">To<input class="in" type="date" id="mvTo"></label>
+          <button type="button" class="btn" id="mvGo"><i class="fa-solid fa-magnifying-glass"></i>Show</button>
+        </div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>When</th><th>Location</th><th>Bin</th><th>SKU</th><th>Type</th><th class="r">Qty</th><th class="r">Balance</th><th>By</th><th>Note</th></tr></thead>
+          <tbody id="mvBody"></tbody></table><div class="empty" id="mvEmpty" hidden>No movements in this range.</div></div>
+        <div class="pager" id="mvPager"></div>
+      </div>
+    </section>
+
+    <!-- Receiving -->
+    <section data-sec="incoming" hidden>
+      <div class="card">
+        <div class="card-h"><h2>Transfers on the way</h2><span class="sub">Open one to count what arrived and book it into stock</span>
+          <div class="end"><button type="button" class="btn sm" id="inReload"><i class="fa-solid fa-rotate"></i>Refresh</button></div></div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Transfer</th><th>Route</th><th>Dispatched</th><th class="r">Units sent</th><th></th></tr></thead>
+          <tbody id="inBody"></tbody></table><div class="empty" id="inEmpty" hidden>Nothing in transit to you.</div></div>
+      </div>
+    </section>
+
+    <!-- Tools -->
+    <section data-sec="tools" hidden>
+      <div class="toolbar"><label class="f">Location<select class="in" id="tlLoc"></select></label>
+        <span class="hint" style="margin-bottom:8px">Every change below is written to the movement ledger with your name.</span></div>
+      <div class="tools">
+        <div class="card"><div class="card-h"><h2>Adjust stock</h2><span class="sub">Damage, loss, found units, corrections</span></div>
+          <div class="fields"><label class="f">Reason<select class="in" id="adjReason"></select></label>
+            <label class="f">Bin<select class="in" id="adjBin"></select></label>
+            <label class="f full">Note<input class="in" id="adjNote" maxlength="200" placeholder="Required for corrections"></label></div>
+          <div class="lines" id="adjLines" style="margin-top:10px"></div>
+          <div style="text-align:right;margin-top:10px"><button type="button" class="btn primary" id="adjSave">Post adjustment</button></div></div>
+
+        <div class="card"><div class="card-h"><h2>Cycle count</h2><span class="sub">Counted minus recorded is posted as the difference</span></div>
+          <div class="fields"><label class="f">Bin counted<select class="in" id="cntBin"></select></label></div>
+          <div class="lines" id="cntLines" style="margin-top:10px"></div>
+          <div style="text-align:right;margin-top:10px"><button type="button" class="btn primary" id="cntSave">Post count</button></div></div>
+
+        <div class="card"><div class="card-h"><h2>Putaway / move bins</h2></div>
+          <div class="fields"><label class="f">From bin<select class="in" id="paFrom"></select></label><label class="f">To bin<select class="in" id="paTo"></select></label></div>
+          <div class="lines" id="paLines" style="margin-top:10px"></div>
+          <div style="display:flex;gap:8px;justify-content:space-between;margin-top:10px;flex-wrap:wrap">
+            <span style="display:flex;gap:6px"><input class="in sm" id="newBins" placeholder="New bins: A-01, A-02" style="width:200px"><button type="button" class="btn sm" id="addBins">Add bins</button></span>
+            <button type="button" class="btn primary" id="paSave">Move units</button></div></div>
+
+        <div class="card" data-perm="par.write"><div class="card-h"><h2>Par levels</h2><span class="sub">Min / max per SKU drive replenishment; 0 / 0 removes</span></div>
+          <div class="lines" id="parLines"></div>
+          <div style="text-align:right;margin-top:10px"><button type="button" class="btn primary" id="parSave">Save par levels</button></div></div>
+
+        <div class="card" data-perm="catalog.write"><div class="card-h"><h2>Opening stock import</h2><span class="sub">Adds to what is there; all rows or none</span></div>
+          <p class="hint" style="margin-top:0">Columns: <span class="mono">location_code, sku</span> (or <span class="mono">barcode</span>)<span class="mono">, qty, bin, unit_cost</span>. Bins must exist first.</p>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><input type="file" id="opFile" accept=".csv,text/csv"><button type="button" class="btn sm" id="opTemplate"><i class="fa-solid fa-download"></i>Template</button></div>
+          <div id="opErrors"></div>
+          <div style="text-align:right;margin-top:10px"><button type="button" class="btn primary" id="opSave">Import opening stock</button></div></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="printArea"></div>
+
+  <script>
+  (function () {
+    const R = window.Retail;
+    const $ = R.$, esc = R.esc;
+    const MOVE_LABELS = { opening: 'Opening', grn: 'Goods received', sale: 'Sale', return: 'Return', return_damaged: 'Return (damaged)',
+      transfer_out: 'Transfer out', transfer_in: 'Transfer in', adjust: 'Adjust', count: 'Count', putaway: 'Putaway',
+      damaged: 'Damaged', lost: 'Lost', found: 'Found', correction: 'Correction', write_off: 'Write off' };
+    const st = { locs: [], cats: [], catPage: 1, stPage: 1, mvPage: 1, stRows: [], bins: [] };
+    const binLabel = (b) => b.bin_code ? b.bin_code + (b.zone ? ' · ' + b.zone : '') : 'Unassigned';
+
+    /* ---------- Locations ---------- */
+    async function loadLocations() {
+      if (R.me.location) st.locs = [R.me.location];
+      else st.locs = (await R.api('/locations')).locations || [];
+      const label = (l) => l.code + ' · ' + l.name + (l.kind === 'warehouse' ? ' (warehouse)' : '');
+      ['#stLoc', '#mvLoc'].forEach((s) => {
+        R.options($(s), st.locs, (l) => l.location_id, label, R.me.location ? undefined : 'All locations');
+        if (R.me.location) $(s).disabled = true;
+      });
+      R.options($('#tlLoc'), st.locs, (l) => l.location_id, label);
+      if (R.me.location) $('#tlLoc').disabled = true;
+    }
+
+    /* ---------- Overview ---------- */
+    let pilot = null;
+    async function loadOverview() {
+      if (!pilot && window.StockPilot) pilot = window.StockPilot.mount($('#ovPilot'), { compact: true });
+      else if (pilot) pilot.refresh();
+      if (!$('#ovTiles').children.length) $('#ovTiles').innerHTML = R.skeleton('tile', 6);
+      try {
+        const [val, sales, low] = await Promise.all([R.api('/stock/valuation'), R.api('/sales-summary'),
+          R.api('/stock', { params: { low_only: true, size: 1 } })]);
+        const daily = salesByDay(sales);
+        const ret = sales.returns_paise !== undefined ? sales.returns_paise : null;
+        $('#ovTiles').innerHTML = [
+          R.kpi({ icon: 'fa-indian-rupee-sign', label: 'Net sales · 30 days', value: R.compactMoney(sales.net_paise), sub: R.count(sales.invoices, 'bill') + ' · ' + R.count(sales.units, 'unit'),
+                  spark: R.spark(daily.map((d) => d[1])), title: R.money(sales.net_paise) + (ret !== null ? ' net of ' + R.money(ret) + ' returns' : '') }),
+          R.kpi({ icon: 'fa-boxes-stacked', label: 'Sellable units', value: R.compact(val.units), sub: R.count(val.locations.length, 'location') + ' with stock', title: R.num(val.units) + ' units' }),
+          R.kpi({ icon: 'fa-coins', label: 'Stock value · cost', value: R.compactMoney(Math.round(val.value_cost * 100)), sub: 'moving average cost', title: R.rupees(val.value_cost) }),
+          R.kpi({ icon: 'fa-tag', label: 'Stock value · MRP', value: R.compactMoney(Math.round(val.value_mrp * 100)), sub: 'GST inclusive', title: R.rupees(val.value_mrp) }),
+          R.kpi({ icon: 'fa-arrow-trend-down', label: 'Below min', value: R.num(low.total), sub: low.total ? 'Click to see SKUs' : 'All above min levels', tone: low.total ? 'bad' : 'ok', go: low.total ? 'stock' : '' }),
+          R.kpi({ icon: 'fa-heart-crack', label: 'Damaged', value: R.num(val.damaged), sub: 'in DMG bins, not sellable', tone: val.damaged ? 'warn' : '', go: val.damaged && R.can('stock.write') ? 'tools' : '' }),
+        ].join('');
+        const lowTile = $('#ovTiles [data-go="stock"]');
+        if (lowTile) lowTile.addEventListener('click', () => { $('#stLow').checked = true; }, true);
+        const empty = $('#ovLocsEmpty');
+        empty.hidden = val.locations.length > 0;
+        empty.innerHTML = R.emptyState({ icon: 'fa-boxes-stacked', title: 'No stock yet', text: 'Receive a purchase order in Warehouse, or import opening stock under Adjust & count.' });
+        const most = Math.max(1, ...val.locations.map((l) => l.units));
+        $('#ovLocs').innerHTML = val.locations.map((l) => '<tr><td><i class="fa-solid ' + (l.kind === 'warehouse' ? 'fa-warehouse' : 'fa-store') + '" style="color:var(--muted);margin-right:.4rem"></i><b class="mono">' +
+          esc(l.code) + '</b> ' + esc(l.name) + '</td><td class="r num-cell">' + R.num(l.units) + '</td><td><div class="share"><i style="width:' + (l.units / most * 100).toFixed(1) + '%"></i></div></td>' +
+          '<td class="r">' + (l.damaged ? '<span class="badge warn">' + R.num(l.damaged) + '</span>' : '<span class="hint">0</span>') + '</td><td class="r num-cell">' + R.rupees(l.value_cost) + '</td><td class="r num-cell">' + R.rupees(l.value_mrp) + '</td></tr>').join('');
+        renderSales(sales, daily);
+      } catch (e) { R.fail(e); }
+    }
+    function salesByDay(s) {
+      const byDay = {};
+      s.days.forEach((d) => { byDay[d.day] = (byDay[d.day] || 0) + d.net_paise; });
+      const out = [];
+      for (let d = s.from; d <= s.to; d = R.addDays(d, 1)) out.push([d, byDay[d] || 0]);
+      return out;
+    }
+    function renderSales(s, daily) {
+      $('#ovSalesSub').textContent = R.money(s.net_paise) + ' net';
+      R.barChart($('#ovBars'), daily.map(([d, v]) => ({ label: R.day(d).replace(/ \d{4}$/, ''), value: v / 100, tip: R.esc(R.day(d)) + ' · <b>' + R.esc(R.money(v)) + '</b>' })),
+        { height: 180, axis: (v) => '₹' + R.compact(v), label: 'Net sales per day, last 30 days', emptyTitle: 'No bills yet', emptyText: 'Sales from Store POS show here.' });
+      const units = Math.max(1, ...s.categories.map((c) => c.units));
+      $('#ovCats').innerHTML = s.categories.length ? s.categories.slice(0, 8).map((c) => '<div class="cat-row"><span>' + esc(c.category || 'Uncategorised') + '</span>' +
+        '<div class="share"><i style="width:' + Math.max(0, c.units / units * 100) + '%"></i></div><span class="r">' + R.num(c.units) + ' u</span><span class="r">' + R.money(c.net_paise) + '</span></div>').join('')
+        : R.emptyState({ icon: 'fa-receipt', title: 'No bills in the last 30 days', text: 'Ring up a sale in Store POS and it shows here.' });
+    }
+
+    /* ---------- Catalog ---------- */
+    async function loadCatalog(page) {
+      st.catPage = page || 1;
+      try {
+        const data = await R.api('/products', { params: { q: $('#catQ').value.trim(), category: $('#catCat').value, active: $('#catActive').value, page: st.catPage, size: 50 } });
+        st.cats = data.categories || [];
+        ['#catCat', '#stCat'].forEach((s) => R.options($(s), st.cats, (c) => c, (c) => c, 'All'));
+        $('#catEmpty').hidden = data.products.length > 0;
+        $('#catBody').innerHTML = data.products.map((p) => {
+          const colors = [...new Set(p.variants.map((x) => x.color))], sizes = [...new Set(p.variants.map((x) => x.size))];
+          const mrps = p.variants.map((x) => x.mrp);
+          const lo = Math.min(...mrps), hi = Math.max(...mrps);
+          return '<tr class="click" data-id="' + esc(p.product_id) + '"><td class="mono"><b>' + esc(p.style_code) + '</b></td><td>' + esc(p.name) + '</td><td>' + esc(p.category) + '</td>' +
+            '<td class="mono">' + esc(p.hsn_code) + ' · ' + (p.gst_rule === 'fixed' ? p.gst_rate + '%' : '5/18%') + '</td>' +
+            '<td>' + esc(colors.slice(0, 4).join(', ')) + (colors.length > 4 ? ' +' + (colors.length - 4) : '') + '<div class="hint" style="margin:0">' + esc(sizes.join(' ')) + '</div></td>' +
+            '<td class="r">' + p.variants.length + '</td><td class="r">' + R.num(p.variants.reduce((a, x) => a + x.units, 0)) + '</td>' +
+            '<td class="r num-cell">' + (mrps.length ? R.rupees(lo) + (hi > lo ? '–' + R.rupees(hi) : '') : '—') + '</td>' +
+            '<td>' + (p.active ? '<span class="badge ok">Active</span>' : '<span class="badge">Inactive</span>') + '</td></tr>';
+        }).join('');
+        R.pager($('#catPager'), data, loadCatalog);
+      } catch (e) { R.fail(e); }
+    }
+    $('#catBody').addEventListener('click', (e) => { const tr = e.target.closest('tr[data-id]'); if (tr) openProduct(tr.dataset.id); });
+    $('#catGo').addEventListener('click', () => loadCatalog(1));
+    $('#catQ').addEventListener('keydown', (e) => { if (e.key === 'Enter') loadCatalog(1); });
+
+    function productForm(p) {
+      p = p || {};
+      return '<form class="fields" onsubmit="return false">' +
+        (p.product_id ? '' : '<label class="f">Style code <span class="req">*</span><input class="in mono" name="style_code" maxlength="32" placeholder="TS100"></label>') +
+        '<label class="f">Name <span class="req">*</span><input class="in" name="name" maxlength="120" value="' + esc(p.name) + '"></label>' +
+        '<label class="f">Category <span class="req">*</span><input class="in" name="category" maxlength="40" list="catList" value="' + esc(p.category) + '" placeholder="T-Shirts"></label>' +
+        '<datalist id="catList">' + st.cats.map((c) => '<option value="' + esc(c) + '">').join('') + '</datalist>' +
+        '<label class="f">Gender<input class="in" name="gender" maxlength="20" value="' + esc(p.gender) + '" placeholder="Women / Men / Unisex"></label>' +
+        '<label class="f">Material<input class="in" name="material" maxlength="60" value="' + esc(p.material) + '" placeholder="100% cotton"></label>' +
+        '<label class="f">Pattern<input class="in" name="pattern" maxlength="40" value="' + esc(p.pattern) + '"></label>' +
+        '<label class="f">Season<input class="in" name="season" maxlength="20" value="' + esc(p.season) + '" placeholder="AW26"></label>' +
+        '<label class="f">HSN code <span class="req">*</span><input class="in mono" name="hsn_code" maxlength="8" value="' + esc(p.hsn_code) + '" placeholder="6109"></label>' +
+        '<label class="f">GST<select class="in" name="gst_rule"><option value="apparel"' + (p.gst_rule !== 'fixed' ? ' selected' : '') + '>Apparel: 5% up to ₹2,500 a piece, else 18%</option><option value="fixed"' + (p.gst_rule === 'fixed' ? ' selected' : '') + '>Fixed rate</option></select></label>' +
+        '<label class="f">Fixed GST %<input class="in" name="gst_rate" inputmode="decimal" value="' + esc(p.gst_rate) + '" placeholder="Only for fixed"></label>' +
+        (p.product_id ? '' :
+          '<label class="f full">Colours <span class="req">*</span><input class="in" name="colors" placeholder="White, Navy, Black"></label>' +
+          '<label class="f">Sizes <span class="req">*</span><input class="in" name="sizes" value="S, M, L, XL"></label>' +
+          '<label class="f">MRP ₹ <span class="req">*</span><input class="in" name="mrp" inputmode="decimal" placeholder="1999"></label>' +
+          '<label class="f">Cost ₹<input class="in" name="cost" inputmode="decimal" placeholder="Optional"></label>' +
+          '<p class="hint full">One SKU is created for every colour × size, each with an in-store EAN-13 barcode. Edit MRPs per SKU afterwards.</p>') +
+        '</form>';
+    }
+    const split = (s) => String(s || '').split(',').map((x) => x.trim()).filter(Boolean);
+    $('#catNew').addEventListener('click', () => {
+      R.modal({ title: 'New style', wide: true, html: productForm(), actions: [{ label: 'Cancel' }, { label: 'Create style', kind: 'primary', onClick: async (_, el) => {
+        const f = R.formData($('form', el));
+        const p = await R.api('/products', { body: { ...f, colors: split(f.colors), sizes: split(f.sizes) } });
+        R.toast(p.style_code + ' created with ' + R.count(p.variants.length, 'SKU') + '.', 'ok');
+        loadCatalog(1);
+        openProduct(p.product_id);
+      } }] });
+    });
+
+    function colorPhotos(p, canWrite) {
+      const byKey = {};
+      (p.images || []).forEach((im) => { byKey[im.color_key || im.color] = im; });
+      const colors = [...new Set(p.variants.map((x) => x.color))];
+      if (!colors.length) return '';
+      const cards = colors.map((c) => {
+        const im = (p.images || []).find((x) => x.color === c) || null;
+        const thumb = im && im.image_url
+          ? '<img src="' + esc(im.image_url) + '" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:8px;background:#f3eee6">'
+          : '<div style="width:72px;height:72px;border-radius:8px;background:#f3eee6;display:flex;align-items:center;justify-content:center;color:#9a8b7a"><i class="fa-solid fa-image"></i></div>';
+        const acts = canWrite
+          ? '<div class="end" style="gap:6px;margin-top:6px">' +
+            '<label class="btn sm" style="cursor:pointer"><i class="fa-solid fa-camera"></i>' + (im ? 'Replace' : 'Add') +
+            '<input type="file" accept="image/jpeg,image/png,image/webp" hidden data-photo-color="' + esc(c) + '"></label>' +
+            (im ? '<button type="button" class="btn sm danger" data-photo-rm="' + esc(c) + '">Remove</button>' : '') +
+            '</div>'
+          : (im ? '' : '<div class="hint" style="margin:6px 0 0">No photo</div>');
+        return '<div class="card" style="padding:12px;margin:0" data-color-card="' + esc(c) + '">' +
+          '<div style="display:flex;gap:12px;align-items:flex-start">' + thumb +
+          '<div style="min-width:0"><b>' + esc(c) + '</b><div class="hint" style="margin:2px 0 0">One photo for ranking · all sizes share it</div>' + acts + '</div></div></div>';
+      }).join('');
+      return '<h4 style="margin:16px 0 8px;font-size:12px;color:var(--plum)">Colour photos · Ads Lab ranking</h4>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">' + cards + '</div>' +
+        '<p class="hint">Upload a clear product photo per colour. Ads Lab ranks style × colour (sizes are ignored).</p>';
+    }
+
+    async function openProduct(id) {
+      let p;
+      try { p = await R.api('/products/' + encodeURIComponent(id)); } catch (e) { R.fail(e); return; }
+      const w = R.can('catalog.write');
+      const rows = p.variants.map((x) => '<tr data-v="' + esc(x.variant_id) + '"><td class="mono">' + esc(x.sku) + '</td><td>' + esc(x.color) + '</td><td>' + esc(x.size) + '</td>' +
+        '<td>' + (w ? '<input class="in sm mono" data-f="barcode" value="' + esc(x.barcode) + '" style="width:140px">' : '<span class="mono">' + esc(x.barcode) + '</span>') + '</td>' +
+        '<td class="r">' + (w ? '<input class="in sm" data-f="mrp" value="' + x.mrp + '" style="width:90px;text-align:right">' : R.rupees(x.mrp)) + '</td>' +
+        '<td class="r num-cell">' + R.rupees(x.avg_cost) + '</td><td class="r">' + R.num(x.units) + '</td>' +
+        '<td>' + (w ? '<label class="check"><input type="checkbox" data-f="active"' + (x.active ? ' checked' : '') + '>On sale</label>' : (x.active ? 'On sale' : 'Inactive')) + '</td>' +
+        '<td>' + (w ? '<button type="button" class="btn sm" data-save>Save</button>' : '') + '</td></tr>').join('');
+      const html = '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>SKU</th><th>Colour</th><th>Size</th><th>Barcode</th><th class="r">MRP ₹</th><th class="r">Avg cost</th><th class="r">Units</th><th>Status</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+        colorPhotos(p, w) +
+        (w ? '<h4 style="margin:16px 0 8px;font-size:12px;color:var(--plum)">Add colours / sizes</h4><form class="fields" id="addVarForm" onsubmit="return false">' +
+          '<label class="f">Colours<input class="in" name="colors" placeholder="Olive"></label><label class="f">Sizes<input class="in" name="sizes" placeholder="S, M, L"></label>' +
+          '<label class="f">MRP ₹<input class="in" name="mrp" inputmode="decimal"></label><label class="f">Cost ₹<input class="in" name="cost" inputmode="decimal"></label></form>' +
+          '<h4 style="margin:16px 0 8px;font-size:12px;color:var(--plum)">Style details</h4><div id="editForm">' + productForm(p) + '</div>' : '');
+      const actions = [{ label: '<i class="fa-solid fa-tags"></i>Print price tags', onClick: () => { printTags(p); return false; } }];
+      if (w) {
+        actions.push({ label: p.active ? 'Stop selling style' : 'Sell style again', kind: p.active ? 'danger' : '', onClick: async (close) => {
+          await R.api('/products/' + encodeURIComponent(p.product_id), { method: 'PATCH', body: { active: !p.active } });
+          R.toast(p.style_code + (p.active ? ' is no longer on sale.' : ' is on sale again.'), 'ok');
+          loadCatalog(st.catPage); close(); openProduct(p.product_id);
+        } });
+        actions.push({ label: 'Add variants', onClick: async (close, el) => {
+          const f = R.formData($('#addVarForm', el));
+          await R.api('/products/' + encodeURIComponent(p.product_id) + '/variants', { body: { colors: split(f.colors), sizes: split(f.sizes), mrp: f.mrp, cost: f.cost } });
+          R.toast('Variants added.', 'ok'); loadCatalog(st.catPage); close(); openProduct(p.product_id);
+        } });
+        actions.push({ label: 'Save details', kind: 'primary', onClick: async (close, el) => {
+          await R.api('/products/' + encodeURIComponent(p.product_id), { method: 'PATCH', body: R.formData($('#editForm form', el)) });
+          R.toast('Saved.', 'ok'); loadCatalog(st.catPage); close(); openProduct(p.product_id);
+        } });
+      }
+      const m = R.modal({ title: p.style_code + ' · ' + p.name, wide: true, html, actions });
+      R.$$('[data-save]', m.el).forEach((b) => b.addEventListener('click', () => R.busy(b, async () => {
+        const tr = b.closest('tr');
+        await R.api('/variants/' + encodeURIComponent(tr.dataset.v), { method: 'PATCH', body: {
+          mrp: $('[data-f="mrp"]', tr).value.trim(), barcode: $('[data-f="barcode"]', tr).value.trim(), active: $('[data-f="active"]', tr).checked } });
+        R.toast('SKU saved.', 'ok');
+      })));
+      R.$$('[data-photo-color]', m.el).forEach((inp) => inp.addEventListener('change', () => {
+        const file = inp.files && inp.files[0];
+        if (!file) return;
+        R.busy(inp.closest('label'), async () => {
+          const fd = new FormData();
+          fd.append('color', inp.dataset.photoColor);
+          fd.append('file', file, file.name);
+          await R.api('/products/' + encodeURIComponent(p.product_id) + '/images', { body: fd });
+          R.toast('Photo saved for ' + inp.dataset.photoColor + '.', 'ok');
+          m.close(); openProduct(p.product_id);
+        });
+      }));
+      R.$$('[data-photo-rm]', m.el).forEach((b) => b.addEventListener('click', () => R.busy(b, async () => {
+        await R.api('/products/' + encodeURIComponent(p.product_id) + '/images?color=' + encodeURIComponent(b.dataset.photoRm), { method: 'DELETE' });
+        R.toast('Photo removed.', 'ok');
+        m.close(); openProduct(p.product_id);
+      })));
+    }
+
+    function printTags(p) {
+      const tags = p.variants.filter((x) => x.active).map((x) => '<div class="tag"><b>' + esc(R.me.brand_name) + '</b>' + esc(p.name) + '<br>' + esc(x.color) + ' · Size ' + esc(x.size) +
+        '<div>' + (R.ean13Svg(x.barcode) || '<span class="mono">' + esc(x.barcode) + '</span>') + '</div><span class="mono">' + esc(x.sku) + '</span>' +
+        '<div class="mrp">MRP ' + R.rupees(x.mrp) + '</div><small>Inclusive of all taxes</small></div>').join('');
+      R.print('<div class="labels">' + tags + '</div>');
+    }
+
+    const CATALOG_TEMPLATE = [['style_code', 'name', 'category', 'hsn_code', 'color', 'size', 'mrp', 'cost', 'gender', 'material', 'season', 'gst_rule', 'gst_rate', 'sku', 'barcode'],
+      ['TS100', 'Relaxed cotton tee', 'T-Shirts', '6109', 'White', 'M', '1999', '640', 'Unisex', '100% cotton', 'AW26', 'apparel', '', '', ''],
+      ['TS100', 'Relaxed cotton tee', 'T-Shirts', '6109', 'White', 'L', '1999', '640', 'Unisex', '100% cotton', 'AW26', 'apparel', '', '', ''],
+      ['JK200', 'Wool blend overshirt', 'Jackets', '6201', 'Camel', 'M', '4999', '1900', 'Men', 'Wool blend', 'AW26', 'apparel', '', '', '']];
+    $('#catImport').addEventListener('click', () => {
+      R.modal({ title: 'Import catalog CSV', wide: true,
+        html: '<p class="hint" style="margin-top:0">Required columns: <span class="mono">style_code, name, category, hsn_code, color, size, mrp</span>. Optional: <span class="mono">cost, gender, material, pattern, season, gst_rule, gst_rate, sku, barcode</span>. ' +
+          'Existing SKUs (same SKU, or same style + colour + size) are updated; the rest are created. Every row is checked first: if any row is wrong nothing is imported.</p>' +
+          '<div style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap"><input type="file" id="ciFile" accept=".csv,text/csv"><button type="button" class="btn sm" id="ciTemplate"><i class="fa-solid fa-download"></i>Template</button></div>' +
+          '<div id="ciErrors"></div>',
+        actions: [{ label: 'Cancel' }, { label: 'Import', kind: 'primary', onClick: async (_, el) => {
+          const file = $('#ciFile', el).files[0];
+          if (!file) { R.toast('Choose a CSV file first.', 'bad'); return false; }
+          $('#ciErrors', el).innerHTML = '';
+          try {
+            const r = await R.api('/catalog/import', { body: { csv: await R.readFile(file) } });
+            R.toast('Imported ' + R.num(r.rows) + ' rows: ' + r.styles_created + ' new styles, ' + r.skus_created + ' new SKUs, ' + r.skus_updated + ' updated.', 'ok');
+            loadCatalog(1);
+          } catch (e) {
+            if (!e.errors.length) throw e;
+            $('#ciErrors', el).innerHTML = '<div class="notice bad"><i class="fa-solid fa-triangle-exclamation"></i><div>' + esc(e.message) + '</div></div>' + R.errorsTable(e.errors);
+            return false;
+          }
+        } }] });
+      $('#ciTemplate').addEventListener('click', () => R.csvDownload('catalog_template.csv', CATALOG_TEMPLATE[0], CATALOG_TEMPLATE.slice(1)));
+    });
+
+    /* ---------- Stock ---------- */
+    async function loadStock(page) {
+      st.stPage = page || 1;
+      try {
+        const data = await R.api('/stock', { params: { location_id: $('#stLoc').value, q: $('#stQ').value.trim(), category: $('#stCat').value,
+          low_only: $('#stLow').checked || undefined, page: st.stPage, size: 100 } });
+        st.stRows = data.rows;
+        $('#stEmpty').hidden = data.rows.length > 0;
+        $('#stBody').innerHTML = data.rows.map((r, i) => '<tr class="click" data-i="' + i + '"><td class="mono">' + esc(r.location_code) + '</td><td class="mono">' + esc(r.sku) + '</td><td>' + esc(r.name) + '</td>' +
+          '<td>' + esc(r.color) + ' / ' + esc(r.size) + '</td><td class="r"><b>' + R.num(r.sellable) + '</b>' + (r.low ? ' <span class="badge bad">low</span>' : '') + '</td>' +
+          '<td class="r">' + (r.damaged ? R.num(r.damaged) : '') + '</td><td class="r">' + (r.min_qty !== null && r.min_qty !== undefined ? r.min_qty + ' / ' + r.max_qty : '') + '</td>' +
+          '<td class="r num-cell">' + R.rupees(r.mrp) + '</td><td class="r num-cell">' + R.rupees(r.value_cost) + '</td></tr>').join('');
+        R.pager($('#stPager'), data, loadStock);
+      } catch (e) { R.fail(e); }
+    }
+    $('#stBody').addEventListener('click', async (e) => {
+      const tr = e.target.closest('tr[data-i]'); if (!tr) return;
+      const r = st.stRows[+tr.dataset.i];
+      try {
+        const data = await R.api('/stock/bins', { params: { location_id: r.location_id, variant_id: r.variant_id } });
+        R.modal({ title: r.sku + ' at ' + r.location_code, html: '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Bin</th><th class="r">On hand</th></tr></thead><tbody>' +
+          data.rows.map((b) => '<tr><td class="mono">' + esc(b.bin_code || 'Unassigned') + (b.bin_code === 'DMG' ? ' <span class="badge bad">damaged</span>' : '') + '</td><td class="r">' + R.num(b.on_hand) + '</td></tr>').join('') +
+          '</tbody></table></div>' });
+      } catch (err) { R.fail(err); }
+    });
+    $('#stGo').addEventListener('click', () => loadStock(1));
+    $('#stQ').addEventListener('keydown', (e) => { if (e.key === 'Enter') loadStock(1); });
+    $('#stCsv').addEventListener('click', () => R.busy($('#stCsv'), async () => {
+      const data = await R.api('/stock', { params: { location_id: $('#stLoc').value, q: $('#stQ').value.trim(), category: $('#stCat').value, low_only: $('#stLow').checked || undefined, size: 500 } });
+      R.csvDownload('stock_' + R.todayIST() + '.csv', ['location', 'sku', 'barcode', 'style', 'name', 'category', 'color', 'size', 'sellable', 'damaged', 'min', 'max', 'mrp', 'avg_cost', 'value_cost'],
+        data.rows.map((r) => [r.location_code, r.sku, r.barcode, r.style_code, r.name, r.category, r.color, r.size, r.sellable, r.damaged, r.min_qty, r.max_qty, r.mrp, r.avg_cost, r.value_cost]));
+      if (data.total > data.rows.length) R.toast('Exported the first ' + data.rows.length + ' of ' + data.total + ' rows. Filter by location to export the rest.');
+    }));
+
+    /* ---------- Movements ---------- */
+    async function loadMoves(page) {
+      st.mvPage = page || 1;
+      try {
+        const data = await R.api('/stock/moves', { params: { location_id: $('#mvLoc').value, q: $('#mvQ').value.trim(), reason: $('#mvReason').value,
+          date_from: $('#mvFrom').value, date_to: $('#mvTo').value, page: st.mvPage, size: 100 } });
+        $('#mvEmpty').hidden = data.moves.length > 0;
+        $('#mvBody').innerHTML = data.moves.map((m) => '<tr><td>' + R.dateTime(m.created_at) + '</td><td class="mono">' + esc(m.location_code) + '</td><td class="mono">' + esc(m.bin_code || '—') + '</td>' +
+          '<td class="mono">' + esc(m.sku) + '<div class="hint" style="margin:0">' + esc(m.color) + ' / ' + esc(m.size) + '</div></td><td>' + esc(MOVE_LABELS[m.reason] || m.reason) + '</td>' +
+          '<td class="r num-cell" style="color:' + (m.qty < 0 ? 'var(--bad)' : 'var(--ok)') + '">' + (m.qty > 0 ? '+' : '') + m.qty + '</td><td class="r">' + m.balance_after + '</td>' +
+          '<td>' + esc(m.actor) + '</td><td>' + esc(m.note || '') + '</td></tr>').join('');
+        R.pager($('#mvPager'), data, loadMoves);
+      } catch (e) { R.fail(e); }
+    }
+    $('#mvGo').addEventListener('click', () => loadMoves(1));
+
+    /* ---------- Receiving ---------- */
+    async function loadIncoming() {
+      try {
+        const data = await R.api('/transfers', { params: { status: 'in_transit', direction: R.me.location ? 'in' : '', size: 100 } });
+        const rows = data.transfers || [];
+        $('#inEmpty').hidden = rows.length > 0;
+        $('#inBody').innerHTML = rows.map((t) => '<tr class="click" data-id="' + esc(t.transfer_id) + '"><td class="mono"><b>' + esc(t.transfer_number) + '</b></td>' +
+          '<td class="mono">' + esc(t.from_code) + ' → ' + esc(t.to_code) + '</td><td>' + R.dateTime(t.dispatched_at) + '</td><td class="r">' + R.num(t.units_sent) + '</td>' +
+          '<td><button type="button" class="btn sm primary">Receive</button></td></tr>').join('');
+      } catch (e) { R.fail(e); }
+    }
+    $('#inBody').addEventListener('click', (e) => { const tr = e.target.closest('tr[data-id]'); if (tr) R.openTransfer(tr.dataset.id, loadIncoming); });
+
+    /* ---------- Tools ---------- */
+    const lineEditor = (root, cols) => R.lineEditor(root, cols, () => $('#tlLoc').value);
+    let adj, cnt, pa, par;
+    async function loadBins() {
+      const lid = $('#tlLoc').value;
+      if (!lid) return;
+      try {
+        st.bins = (await R.api('/locations/' + encodeURIComponent(lid) + '/bins')).bins || [];
+        const sellableBins = st.bins.filter((b) => b.bin_code !== 'DMG');
+        R.options($('#adjBin'), sellableBins, (b) => b.bin_code, binLabel);
+        R.options($('#cntBin'), st.bins, (b) => b.bin_code, binLabel);
+        R.options($('#paFrom'), sellableBins, (b) => b.bin_code, binLabel);
+        R.options($('#paTo'), sellableBins, (b) => b.bin_code, binLabel);
+        if ($('#paTo').value === $('#paFrom').value && sellableBins[1]) $('#paTo').value = sellableBins[1].bin_code;
+      } catch (e) { R.fail(e); }
+    }
+    function initTools() {
+      R.options($('#adjReason'), Object.entries(R.me.adjust_reasons || {}), (x) => x[0], (x) => x[1]);
+      const sync = () => { $('#adjBin').disabled = $('#adjReason').value === 'write_off'; };
+      $('#adjReason').addEventListener('change', sync); sync();
+      adj = lineEditor($('#adjLines'), [{ key: 'qty', label: 'Units', start: '1' }]);
+      cnt = lineEditor($('#cntLines'), [{ key: 'counted', label: 'Counted', min: 0, start: '1' }]);
+      pa = lineEditor($('#paLines'), [{ key: 'qty', label: 'Units', min: 1, start: '1' }]);
+      if (R.can('par.write')) par = lineEditor($('#parLines'), [{ key: 'min_qty', label: 'Min', min: 0, start: '2' }, { key: 'max_qty', label: 'Max', min: 0, start: '6' }]);
+      $('#tlLoc').addEventListener('change', loadBins);
+      loadBins();
+    }
+    const post = (btn, path, body, done) => R.busy(btn, async () => {
+      const r = await R.api(path, { body: { location_id: $('#tlLoc').value, ...body } });
+      done(r);
+      loadBins();
+    });
+    $('#adjSave').addEventListener('click', () => {
+      if (!adj.size()) { R.toast('Add the SKUs to adjust.', 'bad'); return; }
+      const bin = $('#adjReason').value === 'write_off' ? 'DMG' : $('#adjBin').value;
+      post($('#adjSave'), '/stock/adjust', { reason: $('#adjReason').value, note: $('#adjNote').value.trim(), lines: adj.lines().map((l) => ({ ...l, bin_code: bin })) },
+        (r) => { R.toast('Adjustment posted for ' + R.count(r.lines.length, 'SKU') + '.', 'ok'); adj.clear(); $('#adjNote').value = ''; });
+    });
+    $('#cntSave').addEventListener('click', () => {
+      if (!cnt.size()) { R.toast('Add the SKUs you counted.', 'bad'); return; }
+      post($('#cntSave'), '/stock/count', { bin_code: $('#cntBin').value, lines: cnt.lines() }, (r) => {
+        R.modal({ title: 'Count posted · ' + (r.bin_code || 'Unassigned'), html: '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>SKU</th><th class="r">Recorded</th><th class="r">Counted</th><th class="r">Difference</th></tr></thead><tbody>' +
+          r.lines.map((l) => '<tr><td class="mono">' + esc(l.sku) + '</td><td class="r">' + l.recorded + '</td><td class="r">' + l.counted + '</td><td class="r" style="color:' + (l.diff ? 'var(--bad)' : 'var(--ok)') + '">' + (l.diff > 0 ? '+' : '') + l.diff + '</td></tr>').join('') +
+          '</tbody></table></div><p class="hint">Variance: ' + r.variance_units + ' units.</p>' });
+        cnt.clear();
+      });
+    });
+    $('#paSave').addEventListener('click', () => {
+      if (!pa.size()) { R.toast('Add the SKUs to move.', 'bad'); return; }
+      post($('#paSave'), '/stock/putaway', { from_bin: $('#paFrom').value, to_bin: $('#paTo').value, lines: pa.lines() },
+        () => { R.toast('Moved to ' + ($('#paTo').value || 'Unassigned') + '.', 'ok'); pa.clear(); });
+    });
+    $('#addBins').addEventListener('click', () => R.busy($('#addBins'), async () => {
+      const codes = $('#newBins').value.trim();
+      if (!codes) { R.toast('Type bin codes, separated by commas.', 'bad'); return; }
+      await R.api('/locations/' + encodeURIComponent($('#tlLoc').value) + '/bins', { body: { bin_codes: codes } });
+      $('#newBins').value = '';
+      R.toast('Bins added.', 'ok');
+      loadBins();
+    }));
+    $('#parSave').addEventListener('click', () => {
+      if (!par || !par.size()) { R.toast('Add the SKUs to set.', 'bad'); return; }
+      post($('#parSave'), '/stock/par-levels', { lines: par.lines() }, (r) => { R.toast('Saved par levels for ' + r.saved + ' SKUs.', 'ok'); par.clear(); });
+    });
+    $('#opTemplate').addEventListener('click', () => R.csvDownload('opening_stock_template.csv', ['location_code', 'sku', 'barcode', 'qty', 'bin', 'unit_cost'],
+      [['WH1', 'TS100-WHITE-M', '', '120', 'A-01', '640'], ['BLR01', '', '2000000000015', '8', '', '']]));
+    $('#opSave').addEventListener('click', () => R.busy($('#opSave'), async () => {
+      const file = $('#opFile').files[0];
+      if (!file) { R.toast('Choose a CSV file first.', 'bad'); return; }
+      $('#opErrors').innerHTML = '';
+      try {
+        const r = await R.api('/stock/opening-import', { body: { csv: await R.readFile(file) } });
+        R.toast('Imported ' + R.count(r.units, 'unit') + ' from ' + R.count(r.rows, 'row') + '.', 'ok');
+        $('#opFile').value = '';
+      } catch (e) {
+        if (!e.errors.length) throw e;
+        $('#opErrors').innerHTML = '<div class="notice bad" style="margin-top:10px"><i class="fa-solid fa-triangle-exclamation"></i><div>' + esc(e.message) + '</div></div>' + R.errorsTable(e.errors);
+      }
+    }));
+
+    let nav = null, section = '';
+    R.onAgentCommand({
+      refresh: () => {
+        if (section === 'overview') loadOverview(); else if (pilot) pilot.refresh();
+        if (section === 'stock') loadStock(st.stPage || 1);
+        if (section === 'incoming') loadIncoming();
+      },
+    });
+    R.addCommands([
+      { group: 'Find', icon: 'fa-solid fa-arrow-trend-down', label: 'SKUs below min level', hint: 'Stock', run: () => { $('#stLow').checked = true; nav.show('stock'); } },
+    ]);
+    R.boot('inventory', async () => {
+      try { await loadLocations(); } catch (e) { R.fail(e); return; }
+      R.options($('#mvReason'), Object.keys(MOVE_LABELS), (k) => k, (k) => MOVE_LABELS[k], 'All');
+      $('#mvFrom').value = R.addDays(R.todayIST(), -6);
+      $('#mvTo').value = R.todayIST();
+      if (R.can('stock.write')) initTools();
+      const loaded = {};
+      nav = R.sections($('#nav'), (sec) => {
+        section = sec;
+        if (sec === 'overview') loadOverview();
+        if (sec === 'catalog') loadCatalog(st.catPage);
+        if (sec === 'stock') { if (!loaded.cats) { loaded.cats = true; loadCatalog(1); } loadStock(1); }
+        if (sec === 'moves') loadMoves(st.mvPage);
+        if (sec === 'incoming') loadIncoming();
+      });
+      $('#inReload').addEventListener('click', loadIncoming);
+      nav.start();
+    });
+  })();
+  </script>
+</body>
+</html>

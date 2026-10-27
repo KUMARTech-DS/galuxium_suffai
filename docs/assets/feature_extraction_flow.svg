@@ -1,0 +1,287 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1240" width="1000" height="1240" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7d8aa8"/>
+    </marker>
+    <symbol id="hex" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5"/></symbol>
+    <symbol id="ic-gcs" viewBox="0 0 40 40">
+      <polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/>
+      <rect x="12" y="12" width="16" height="4.5" rx="1" fill="#fff"/><rect x="12" y="18" width="16" height="4.5" rx="1" fill="#fff"/><rect x="12" y="24" width="16" height="4.5" rx="1" fill="#fff"/>
+    </symbol>
+    <symbol id="ic-pubsub" viewBox="0 0 40 40">
+      <polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#9334E6"/>
+      <g stroke="#fff" stroke-width="2" fill="#fff"><line x1="20" y1="20" x2="11" y2="13"/><line x1="20" y1="20" x2="29" y2="13"/><line x1="20" y1="20" x2="20" y2="30"/>
+      <circle cx="20" cy="20" r="3.4"/><circle cx="11" cy="13" r="2.6"/><circle cx="29" cy="13" r="2.6"/><circle cx="20" cy="30" r="2.6"/></g>
+    </symbol>
+    <symbol id="ic-tasks" viewBox="0 0 40 40">
+      <polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#E37400"/>
+      <g stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M11 13 l2 2 l3.5 -3.5"/><line x1="19.5" y1="13" x2="29" y2="13"/><path d="M11 20 l2 2 l3.5 -3.5"/><line x1="19.5" y1="20" x2="29" y2="20"/><path d="M11 27 l2 2 l3.5 -3.5"/><line x1="19.5" y1="27" x2="29" y2="27"/></g>
+    </symbol>
+    <symbol id="ic-run" viewBox="0 0 40 40">
+      <polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/>
+      <g stroke="#fff" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"><path d="M12 13 l7 7 l-7 7"/><path d="M20 13 l7 7 l-7 7"/></g>
+    </symbol>
+    <symbol id="ic-vertex" viewBox="0 0 40 40">
+      <polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#188038"/>
+      <path d="M20 8 L23.2 16.8 L32 20 L23.2 23.2 L20 32 L16.8 23.2 L8 20 L16.8 16.8 Z" fill="#fff"/>
+    </symbol>
+    <symbol id="ic-sql" viewBox="0 0 40 40">
+      <polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#D93025"/>
+      <g stroke="#fff" stroke-width="2" fill="none"><ellipse cx="20" cy="13" rx="8" ry="3"/><path d="M12 13 v14 a8 3 0 0 0 16 0 v-14"/><path d="M12 20 a8 3 0 0 0 16 0"/></g>
+    </symbol>
+    <symbol id="ic-bq" viewBox="0 0 40 40">
+      <polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/>
+      <g stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"><circle cx="18" cy="18" r="7"/><line x1="23.5" y1="23.5" x2="30" y2="30"/><line x1="15.5" y1="21" x2="15.5" y2="18"/><line x1="18.5" y1="21" x2="18.5" y2="15"/></g>
+    </symbol>
+    <symbol id="ic-cam" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="19" fill="#5f6b85"/>
+      <rect x="16" y="11.5" width="8" height="3.5" rx="1" fill="#fff"/>
+      <rect x="10.5" y="14" width="19" height="13.5" rx="2.5" fill="#fff"/>
+      <circle cx="20" cy="20.8" r="4" fill="#5f6b85"/><circle cx="20" cy="20.8" r="2" fill="#fff"/>
+    </symbol>
+  </defs>
+
+  <rect width="1000" height="1240" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="20" y="34" font-size="22" font-weight="700" fill="#14213d">From garment photo to business insight</text>
+  <text x="20" y="54" font-size="13" fill="#5b6478">Where images are stored, which Google Cloud services process them, what is extracted, and where the results go</text>
+
+  <!-- Lanes -->
+  <g>
+    <rect x="0" y="66" width="1000" height="104" fill="#f6f8fc"/>
+    <rect x="0" y="170" width="1000" height="104" fill="#ffffff"/>
+    <rect x="0" y="274" width="1000" height="122" fill="#f6f8fc"/>
+    <rect x="0" y="396" width="1000" height="154" fill="#ffffff"/>
+    <rect x="0" y="550" width="1000" height="310" fill="#f6f8fc"/>
+    <rect x="0" y="860" width="1000" height="160" fill="#ffffff"/>
+    <rect x="0" y="1020" width="1000" height="156" fill="#f6f8fc"/>
+  </g>
+  <g font-size="12" font-weight="700" fill="#23345c" text-anchor="middle" letter-spacing="0.6">
+    <circle cx="60" cy="104" r="12" fill="#23345c"/><text x="60" y="108" fill="#fff">1</text><text x="60" y="134">CAPTURE</text>
+    <circle cx="60" cy="208" r="12" fill="#23345c"/><text x="60" y="212" fill="#fff">2</text><text x="60" y="238">STORE</text>
+    <circle cx="60" cy="318" r="12" fill="#23345c"/><text x="60" y="322" fill="#fff">3</text><text x="60" y="348">TRIGGER</text>
+    <circle cx="60" cy="458" r="12" fill="#23345c"/><text x="60" y="462" fill="#fff">4</text><text x="60" y="488">AI EXTRACT</text>
+    <circle cx="60" cy="690" r="12" fill="#23345c"/><text x="60" y="694" fill="#fff">5</text><text x="60" y="720">OUTPUTS</text>
+    <circle cx="60" cy="924" r="12" fill="#23345c"/><text x="60" y="928" fill="#fff">6</text><text x="60" y="954">SAVE</text>
+    <circle cx="60" cy="1082" r="12" fill="#23345c"/><text x="60" y="1086" fill="#fff">7</text><text x="60" y="1112">USE</text>
+  </g>
+
+  <!-- 1 Capture -->
+  <g>
+    <rect x="130" y="78" width="420" height="80" rx="10" fill="#fff" stroke="#cfd8ea"/>
+    <use href="#ic-cam" x="145" y="98" width="40" height="40"/>
+    <text x="198" y="104" font-size="16" font-weight="700" fill="#14213d">Customer garment photo</text>
+    <text x="198" y="124" font-size="13" fill="#3a4459">Taken during a laundry order</text>
+    <text x="198" y="142" font-size="13" fill="#3a4459">File name links it to the customer and order</text>
+
+    <rect x="570" y="78" width="420" height="80" rx="10" fill="#fff" stroke="#cfd8ea"/>
+    <use href="#ic-run" x="585" y="98" width="40" height="40"/>
+    <text x="638" y="104" font-size="16" font-weight="700" fill="#14213d">Brand SKU images</text>
+    <text x="638" y="124" font-size="13" fill="#3a4459">Uploaded in Ads Lab (Command Center, Cloud Run)</text>
+    <text x="638" y="142" font-size="13" fill="#3a4459">with target PINs, age, gender and RFM tier</text>
+  </g>
+  <g stroke="#7d8aa8" stroke-width="2" marker-end="url(#arr)">
+    <line x1="340" y1="158" x2="340" y2="180"/><line x1="780" y1="158" x2="780" y2="180"/>
+  </g>
+
+  <!-- 2 Store -->
+  <g>
+    <rect x="130" y="182" width="860" height="80" rx="10" fill="#fff" stroke="#1A73E8" stroke-width="1.5"/>
+    <use href="#ic-gcs" x="145" y="202" width="40" height="40"/>
+    <text x="198" y="212" font-size="16" font-weight="700" fill="#14213d">Cloud Storage (image bucket)</text>
+    <text x="198" y="232" font-size="13" fill="#3a4459">Original images kept securely;</text>
+    <text x="198" y="249" font-size="13" fill="#3a4459">AI services read them directly by link</text>
+    <rect x="560" y="194" width="415" height="26" rx="13" fill="#e8f0fe"/>
+    <text x="576" y="212" font-size="12.5" fill="#174ea6"><tspan font-family="Menlo, monospace">garments/&#8230;/user_order_item.jpg</tspan>  customer items</text>
+    <rect x="560" y="226" width="415" height="26" rx="13" fill="#e8f0fe"/>
+    <text x="576" y="244" font-size="12.5" fill="#174ea6"><tspan font-family="Menlo, monospace">brands/{brand}/{campaign}/{sku}.jpg</tspan>  brand SKUs</text>
+  </g>
+  <g stroke="#7d8aa8" stroke-width="2" marker-end="url(#arr)">
+    <line x1="340" y1="262" x2="340" y2="284"/><line x1="780" y1="262" x2="780" y2="284"/>
+  </g>
+
+  <!-- 3 Trigger -->
+  <g>
+    <rect x="130" y="286" width="420" height="74" rx="10" fill="#fff" stroke="#cfd8ea"/>
+    <use href="#ic-pubsub" x="145" y="303" width="40" height="40"/>
+    <text x="198" y="309" font-size="16" font-weight="700" fill="#14213d">Pub/Sub</text>
+    <text x="198" y="329" font-size="13" fill="#3a4459">Fires automatically when a new photo lands</text>
+    <text x="198" y="347" font-size="13" fill="#3a4459">Safe retries: each image is processed once</text>
+
+    <rect x="570" y="286" width="420" height="74" rx="10" fill="#fff" stroke="#cfd8ea"/>
+    <use href="#ic-tasks" x="585" y="303" width="40" height="40"/>
+    <text x="638" y="309" font-size="16" font-weight="700" fill="#14213d">Cloud Tasks / direct call</text>
+    <text x="638" y="329" font-size="13" fill="#3a4459">Small uploads are processed straight away</text>
+    <text x="638" y="347" font-size="13" fill="#3a4459">Large uploads run as short background batches</text>
+  </g>
+  <g stroke="#7d8aa8" stroke-width="2" fill="none">
+    <line x1="340" y1="360" x2="340" y2="382"/><line x1="780" y1="360" x2="780" y2="382"/>
+    <line x1="340" y1="382" x2="780" y2="382"/>
+  </g>
+  <rect x="440" y="372" width="240" height="20" rx="10" fill="#fff" stroke="#cfd8ea"/>
+  <text x="560" y="386" font-size="12" fill="#5b6478" text-anchor="middle" font-style="italic">both image types go through both AI steps</text>
+  <g stroke="#7d8aa8" stroke-width="2" marker-end="url(#arr)">
+    <line x1="340" y1="382" x2="340" y2="406"/><line x1="780" y1="382" x2="780" y2="406"/>
+  </g>
+
+  <!-- 4 AI extract -->
+  <g>
+    <rect x="130" y="408" width="420" height="130" rx="10" fill="#eef4ff" stroke="#1A73E8" stroke-width="1.5"/>
+    <use href="#ic-run" x="145" y="420" width="40" height="40"/>
+    <text x="198" y="437" font-size="16" font-weight="700" fill="#14213d">Extraction worker</text>
+    <text x="198" y="455" font-size="13" fill="#5b6478">Cloud Run service</text>
+    <use href="#ic-vertex" x="145" y="478" width="40" height="40"/>
+    <text x="198" y="495" font-size="16" font-weight="700" fill="#14213d">Vertex AI &#183; Gemini 2.0 Flash</text>
+    <text x="198" y="514" font-size="13" fill="#3a4459">Reads the photo and any labels</text>
+    <text x="198" y="530" font-size="13" fill="#3a4459">and returns structured attributes</text>
+
+    <rect x="570" y="408" width="420" height="130" rx="10" fill="#eef4ff" stroke="#1A73E8" stroke-width="1.5"/>
+    <use href="#ic-run" x="585" y="420" width="40" height="40"/>
+    <text x="638" y="437" font-size="16" font-weight="700" fill="#14213d">Similarity service</text>
+    <text x="638" y="455" font-size="13" fill="#5b6478">Cloud Run service</text>
+    <use href="#ic-vertex" x="585" y="478" width="40" height="40"/>
+    <text x="638" y="495" font-size="16" font-weight="700" fill="#14213d">Vertex AI &#183; Multimodal embedding</text>
+    <text x="638" y="514" font-size="13" fill="#3a4459">Turns the photo into a visual fingerprint</text>
+    <text x="638" y="530" font-size="13" fill="#3a4459">that captures its overall look</text>
+  </g>
+  <g stroke="#7d8aa8" stroke-width="2" marker-end="url(#arr)">
+    <line x1="340" y1="538" x2="340" y2="562"/><line x1="780" y1="538" x2="780" y2="562"/>
+  </g>
+
+  <!-- 5 Outputs: label card -->
+  <g>
+    <rect x="130" y="564" width="420" height="214" rx="10" fill="#fff" stroke="#188038" stroke-width="1.5"/>
+    <path d="M130 574 a10 10 0 0 1 10 -10 h400 a10 10 0 0 1 10 10 v24 h-420 z" fill="#e6f4ea"/>
+    <text x="148" y="587" font-size="15" font-weight="700" fill="#0d652d">Label card: what is extracted</text>
+    <g font-size="13" fill="#14213d">
+      <g fill="#188038"><circle cx="152" cy="617" r="3.5"/><circle cx="152" cy="642" r="3.5"/><circle cx="152" cy="667" r="3.5"/><circle cx="152" cy="692" r="3.5"/>
+      <circle cx="352" cy="617" r="3.5"/><circle cx="352" cy="642" r="3.5"/><circle cx="352" cy="667" r="3.5"/><circle cx="352" cy="692" r="3.5"/></g>
+      <text x="162" y="621"><tspan font-weight="700">Garment type</tspan><tspan fill="#6b7389"> shirt, kurta&#8230;</tspan></text>
+      <text x="162" y="646"><tspan font-weight="700">Colours</tspan><tspan fill="#6b7389"> primary + others</tspan></text>
+      <text x="162" y="671"><tspan font-weight="700">Pattern</tspan><tspan fill="#6b7389"> solid, checked&#8230;</tspan></text>
+      <text x="162" y="696"><tspan font-weight="700">Material</tspan><tspan fill="#6b7389"> + blend %</tspan></text>
+      <text x="362" y="621"><tspan font-weight="700">Size</tspan><tspan fill="#6b7389"> + IN / US / EU</tspan></text>
+      <text x="362" y="646"><tspan font-weight="700">Brand / SKU</tspan><tspan fill="#6b7389"> labels only</tspan></text>
+      <text x="362" y="671"><tspan font-weight="700">Style tags</tspan><tspan fill="#6b7389"> casual&#8230;</tspan></text>
+      <text x="362" y="696"><tspan font-weight="700">Confidence</tspan><tspan fill="#6b7389"> per field</tspan></text>
+    </g>
+    <rect x="148" y="714" width="188" height="26" rx="13" fill="#e6f4ea" stroke="#188038"/>
+    <text x="242" y="731" font-size="12" fill="#0d652d" text-anchor="middle" font-weight="600">90%+ confident: auto-accepted</text>
+    <rect x="346" y="714" width="188" height="26" rx="13" fill="#fef7e0" stroke="#E37400"/>
+    <text x="440" y="731" font-size="12" fill="#a04f00" text-anchor="middle" font-weight="600">Lower: marked Needs review</text>
+    <text x="148" y="764" font-size="12" fill="#6b7389">Never infers gender, age or income &#183; "unknown" is allowed</text>
+  </g>
+
+  <!-- 5 Outputs: fingerprint -->
+  <g>
+    <rect x="570" y="564" width="420" height="214" rx="10" fill="#fff" stroke="#1A73E8" stroke-width="1.5"/>
+    <path d="M570 574 a10 10 0 0 1 10 -10 h400 a10 10 0 0 1 10 10 v24 h-420 z" fill="#e8f0fe"/>
+    <text x="588" y="587" font-size="15" font-weight="700" fill="#174ea6">Visual fingerprint and matching</text>
+    <text x="588" y="620" font-size="13" font-weight="700" fill="#14213d">1,408-number fingerprint of the garment's look</text>
+    <g fill="#1A73E8">
+      <rect x="588" y="640" width="12" height="12" opacity="0.55"/><rect x="606" y="632" width="12" height="20"/><rect x="624" y="644" width="12" height="8" opacity="0.55"/><rect x="642" y="628" width="12" height="24"/><rect x="660" y="638" width="12" height="14" opacity="0.55"/>
+      <rect x="678" y="646" width="12" height="6"/><rect x="696" y="631" width="12" height="21" opacity="0.55"/><rect x="714" y="641" width="12" height="11"/><rect x="732" y="635" width="12" height="17" opacity="0.55"/><rect x="750" y="643" width="12" height="9"/>
+      <rect x="768" y="629" width="12" height="23" opacity="0.55"/><rect x="786" y="645" width="12" height="7"/><rect x="804" y="637" width="12" height="15" opacity="0.55"/><rect x="822" y="633" width="12" height="19"/><rect x="840" y="642" width="12" height="10" opacity="0.55"/>
+      <rect x="858" y="636" width="12" height="16"/><rect x="876" y="630" width="12" height="22" opacity="0.55"/><rect x="894" y="644" width="12" height="8"/><rect x="912" y="639" width="12" height="13" opacity="0.55"/><rect x="930" y="634" width="12" height="18"/>
+      <text x="952" y="650" font-size="14" fill="#5b6478">&#8230;</text>
+    </g>
+    <text x="588" y="682" font-size="13" fill="#14213d"><tspan font-weight="700">Customer photo:</tspan> same garment? (92%+ match)</text>
+    <text x="588" y="700" font-size="13" fill="#3a4459">Yes: link to wardrobe &#183; No: new unique garment</text>
+    <text x="588" y="718" font-size="13" fill="#3a4459">Either way, that PIN code's count goes up by 1</text>
+    <text x="588" y="746" font-size="13" fill="#14213d"><tspan font-weight="700">Brand SKU:</tspan> top 5 look-alikes in each target PIN</text>
+    <text x="588" y="764" font-size="13" fill="#3a4459">give a visual match score from 0 to 1 (read-only)</text>
+  </g>
+
+  <!-- Rank -->
+  <g stroke="#7d8aa8" stroke-width="2" marker-end="url(#arr)" fill="none">
+    <path d="M440 778 L470 804"/><path d="M680 778 L650 804"/>
+  </g>
+  <rect x="330" y="806" width="460" height="46" rx="10" fill="#14213d"/>
+  <text x="560" y="825" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">Ads Lab rank score for each brand SKU (0 to 100)</text>
+  <text x="560" y="843" font-size="12.5" fill="#c9d3ee" text-anchor="middle">55% visual match + 15% local popularity + 30% attribute fit</text>
+
+  <g stroke="#7d8aa8" stroke-width="2" marker-end="url(#arr)" fill="none">
+    <line x1="170" y1="778" x2="170" y2="868"/>
+    <line x1="560" y1="852" x2="560" y2="868"/>
+    <line x1="950" y1="778" x2="950" y2="868"/>
+  </g>
+
+  <!-- 6 Save -->
+  <g>
+    <rect x="130" y="870" width="520" height="140" rx="10" fill="#fff" stroke="#D93025" stroke-width="1.5"/>
+    <use href="#ic-sql" x="145" y="882" width="40" height="40"/>
+    <text x="198" y="899" font-size="16" font-weight="700" fill="#14213d">Cloud SQL (system of record)</text>
+    <text x="198" y="916" font-size="12.5" fill="#5b6478">Live data the app reads and writes</text>
+    <g font-size="12" fill="#3a4459">
+      <text x="148" y="944"><tspan font-weight="700" fill="#14213d">garment_instances</tspan> attributes</text>
+      <text x="148" y="962"><tspan font-weight="700" fill="#14213d">extraction_jobs</tspan> status, confidence</text>
+      <text x="148" y="980"><tspan font-weight="700" fill="#14213d">unique_garments</tspan> fingerprints</text>
+      <text x="148" y="998"><tspan font-weight="700" fill="#14213d">user_wardrobe</tspan> customer's items</text>
+      <text x="398" y="944"><tspan font-weight="700" fill="#14213d">garment_pin_counts</tspan> per PIN</text>
+      <text x="398" y="962"><tspan font-weight="700" fill="#14213d">brand_campaigns</tspan> setup</text>
+      <text x="398" y="980"><tspan font-weight="700" fill="#14213d">brand_skus</tspan> attributes, score</text>
+      <text x="398" y="998"><tspan font-weight="700" fill="#14213d">brand_sku_pin_scores</tspan> per PIN</text>
+    </g>
+
+    <rect x="670" y="870" width="320" height="140" rx="10" fill="#fff" stroke="#1A73E8" stroke-width="1.5"/>
+    <use href="#ic-bq" x="685" y="882" width="40" height="40"/>
+    <text x="738" y="899" font-size="16" font-weight="700" fill="#14213d">BigQuery (analytics)</text>
+    <text x="738" y="916" font-size="12.5" fill="#5b6478">Reporting and audience data</text>
+    <g font-size="12" fill="#3a4459">
+      <text x="688" y="944" font-weight="700" fill="#14213d">garment_similarity_observations</text>
+      <text x="688" y="961">every match event, by PIN</text>
+      <text x="688" y="982" font-weight="700" fill="#14213d">suffai_ops: customers, orders, commodities</text>
+      <text x="688" y="999">audience preferences for attribute fit</text>
+    </g>
+  </g>
+
+  <g stroke="#7d8aa8" stroke-width="2" marker-end="url(#arr)">
+    <line x1="390" y1="1010" x2="390" y2="1034"/><line x1="830" y1="1010" x2="830" y2="1034"/>
+  </g>
+
+  <!-- 7 Use -->
+  <g font-size="12.5">
+    <g>
+      <rect x="130" y="1036" width="276" height="56" rx="10" fill="#fff" stroke="#cfd8ea"/>
+      <circle cx="152" cy="1064" r="8" fill="#1A73E8"/>
+      <text x="170" y="1059" font-size="14" font-weight="700" fill="#14213d">Ads Lab SKU ranking</text>
+      <text x="170" y="1078" fill="#5b6478">Best products for the target PINs</text>
+    </g>
+    <g>
+      <rect x="422" y="1036" width="276" height="56" rx="10" fill="#fff" stroke="#cfd8ea"/>
+      <circle cx="444" cy="1064" r="8" fill="#1A73E8"/>
+      <text x="462" y="1059" font-size="14" font-weight="700" fill="#14213d">Campaigns</text>
+      <text x="462" y="1078" fill="#5b6478">Selected SKUs and analysis view</text>
+    </g>
+    <g>
+      <rect x="714" y="1036" width="276" height="56" rx="10" fill="#fff" stroke="#cfd8ea"/>
+      <circle cx="736" cy="1064" r="8" fill="#188038"/>
+      <text x="754" y="1059" font-size="14" font-weight="700" fill="#14213d">Style Assistant</text>
+      <text x="754" y="1078" fill="#5b6478">"Complete the look" for customers</text>
+    </g>
+    <g>
+      <rect x="130" y="1104" width="276" height="56" rx="10" fill="#fff" stroke="#cfd8ea"/>
+      <circle cx="152" cy="1132" r="8" fill="#9334E6"/>
+      <text x="170" y="1127" font-size="14" font-weight="700" fill="#14213d">AURA assistant</text>
+      <text x="170" y="1146" fill="#5b6478">Explains results, suggests next step</text>
+    </g>
+    <g>
+      <rect x="422" y="1104" width="276" height="56" rx="10" fill="#fff" stroke="#cfd8ea"/>
+      <circle cx="444" cy="1132" r="8" fill="#D93025"/>
+      <text x="462" y="1127" font-size="14" font-weight="700" fill="#14213d">Admin intelligence</text>
+      <text x="462" y="1146" fill="#5b6478">Garment and colour profiles</text>
+    </g>
+    <g>
+      <rect x="714" y="1104" width="276" height="56" rx="10" fill="#fff" stroke="#cfd8ea"/>
+      <circle cx="736" cy="1132" r="8" fill="#E37400"/>
+      <text x="754" y="1127" font-size="14" font-weight="700" fill="#14213d">Geo and brand insight</text>
+      <text x="754" y="1146" fill="#5b6478">PIN-level garment preferences</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <rect x="20" y="1186" width="970" height="46" rx="10" fill="#fff8e6" stroke="#f0c36d"/>
+  <text x="36" y="1205" font-size="12.5" fill="#6b4a00"><tspan font-weight="700">Privacy:</tspan> brand images are compared read-only and never written to customer wardrobes or PIN counts.</text>
+  <text x="36" y="1223" font-size="12.5" fill="#6b4a00">The AI never infers gender, age or income. Brands see PIN-level aggregates only, with competitors masked.</text>
+</svg>

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2440 1640" width="2440" height="1640" font-family="Outfit, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+<style>
+.t { font-size: 14.5px; font-weight: 700; fill: #3B2733; }
+.s { font-size: 12px; fill: #6f5a66; }
+.b { font-size: 12.5px; fill: #3B2733; }
+.p { font-size: 12.5px; fill: #3B2733; }
+.pb { font-size: 12.5px; font-weight: 700; fill: #3B2733; }
+.ph { font-size: 13px; font-weight: 700; fill: #6B3A55; letter-spacing: 1px; }
+.sh { font-size: 11.5px; font-weight: 700; fill: #3B2733; }
+.m { font-size: 11px; fill: #6B3A55; font-family: Menlo, 'IBM Plex Mono', monospace; }
+.f { font-size: 10.5px; fill: #6f5a66; font-family: Menlo, 'IBM Plex Mono', monospace; }
+.modt { font-size: 13px; font-weight: 700; fill: #3B2733; }
+.mods { font-size: 11.5px; fill: #6f5a66; }
+.gh { font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+.num { font-size: 11px; font-weight: 700; fill: #FFFFFF; }
+.chip { font-size: 10px; font-weight: 700; fill: #FFFFFF; letter-spacing: 0.5px; }
+.data { stroke: #8A7480; stroke-width: 2; fill: none; }
+.call { stroke: #6B3A55; stroke-width: 1.9; fill: none; stroke-dasharray: 7 4; }
+.async { stroke: #8A7480; stroke-width: 2.3; fill: none; stroke-dasharray: 1.5 4.5; stroke-linecap: round; }
+.halo { stroke: #FFFFFF; stroke-width: 8; fill: none; }
+</style>
+<defs>
+<marker id="m-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A7480"/></marker><marker id="m-call" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6B3A55"/></marker><marker id="m-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A7480"/></marker>
+
+    <symbol id="ic-run" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><g stroke="#fff" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"><path d="M12 13 l7 7 l-7 7"/><path d="M20 13 l7 7 l-7 7"/></g></symbol>
+    <symbol id="ic-job" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1967D2"/><g stroke="#fff" stroke-width="2.6" fill="none" stroke-linejoin="round" stroke-linecap="round"><path d="M12 11 l6 6 l-6 6"/><path d="M19 11 l6 6 l-6 6"/><line x1="12" y1="29" x2="28" y2="29"/></g></symbol>
+    <symbol id="ic-gcs" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><rect x="12" y="12" width="16" height="4.5" rx="1" fill="#fff"/><rect x="12" y="18" width="16" height="4.5" rx="1" fill="#fff"/><rect x="12" y="24" width="16" height="4.5" rx="1" fill="#fff"/></symbol>
+    <symbol id="ic-pubsub" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#9334E6"/><g stroke="#fff" stroke-width="2" fill="#fff"><line x1="20" y1="20" x2="11" y2="13"/><line x1="20" y1="20" x2="29" y2="13"/><line x1="20" y1="20" x2="20" y2="30"/><circle cx="20" cy="20" r="3.4"/><circle cx="11" cy="13" r="2.6"/><circle cx="29" cy="13" r="2.6"/><circle cx="20" cy="30" r="2.6"/></g></symbol>
+    <symbol id="ic-tasks" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#E37400"/><g stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M11 13 l2 2 l3.5 -3.5"/><line x1="19.5" y1="13" x2="29" y2="13"/><path d="M11 20 l2 2 l3.5 -3.5"/><line x1="19.5" y1="20" x2="29" y2="20"/><path d="M11 27 l2 2 l3.5 -3.5"/><line x1="19.5" y1="27" x2="29" y2="27"/></g></symbol>
+    <symbol id="ic-sched" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><g stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"><circle cx="20" cy="20" r="9"/><path d="M20 14 v6 l4 3"/></g></symbol>
+    <symbol id="ic-vertex" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#188038"/><path d="M20 8 L23.2 16.8 L32 20 L23.2 23.2 L20 32 L16.8 23.2 L8 20 L16.8 16.8 Z" fill="#fff"/></symbol>
+    <symbol id="ic-sql" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#D93025"/><g stroke="#fff" stroke-width="2" fill="none"><ellipse cx="20" cy="13" rx="8" ry="3"/><path d="M12 13 v14 a8 3 0 0 0 16 0 v-14"/><path d="M12 20 a8 3 0 0 0 16 0"/></g></symbol>
+    <symbol id="ic-bq" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><g stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"><circle cx="18" cy="18" r="7"/><line x1="23.5" y1="23.5" x2="30" y2="30"/><line x1="15.5" y1="21" x2="15.5" y2="18"/><line x1="18.5" y1="21" x2="18.5" y2="15"/></g></symbol>
+    <symbol id="ic-build" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><g stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 15 a9 9 0 0 0 -15 -2"/><path d="M13 9 v4.5 h4.5"/><path d="M12 25 a9 9 0 0 0 15 2"/><path d="M27 31 v-4.5 h-4.5"/></g></symbol>
+    <symbol id="ic-ar" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><g fill="#fff"><rect x="11" y="21" width="8" height="8" rx="1"/><rect x="21" y="21" width="8" height="8" rx="1"/><rect x="16" y="11" width="8" height="8" rx="1"/></g></symbol>
+    <symbol id="ic-secret" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#B06000"/><rect x="12.5" y="18" width="15" height="11" rx="2" fill="#fff"/><path d="M15.5 18 v-3 a4.5 4.5 0 0 1 9 0 v3" stroke="#fff" stroke-width="2.4" fill="none"/><circle cx="20" cy="23.5" r="1.8" fill="#B06000"/></symbol>
+    <symbol id="ic-iam" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><path d="M20 9 L29 12.5 V19.5 C29 25 25 29 20 31 C15 29 11 25 11 19.5 V12.5 Z" fill="#fff"/><path d="M16 20 l3 3 l5 -5.5" stroke="#1A73E8" stroke-width="2.4" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="ic-search" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18.5" fill="#fff" stroke="#DADCE0" stroke-width="1.5"/><text x="20" y="27.5" text-anchor="middle" font-size="21" font-weight="700" fill="#4285F4" font-family="Arial, sans-serif">G</text></symbol>
+    <symbol id="ic-mongo" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#13AA52"/><path d="M20 7 C27 15 27 24 20 32 C13 24 13 15 20 7 Z" fill="#fff"/><line x1="20" y1="14" x2="20" y2="35" stroke="#13AA52" stroke-width="1.6"/></symbol>
+    <symbol id="ic-user" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#6B3A55"/><circle cx="20" cy="15.5" r="5.2" fill="#fff"/><path d="M10.5 30 a9.5 8 0 0 1 19 0 z" fill="#fff"/></symbol>
+    <symbol id="ic-cam" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#6B3A55"/><rect x="16" y="11.5" width="8" height="3.5" rx="1" fill="#fff"/><rect x="10.5" y="14" width="19" height="13.5" rx="2.5" fill="#fff"/><circle cx="20" cy="20.8" r="4" fill="#6B3A55"/><circle cx="20" cy="20.8" r="2" fill="#fff"/></symbol>
+    <symbol id="ic-web" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#6B3A55"/><rect x="9.5" y="11.5" width="21" height="17" rx="2.5" fill="#fff"/><rect x="9.5" y="11.5" width="21" height="4.5" rx="2" fill="#C59FB0"/><rect x="13" y="19.5" width="9" height="2.2" fill="#6B3A55"/><rect x="13" y="23.5" width="14" height="2.2" fill="#C59FB0"/></symbol>
+<symbol id="ic-log" viewBox="0 0 40 40"><polygon points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5" fill="#1A73E8"/><g stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M12 14h16"/><path d="M12 20h10"/><path d="M12 26h14"/></g></symbol>
+</defs>
+<rect width="2440" height="1640" fill="#FAF6EE"/>
+<text x="24" y="50" font-size="30" font-weight="700" fill="#6B3A55" font-family="'Cormorant Garamond', Georgia, serif">SuffAI Command Center · Engineering Review Diagram</text>
+<text x="24" y="78" class="b" fill="#8A7480">As deployed on Google Cloud (region asia-south1): trust boundaries, service identities, how every hop is authenticated, and the numbered end-to-end flow · reviewed 18 Oct 2026</text>
+<rect x="20" y="100" width="255" height="1345" rx="14" fill="#FFFFFF" stroke="#CDB8C2" stroke-width="1.4" stroke-dasharray="6 5"/><text x="36" y="123" class="gh" fill="#8A7480">OUTSIDE GOOGLE CLOUD</text>
+<rect x="300" y="100" width="1425" height="1345" rx="14" fill="#FFFFFF" stroke="#7FA6DE" stroke-width="1.8" stroke-dasharray="10 6"/><text x="316" y="123" class="gh" fill="#2A63B8">GOOGLE CLOUD PROJECT · REGION asia-south1</text>
+<rect x="320" y="290" width="485" height="650" rx="14" fill="#F6EEF0" stroke="#B88EA2" stroke-width="1.7"/><text x="336" y="313" class="gh" fill="#6B3A55">PUBLIC INGRESS · allow-unauthenticated</text>
+<rect x="1074" y="290" width="320" height="330" rx="14" fill="#F6EEF0" stroke="#B88EA2" stroke-width="1.5" stroke-dasharray="5 4"/><text x="1090" y="313" class="gh" fill="#6B3A55">PRIVATE · run.invoker ONLY</text>
+<rect x="1410" y="290" width="300" height="330" rx="14" fill="#F6EEF0" stroke="#EAD9E0" stroke-width="1.2"/><text x="1426" y="313" class="gh" fill="#6B3A55">VERTEX AI</text>
+<rect x="842" y="712" width="216" height="228" rx="14" fill="#F6EEF0" stroke="#EAD9E0" stroke-width="1.2"/><text x="858" y="735" class="gh" fill="#6B3A55">VERTEX AI</text>
+<rect x="320" y="955" width="1072" height="213" rx="14" fill="#F6EEF0" stroke="#EAD9E0" stroke-width="1.2"/><text x="336" y="978" class="gh" fill="#6B3A55">DATA STORES</text>
+<rect x="1410" y="955" width="300" height="213" rx="14" fill="#F6EEF0" stroke="#EAD9E0" stroke-width="1.2"/><text x="1426" y="978" class="gh" fill="#6B3A55">SECRETS · LOGS</text>
+<rect x="320" y="1195" width="690" height="115" rx="14" fill="#F6EEF0" stroke="#EAD9E0" stroke-width="1.2"/><text x="336" y="1218" class="gh" fill="#6B3A55">SCHEDULED BATCH</text>
+<rect x="320" y="1322" width="690" height="113" rx="14" fill="#F6EEF0" stroke="#EAD9E0" stroke-width="1.2"/><text x="336" y="1345" class="gh" fill="#6B3A55">BUILD &amp; DEPLOY</text>
+<rect x="1030" y="1195" width="680" height="240" rx="14" fill="#F6EEF0" stroke="#EAD9E0" stroke-width="1.2"/><text x="1046" y="1218" class="gh" fill="#6B3A55">IAM · SERVICE IDENTITIES</text>
+<rect x="1750" y="100" width="670" height="1345" rx="14" fill="#FFFFFF" stroke="#EAD9E0" stroke-width="1.2"/>
+<path d="M265.0,625.0 L338.0,625.0" class="data" marker-end="url(#m-data)"/>
+<path d="M500.0,925.0 L500.0,1011.0" class="data" marker-end="url(#m-data)"/>
+<path d="M720.0,325.0 L720.0,246.0" class="data" marker-end="url(#m-data)"/>
+<path d="M760.0,925.0 L760.0,1030.0 L830.0,1030.0" class="data" marker-end="url(#m-data)"/>
+<path d="M788.0,622.0 L852.0,622.0" class="async" marker-end="url(#m-async)"/>
+<path d="M852.0,658.0 L788.0,658.0" class="call" marker-end="url(#m-call)"/>
+<path d="M788.0,390.0 L1089.0,390.0" class="call" marker-end="url(#m-call)"/>
+<path d="M788.0,535.0 L1089.0,535.0" class="call" marker-end="url(#m-call)"/>
+<path d="M788.0,465.0 L852.0,465.0" class="data" marker-end="url(#m-data)"/>
+<path d="M265.0,572.0 L286.0,572.0 L286.0,222.0 L470.0,222.0" class="data" marker-end="url(#m-data)"/>
+<path d="M788.0,790.0 L852.0,790.0" class="data" marker-end="url(#m-data)"/>
+<path d="M788.0,885.0 L852.0,885.0" class="data" marker-end="url(#m-data)"/>
+<path d="M1379.0,390.0 L1425.0,390.0" class="data" marker-end="url(#m-data)"/>
+<path d="M1379.0,545.0 L1425.0,545.0" class="data" marker-end="url(#m-data)"/>
+<path d="M265.0,188.0 L470.0,188.0" class="data" marker-end="url(#m-data)"/>
+<path d="M800.0,200.0 L1085.0,200.0" class="async" marker-end="url(#m-async)"/>
+<path d="M1330.0,238.0 L1330.0,344.0" class="call" marker-end="url(#m-call)"/>
+<path d="M1375.0,200.0 L1402.0,200.0 L1402.0,515.0 L1379.0,515.0" class="halo"/>
+<path d="M1375.0,200.0 L1402.0,200.0 L1402.0,515.0 L1379.0,515.0" class="call" marker-end="url(#m-call)"/>
+<path d="M1089.0,418.0 L1066.0,418.0 L1066.0,990.0" class="halo"/>
+<path d="M1089.0,418.0 L1066.0,418.0 L1066.0,990.0" class="data" marker-end="url(#m-data)"/>
+<path d="M1180.0,581.0 L1180.0,990.0" class="data" marker-end="url(#m-data)"/>
+<path d="M1350.0,581.0 L1350.0,1182.0 L690.0,1182.0 L690.0,1095.0 L668.0,1095.0" class="async" marker-end="url(#m-async)"/>
+<path d="M720.0,1268.0 L668.0,1268.0" class="async" marker-end="url(#m-async)"/>
+<path d="M265.0,1268.0 L338.0,1268.0" class="data" marker-end="url(#m-data)"/>
+<path d="M450.0,1237.0 L450.0,1119.0" class="data" marker-end="url(#m-data)"/>
+<path d="M265.0,1392.0 L338.0,1392.0" class="data" marker-end="url(#m-data)"/>
+<path d="M568.0,1392.0 L600.0,1392.0" class="data" marker-end="url(#m-data)"/>
+<rect x="32" y="162.0" width="233" height="76" rx="10" fill="#F6EEF0" stroke="#C59FB0" stroke-width="1.4"/>
+<use href="#ic-cam" x="44" y="182.0" width="36" height="36"/>
+<text x="92" y="187.0" class="t">Customer</text>
+<text x="92" y="206.0" class="s">laundry app photo</text>
+<text x="92" y="222.0" class="s">of an order item</text>
+<rect x="32" y="554.0" width="233" height="92" rx="10" fill="#F6EEF0" stroke="#C59FB0" stroke-width="1.4"/>
+<use href="#ic-web" x="44" y="582.0" width="36" height="36"/>
+<text x="92" y="579.0" class="t">Browser</text>
+<text x="92" y="598.0" class="s">brand, admin or</text>
+<text x="92" y="614.0" class="s">customer login</text>
+<text x="92" y="630.0" class="s">Command Center UI</text>
+<rect x="32" y="1230.0" width="233" height="76" rx="10" fill="#FFF6F4" stroke="#E6B8B0" stroke-width="1.4"/>
+<use href="#ic-mongo" x="44" y="1250.0" width="36" height="36"/>
+<text x="92" y="1255.0" class="t">MongoDB</text>
+<text x="92" y="1274.0" class="s">ops source data</text>
+<text x="92" y="1290.0" class="s">orders · customers</text>
+<rect x="32" y="1354.0" width="233" height="76" rx="10" fill="#F6EEF0" stroke="#C59FB0" stroke-width="1.4"/>
+<use href="#ic-user" x="44" y="1374.0" width="36" height="36"/>
+<text x="92" y="1379.0" class="t">Developer</text>
+<text x="92" y="1398.0" class="s">deploy/*.sh</text>
+<text x="92" y="1414.0" class="s">gcloud CLI</text>
+<rect x="470" y="154.0" width="330" height="92" rx="10" fill="#FFF6F4" stroke="#E6B8B0" stroke-width="1.4"/>
+<use href="#ic-gcs" x="482" y="182.0" width="36" height="36"/>
+<text x="530" y="179.0" class="t">Cloud Storage</text>
+<text x="530" y="198.0" class="m">PROJECT-suffai-garment-images</text>
+<text x="530" y="214.0" class="s">garments/ · brands/brand/campaign/</text>
+<text x="530" y="230.0" class="s">private · V4 signed URLs for the UI</text>
+<rect x="1085" y="162.0" width="290" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-pubsub" x="1097" y="182.0" width="36" height="36"/>
+<text x="1145" y="187.0" class="t">Pub/Sub</text>
+<text x="1145" y="206.0" class="m">garment-image-uploaded</text>
+<text x="1145" y="222.0" class="s">2 push subscriptions</text>
+<rect x="338" y="325" width="450" height="600" rx="12" fill="#FFFFFF" stroke="#B88EA2" stroke-width="1.8"/>
+<use href="#ic-run" x="352" y="339" width="40" height="40"/>
+<text x="402" y="357" class="t" style="font-size:16px">suffai-command-center</text>
+<text x="402" y="376" class="s">Cloud Run · FastAPI API + static web UI in one container</text>
+<rect x="352" y="397" width="422" height="50" rx="8" fill="#FAF6EE" stroke="#EAD9E0"/>
+<text x="366" y="418" class="modt">Web UI shell</text>
+<text x="366" y="436" class="mods">login · Geo · Ads Lab · Campaigns · Style · Admin · AURA panel</text>
+<rect x="352" y="454" width="422" height="50" rx="8" fill="#FAF6EE" stroke="#EAD9E0"/>
+<text x="366" y="475" class="modt">Auth + role ACL</text>
+<text x="366" y="493" class="mods">BigQuery login · in-memory session (12 h) · competitors masked</text>
+<rect x="352" y="511" width="422" height="50" rx="8" fill="#FAF6EE" stroke="#EAD9E0"/>
+<text x="366" y="532" class="modt">Geo</text>
+<text x="366" y="550" class="mods">metrics from BigQuery (cached 120 s) · stores · market · brief</text>
+<rect x="352" y="568" width="422" height="50" rx="8" fill="#FAF6EE" stroke="#EAD9E0"/>
+<text x="366" y="589" class="modt">Ads Lab campaign jobs</text>
+<text x="366" y="607" class="mods">5 SKUs per chunk under a DB lease · extract → compare → rank</text>
+<rect x="352" y="625" width="422" height="50" rx="8" fill="#FAF6EE" stroke="#EAD9E0"/>
+<text x="366" y="646" class="modt">Campaigns (1P)</text>
+<text x="366" y="664" class="mods">config · estimate · launch · monitor (Simulated) · signed images</text>
+<rect x="352" y="682" width="422" height="50" rx="8" fill="#FAF6EE" stroke="#EAD9E0"/>
+<text x="366" y="703" class="modt">AURA agent + guard</text>
+<text x="366" y="721" class="mods">Gemini tool calls · ui_focus sync · PII + internal IDs scrubbed</text>
+<rect x="352" y="739" width="422" height="50" rx="8" fill="#FAF6EE" stroke="#EAD9E0"/>
+<text x="366" y="760" class="modt">Admin</text>
+<text x="366" y="778" class="mods">intel from BigQuery · unique garments via similarity proxy</text>
+<text x="356" y="810" class="f">1 vCPU · 1 GiB · allow-unauthenticated · one uvicorn process</text>
+<text x="356" y="827" class="f">env: USE_BQ · EXTRACTION_URL · SIMILARITY_URL · ENABLE_VERTEX</text>
+<text x="356" y="844" class="f">Cloud SQL attached · DATABASE_URL (Secret Manager)</text>
+<text x="356" y="861" class="f">/internal/campaign-jobs/:id/run checks the Tasks OIDC token</text>
+<rect x="852" y="434.0" width="200" height="62" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-iam" x="864" y="447.0" width="36" height="36"/>
+<text x="912" y="459.0" class="t">IAM Credentials</text>
+<text x="912" y="478.0" class="s">API · signBlob</text>
+<rect x="852" y="602.0" width="200" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-tasks" x="864" y="622.0" width="36" height="36"/>
+<text x="912" y="627.0" class="t">Cloud Tasks</text>
+<text x="912" y="646.0" class="m">campaign-jobs</text>
+<text x="912" y="662.0" class="s">opt-in, else thread</text>
+<rect x="852" y="752.0" width="200" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-vertex" x="864" y="772.0" width="36" height="36"/>
+<text x="912" y="777.0" class="t">Gemini 2.5 Flash</text>
+<text x="912" y="796.0" class="s">AURA · /v1/chat</text>
+<text x="912" y="812.0" class="s">Geo brief</text>
+<rect x="852" y="847.0" width="200" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-vertex" x="864" y="867.0" width="36" height="36"/>
+<use href="#ic-search" x="884" y="887.0" width="22" height="22"/>
+<text x="912" y="872.0" class="t">Grounded Gemini</text>
+<text x="912" y="891.0" class="s">Google Search tool</text>
+<text x="912" y="907.0" class="s">stores · market data</text>
+<rect x="1089" y="344.0" width="290" height="92" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-run" x="1101" y="372.0" width="36" height="36"/>
+<text x="1149" y="369.0" class="t">suffai-extraction</text>
+<text x="1149" y="388.0" class="m">POST /v1/extract · push /</text>
+<text x="1149" y="404.0" class="s">reads image from Cloud Storage</text>
+<text x="1149" y="420.0" class="s">no-allow-unauthenticated</text>
+<rect x="1089" y="489.0" width="290" height="92" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-run" x="1101" y="517.0" width="36" height="36"/>
+<text x="1149" y="514.0" class="t">suffai-similarity</text>
+<text x="1149" y="533.0" class="m">/v1/similarity/compare-pins</text>
+<text x="1149" y="549.0" class="s">dedupe per PIN · brand read-only</text>
+<text x="1149" y="565.0" class="s">1 vCPU · 1 GiB · private</text>
+<rect x="1425" y="352.0" width="270" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-vertex" x="1437" y="372.0" width="36" height="36"/>
+<text x="1485" y="377.0" class="t">Gemini 2.0 Flash</text>
+<text x="1485" y="396.0" class="s">label card per image</text>
+<text x="1485" y="412.0" class="s">temp 0.1 · JSON only</text>
+<rect x="1425" y="497.0" width="270" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-vertex" x="1437" y="517.0" width="36" height="36"/>
+<text x="1485" y="522.0" class="t">Multimodal embedding</text>
+<text x="1485" y="541.0" class="m">multimodalembedding@001</text>
+<text x="1485" y="557.0" class="s">1,408-dim vectors</text>
+<rect x="338" y="1011.0" width="330" height="108" rx="10" fill="#FFF6F4" stroke="#E6B8B0" stroke-width="1.4"/>
+<use href="#ic-bq" x="350" y="1047.0" width="36" height="36"/>
+<text x="398" y="1036.0" class="t">BigQuery</text>
+<text x="398" y="1055.0" class="m">suffai_ops: customers · orders</text>
+<text x="398" y="1071.0" class="m">commodities · login_cred_db</text>
+<text x="398" y="1087.0" class="m">garment_similarity_observations</text>
+<text x="398" y="1103.0" class="m">+ staging · marts · raw</text>
+<rect x="830" y="990" width="490" height="168" rx="10" fill="#FFF6F4" stroke="#E6B8B0" stroke-width="1.4"/>
+<use href="#ic-sql" x="842" y="1002" width="36" height="36"/>
+<text x="890" y="1017" class="t">Cloud SQL · PostgreSQL</text>
+<text x="890" y="1035" class="s">system of record · Cloud SQL connector · DATABASE_URL</text>
+<text x="850" y="1060" class="sh">Campaigns (Ads Lab, 1P)</text>
+<text x="850" y="1077" class="m" style="font-size:10.5px">brand_campaigns · brand_skus</text>
+<text x="850" y="1091" class="m" style="font-size:10.5px">brand_sku_pin_scores</text>
+<text x="850" y="1105" class="m" style="font-size:10.5px">campaign_jobs</text>
+<text x="850" y="1119" class="m" style="font-size:10.5px">campaign_user_recommendations</text>
+<text x="850" y="1133" class="m" style="font-size:10.5px">campaign_impact_* (Simulated)</text>
+<text x="1086" y="1060" class="sh">Garments · wardrobe · geo</text>
+<text x="1086" y="1077" class="m" style="font-size:10.5px">extraction_jobs</text>
+<text x="1086" y="1091" class="m" style="font-size:10.5px">garment_instances</text>
+<text x="1086" y="1105" class="m" style="font-size:10.5px">unique_garments · user_wardrobe</text>
+<text x="1086" y="1119" class="m" style="font-size:10.5px">garment_pin_counts</text>
+<text x="1086" y="1133" class="m" style="font-size:10.5px">garment_similarity_events</text>
+<text x="1086" y="1147" class="m" style="font-size:10.5px">geo_store_lookups · geo_market_*</text>
+<rect x="1425" y="990.0" width="270" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-secret" x="1437" y="1010.0" width="36" height="36"/>
+<text x="1485" y="1015.0" class="t">Secret Manager</text>
+<text x="1485" y="1034.0" class="m">DATABASE_URL</text>
+<text x="1485" y="1050.0" class="s">for CC and similarity</text>
+<rect x="1425" y="1084.0" width="270" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-log" x="1437" y="1104.0" width="36" height="36"/>
+<text x="1485" y="1109.0" class="t">Cloud Logging</text>
+<text x="1485" y="1128.0" class="s">stdout of every service</text>
+<text x="1485" y="1144.0" class="s">masked-error reference IDs</text>
+<rect x="338" y="1237.0" width="330" height="62" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-job" x="350" y="1250.0" width="36" height="36"/>
+<text x="398" y="1262.0" class="t">Cloud Run Jobs</text>
+<text x="398" y="1281.0" class="m">suffai-cdc · suffai-bq-sync</text>
+<rect x="720" y="1237.0" width="270" height="62" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-sched" x="732" y="1250.0" width="36" height="36"/>
+<text x="780" y="1262.0" class="t">Cloud Scheduler</text>
+<text x="780" y="1281.0" class="s">hourly CDC · daily 02:15 IST</text>
+<rect x="338" y="1354.0" width="230" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-build" x="350" y="1374.0" width="36" height="36"/>
+<text x="398" y="1379.0" class="t">Cloud Build</text>
+<text x="398" y="1398.0" class="m">cloudbuild-*.yaml</text>
+<text x="398" y="1414.0" class="s">or local docker build</text>
+<rect x="600" y="1354.0" width="395" height="76" rx="10" fill="#FFFFFF" stroke="#D9C2CD" stroke-width="1.4"/>
+<use href="#ic-ar" x="612" y="1374.0" width="36" height="36"/>
+<text x="660" y="1379.0" class="t">Artifact Registry</text>
+<text x="660" y="1398.0" class="m">asia-south1-docker.pkg.dev/…/suffai</text>
+<text x="660" y="1414.0" class="s">→ gcloud run deploy --update-env-vars</text>
+<use href="#ic-iam" x="1666" y="1203" width="30" height="30"/>
+<text x="1048" y="1245" class="pb">Command Center runtime</text>
+<text x="1048" y="1261" class="s">(default compute SA)</text>
+<text x="1244" y="1245" class="p">run.invoker on extraction + similarity · cloudtasks.enqueuer</text>
+<text x="1244" y="1261" class="p">act-as cc-tasks · BigQuery jobUser + dataViewer · Vertex AI user</text>
+<text x="1244" y="1277" class="p">Storage object create/view · Cloud SQL client · Token Creator on self</text>
+<line x1="1046" y1="1290" x2="1694" y2="1290" stroke="#EAD9E0"/>
+<text x="1048" y="1303" class="pb">pubsub-push</text>
+<text x="1244" y="1303" class="p">run.invoker on extraction + similarity (Pub/Sub push OIDC)</text>
+<line x1="1046" y1="1316" x2="1694" y2="1316" stroke="#EAD9E0"/>
+<text x="1048" y="1329" class="pb">cc-tasks</text>
+<text x="1244" y="1329" class="p">run.invoker on Command Center (Cloud Tasks OIDC, audience = URL)</text>
+<line x1="1046" y1="1342" x2="1694" y2="1342" stroke="#EAD9E0"/>
+<text x="1048" y="1355" class="pb">Similarity runtime</text>
+<text x="1244" y="1355" class="p">storage.objectViewer · aiplatform.user · bigquery.dataEditor</text>
+<text x="1244" y="1371" class="p">cloudsql.client</text>
+<line x1="1046" y1="1384" x2="1694" y2="1384" stroke="#EAD9E0"/>
+<text x="1048" y="1397" class="pb">Scheduler SA</text>
+<text x="1244" y="1397" class="p">starts the suffai-cdc and suffai-bq-sync Cloud Run Jobs</text>
+<circle cx="290" cy="625" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="290" y="629.1" text-anchor="middle" class="num">1</text>
+<circle cx="500" cy="984" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="500" y="988.1" text-anchor="middle" class="num">2</text>
+<circle cx="720" cy="272" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="720" y="276.1" text-anchor="middle" class="num">3</text>
+<circle cx="760" cy="984" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="760" y="988.1" text-anchor="middle" class="num">4</text>
+<circle cx="800" cy="1030" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="800" y="1034.1" text-anchor="middle" class="num">9</text>
+<circle cx="820" cy="622" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="820" y="626.1" text-anchor="middle" class="num">5</text>
+<circle cx="820" cy="658" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="820" y="662.1" text-anchor="middle" class="num">6</text>
+<circle cx="930" cy="390" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="930" y="394.1" text-anchor="middle" class="num">7</text>
+<circle cx="930" cy="535" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="930" y="539.1" text-anchor="middle" class="num">8</text>
+<circle cx="820" cy="465" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="820" y="469.1" text-anchor="middle" class="num">10</text>
+<circle cx="390" cy="222" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="390" y="226.1" text-anchor="middle" class="num">11</text>
+<circle cx="820" cy="790" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="820" y="794.1" text-anchor="middle" class="num">12</text>
+<circle cx="820" cy="885" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="820" y="889.1" text-anchor="middle" class="num">13</text>
+<circle cx="390" cy="188" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="390" y="192.1" text-anchor="middle" class="num">A</text>
+<circle cx="942" cy="200" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="942" y="204.1" text-anchor="middle" class="num">B</text>
+<circle cx="1330" cy="270" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1330" y="274.1" text-anchor="middle" class="num">C</text>
+<circle cx="1402" cy="252" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1402" y="256.1" text-anchor="middle" class="num">C</text>
+<circle cx="1066" cy="690" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1066" y="694.1" text-anchor="middle" class="num">D</text>
+<circle cx="1180" cy="760" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1180" y="764.1" text-anchor="middle" class="num">E</text>
+<circle cx="1020" cy="1182" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1020" y="1186.1" text-anchor="middle" class="num">E</text>
+<circle cx="694" cy="1268" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="694" y="1272.1" text-anchor="middle" class="num">F</text>
+<circle cx="450" cy="1182" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="450" y="1186.1" text-anchor="middle" class="num">G</text>
+<circle cx="300" cy="1392" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="300" y="1396.1" text-anchor="middle" class="num">H</text>
+<text x="1772" y="134" class="ph">END-TO-END FLOW</text>
+<text x="1772" y="160" class="pb">Brand journey (numbered on the diagram)</text>
+<circle cx="1783" cy="177" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="181.1" text-anchor="middle" class="num">1</text>
+<text x="1802" y="181" class="p">Sign in over HTTPS: POST /v1/auth/login returns a session token, sent as X-Session-Token</text>
+<circle cx="1783" cy="199" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="203.1" text-anchor="middle" class="num">2</text>
+<text x="1802" y="203" class="p">Password hash checked in BigQuery login_cred_db; Geo metrics read from suffai_ops (cached 120 s)</text>
+<circle cx="1783" cy="221" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="225.1" text-anchor="middle" class="num">3</text>
+<text x="1802" y="225" class="p">Ads Lab SKU images written to Cloud Storage under brands/brand/campaign/</text>
+<circle cx="1783" cy="243" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="247.1" text-anchor="middle" class="num">4</text>
+<text x="1802" y="247" class="p">Campaign, SKU and job rows created in Cloud SQL (processing · pending · queued)</text>
+<circle cx="1783" cy="265" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="269.1" text-anchor="middle" class="num">5</text>
+<text x="1802" y="269" class="p">Job chunk enqueued on Cloud Tasks campaign-jobs (or run in a thread if Tasks isn&#x27;t set up)</text>
+<circle cx="1783" cy="287" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="291.1" text-anchor="middle" class="num">6</text>
+<text x="1802" y="291" class="p">Cloud Tasks calls /internal/campaign-jobs/:id/run with an OIDC token minted as cc-tasks</text>
+<circle cx="1783" cy="309" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="313.1" text-anchor="middle" class="num">7</text>
+<text x="1802" y="313" class="p">Extract attributes: POST /v1/extract with a Google ID token; Gemini 2.0 Flash label card</text>
+<circle cx="1783" cy="331" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="335.1" text-anchor="middle" class="num">8</text>
+<text x="1802" y="335" class="p">Compare with PIN wardrobes: POST /v1/similarity/compare-pins with an ID token; top 5 per PIN</text>
+<circle cx="1783" cy="353" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="357.1" text-anchor="middle" class="num">9</text>
+<text x="1802" y="357" class="p">Rank (55% visual · 15% frequency · 30% attribute fit); save scores and per-customer picks</text>
+<circle cx="1783" cy="375" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="379.1" text-anchor="middle" class="num">10</text>
+<text x="1802" y="379" class="p">Campaigns tab: image URLs signed (V4) through the IAM Credentials API (signBlob)</text>
+<circle cx="1783" cy="397" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="401.1" text-anchor="middle" class="num">11</text>
+<text x="1802" y="401" class="p">Browser loads SKU images straight from Cloud Storage with the signed URLs</text>
+<circle cx="1783" cy="419" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="423.1" text-anchor="middle" class="num">12</text>
+<text x="1802" y="423" class="p">AURA: /v1/agent/chat with ui_focus; ownership checked, then Gemini 2.5 Flash tool calls</text>
+<circle cx="1783" cy="441" r="9.5" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="445.1" text-anchor="middle" class="num">13</text>
+<text x="1802" y="445" class="p">Geo stores and market data: Gemini 2.5 Flash + Google Search grounding, cached 7 days</text>
+<text x="1772" y="471" class="pb">Customer photos, scheduled loads and deploys (lettered)</text>
+<circle cx="1783" cy="488" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="492.1" text-anchor="middle" class="num">A</text>
+<text x="1802" y="492" class="p">Customer garment photo stored in Cloud Storage under garments/</text>
+<circle cx="1783" cy="510" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="514.1" text-anchor="middle" class="num">B</text>
+<text x="1802" y="514" class="p">Upload event published to Pub/Sub topic garment-image-uploaded</text>
+<circle cx="1783" cy="532" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="536.1" text-anchor="middle" class="num">C</text>
+<text x="1802" y="536" class="p">Two push subscriptions call extraction and similarity with an OIDC token (pubsub-push)</text>
+<circle cx="1783" cy="554" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="558.1" text-anchor="middle" class="num">D</text>
+<text x="1802" y="558" class="p">Extraction writes the label card and job state to Cloud SQL (all fields ≥ 0.90 auto-accepted)</text>
+<circle cx="1783" cy="576" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="580.1" text-anchor="middle" class="num">E</text>
+<text x="1802" y="580" class="p">Similarity counts each garment once per PIN in Cloud SQL and copies observations to BigQuery</text>
+<circle cx="1783" cy="598" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="602.1" text-anchor="middle" class="num">F</text>
+<text x="1802" y="602" class="p">Cloud Scheduler starts Cloud Run Jobs: suffai-cdc hourly, suffai-bq-sync daily at 02:15 IST</text>
+<circle cx="1783" cy="620" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="624.1" text-anchor="middle" class="num">G</text>
+<text x="1802" y="624" class="p">Jobs read MongoDB and load suffai_ops, staging and marts into BigQuery</text>
+<circle cx="1783" cy="642" r="9.5" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1783" y="646.1" text-anchor="middle" class="num">H</text>
+<text x="1802" y="646" class="p">Cloud Build image → Artifact Registry repo suffai → gcloud run deploy --update-env-vars</text>
+<text x="1772" y="680" class="ph">CONTROLS IN PLACE</text>
+<rect x="1776" y="698" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="706" class="p">Private services accept only Google-signed tokens (ID tokens, Pub/Sub push and Cloud Tasks OIDC)</text>
+<rect x="1776" y="720" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="728" class="p">Every campaign and job read checks brand ownership; brand logins see other brands as Competitors</text>
+<rect x="1776" y="742" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="750" class="p">AURA guard strips customer PII and internal IDs before Gemini; its on-screen focus carries no IDs</text>
+<rect x="1776" y="764" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="772" class="p">Users see masked errors with a reference ID; the full error goes to Cloud Logging</text>
+<rect x="1776" y="786" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="794" class="p">The plaintext credentials CSV is kept out of the image by .dockerignore</text>
+<text x="1772" y="828" class="ph">RELIABILITY</text>
+<rect x="1776" y="846" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="854" class="p">Cloud Tasks retries a chunk up to 10 times (10–300 s backoff); a job stalled 180 s is re-dispatched</text>
+<rect x="1776" y="868" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="876" class="p">Each chunk runs under a DB lease, so a retried or duplicate task can&#x27;t process the same SKUs twice</text>
+<rect x="1776" y="890" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="898" class="p">Extraction is idempotent on the Pub/Sub message ID; bad payloads are acked, other errors retried</text>
+<rect x="1776" y="912" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="920" class="p">Geo store and market lookups are cached 7 days in Cloud SQL; metrics are cached 120 s per instance</text>
+<text x="1772" y="954" class="ph">ENGINEERING REVIEW FINDINGS</text>
+<rect x="1772" y="967" width="44" height="18" rx="9" fill="#A3301F"/><text x="1794" y="980" text-anchor="middle" class="chip">HIGH</text>
+<text x="1828" y="980" class="p">Sessions, AURA state and staged uploads live in one instance&#x27;s memory. A second Cloud Run</text>
+<text x="1828" y="996" class="p">instance signs users out at random: set --max-instances=1 now, move sessions to Cloud SQL or</text>
+<text x="1828" y="1012" class="p">Memorystore.</text>
+<rect x="1772" y="1024" width="44" height="18" rx="9" fill="#A3301F"/><text x="1794" y="1037" text-anchor="middle" class="chip">HIGH</text>
+<text x="1828" y="1037" class="p">Passwords are unsalted SHA-256 hashes (BigQuery login_cred_db and the CSV fallback in the</text>
+<text x="1828" y="1053" class="p">image). Move to bcrypt or argon2, or to Identity Platform.</text>
+<rect x="1772" y="1065" width="44" height="18" rx="9" fill="#B06000"/><text x="1794" y="1078" text-anchor="middle" class="chip">MED</text>
+<text x="1828" y="1078" class="p">Signed image URLs need Token Creator on the runtime account itself and</text>
+<text x="1828" y="1094" class="p">iamcredentials.googleapis.com enabled; otherwise Campaigns shows drawn placeholders.</text>
+<rect x="1772" y="1106" width="44" height="18" rx="9" fill="#B06000"/><text x="1794" y="1119" text-anchor="middle" class="chip">MED</text>
+<text x="1828" y="1119" class="p">Campaign jobs run in a thread unless setup_cloud_tasks.sh was run. Cloud Run CPU is</text>
+<text x="1828" y="1135" class="p">request-only, so those jobs mostly advance while the UI polls.</text>
+<rect x="1772" y="1147" width="44" height="18" rx="9" fill="#B06000"/><text x="1794" y="1160" text-anchor="middle" class="chip">MED</text>
+<text x="1828" y="1160" class="p">Services fall back to the default compute account, which often has Editor. Give each service</text>
+<text x="1828" y="1176" class="p">its own least-privilege account.</text>
+<rect x="1772" y="1188" width="44" height="18" rx="9" fill="#8A7480"/><text x="1794" y="1201" text-anchor="middle" class="chip">LOW</text>
+<text x="1828" y="1201" class="p">deploy_command_center.sh writes DATABASE_URL as a plain env var (prefer --set-secrets), and</text>
+<text x="1828" y="1217" class="p">CORS_ORIGINS=* is set on the public service (restrict it to its own URL).</text>
+<text x="1772" y="1252" class="ph">DEPLOYMENT FACTS</text>
+<rect x="1776" y="1270" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="1278" class="p">Cloud Run: suffai-command-center (public) · suffai-extraction, suffai-similarity (private)</text>
+<rect x="1776" y="1292" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="1300" class="p">Cloud Run Jobs: suffai-cdc and suffai-bq-sync · all images in Artifact Registry repo suffai</text>
+<rect x="1776" y="1314" width="6" height="6" rx="1.5" fill="#8A7480"/>
+<text x="1792" y="1322" class="p">Retired: suffai-api (do not recreate)</text>
+<rect x="0" y="1462" width="2440" height="178" fill="#FFFFFF" stroke="#EAD9E0"/>
+<text x="24" y="1494" class="gh" fill="#6B3A55">GCP SERVICES USED</text>
+<use href="#ic-run" x="200" y="1475" width="26" height="26"/><text x="232" y="1493" class="b">Cloud Run</text>
+<use href="#ic-job" x="319.0" y="1475" width="26" height="26"/><text x="351.0" y="1493" class="b">Cloud Run Jobs</text>
+<use href="#ic-gcs" x="473.0" y="1475" width="26" height="26"/><text x="505.0" y="1493" class="b">Cloud Storage</text>
+<use href="#ic-pubsub" x="620.0" y="1475" width="26" height="26"/><text x="652.0" y="1493" class="b">Pub/Sub</text>
+<use href="#ic-tasks" x="725.0" y="1475" width="26" height="26"/><text x="757.0" y="1493" class="b">Cloud Tasks</text>
+<use href="#ic-sched" x="858.0" y="1475" width="26" height="26"/><text x="890.0" y="1493" class="b">Cloud Scheduler</text>
+<use href="#ic-vertex" x="1019.0" y="1475" width="26" height="26"/><text x="1051.0" y="1493" class="b">Vertex AI</text>
+<use href="#ic-search" x="1138.0" y="1475" width="26" height="26"/><text x="1170.0" y="1493" class="b">Google Search grounding</text>
+<use href="#ic-sql" x="1355.0" y="1475" width="26" height="26"/><text x="1387.0" y="1493" class="b">Cloud SQL</text>
+<use href="#ic-bq" x="1474.0" y="1475" width="26" height="26"/><text x="1506.0" y="1493" class="b">BigQuery</text>
+<use href="#ic-iam" x="1586.0" y="1475" width="26" height="26"/><text x="1618.0" y="1493" class="b">IAM + IAM Credentials</text>
+<use href="#ic-secret" x="1789.0" y="1475" width="26" height="26"/><text x="1821.0" y="1493" class="b">Secret Manager</text>
+<use href="#ic-log" x="1943.0" y="1475" width="26" height="26"/><text x="1975.0" y="1493" class="b">Cloud Logging</text>
+<use href="#ic-build" x="2090.0" y="1475" width="26" height="26"/><text x="2122.0" y="1493" class="b">Cloud Build</text>
+<use href="#ic-ar" x="2223.0" y="1475" width="26" height="26"/><text x="2255.0" y="1493" class="b">Artifact Registry</text>
+<text x="24" y="1548" class="gh" fill="#6B3A55">LEGEND</text>
+<path d="M200,1544 h40" class="data" marker-end="url(#m-data)"/><text x="250" y="1548" class="s">request or data read / write</text>
+<path d="M468.0,1544 h40" class="call" marker-end="url(#m-call)"/><text x="518.0" y="1548" class="s">service call with a Google ID token or OIDC token</text>
+<path d="M872.5,1544 h40" class="async" marker-end="url(#m-async)"/><text x="922.5" y="1548" class="s">async: queue, push event, schedule or copy</text>
+<circle cx="1241.5" cy="1544" r="11" fill="#6B3A55" stroke="#FFFFFF" stroke-width="2"/><text x="1241.5" y="1548.1" text-anchor="middle" class="num">1</text>
+<text x="1259.5" y="1548" class="s">brand journey step</text>
+<circle cx="1416.5" cy="1544" r="11" fill="#8A7480" stroke="#FFFFFF" stroke-width="2"/><text x="1416.5" y="1548.1" text-anchor="middle" class="num">A</text>
+<text x="1434.5" y="1548" class="s">pipeline or deploy step</text>
+<rect x="1620.0" y="1535" width="34" height="18" rx="5" fill="#F6EEF0" stroke="#7FA6DE" stroke-width="1.8" stroke-dasharray="10 6"/><text x="1662.0" y="1548" class="s">Google Cloud project</text>
+<rect x="1822.0" y="1535" width="34" height="18" rx="5" fill="#F6EEF0" stroke="#CDB8C2" stroke-width="1.4" stroke-dasharray="6 5"/><text x="1864.0" y="1548" class="s">outside Google Cloud</text>
+<rect x="2024.0" y="1535" width="34" height="18" rx="5" fill="#F6EEF0" stroke="#B88EA2" stroke-width="1.7"/><text x="2066.0" y="1548" class="s">public ingress</text>
+<rect x="2187.0" y="1535" width="34" height="18" rx="5" fill="#F6EEF0" stroke="#B88EA2" stroke-width="1.5" stroke-dasharray="5 4"/><text x="2229.0" y="1548" class="s">private (run.invoker only)</text>
+<text x="24" y="1622" class="s">Source: deploy/*.sh, Dockerfile.command_center, command_center/*.py, worker/, similarity/ · PROJECT stands for the GCP project ID · campaign impact metrics are simulated and labelled Simulated in the UI · brand logins see competitors masked · no customer PII is sent to the AI</text>
+</svg>

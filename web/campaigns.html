@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuffAI · Campaigns</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="./select.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #FAF6EE; --panel: #FFFFFF; --raised: #F6EEF0; --line: #EAD9E0; --muted: #8A7480; --ink: #3B2733;
+      --plum: #6B3A55; --plum-dk: #552C43; --wine: #2A0F1F; --wine-2: #4A1A33; --gold: #C9A24A; --gold-lt: #F3D58A;
+      --ok: #3F7D3B; --bad: #A3301F; --ease: cubic-bezier(.22,.8,.24,1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Outfit, system-ui, sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: 0; }
+    :focus-visible { outline: 3px solid rgba(201,162,74,.6); outline-offset: 2px; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+    [hidden] { display: none !important; }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; color: #F7EAF0; padding: 22px 28px 26px;
+      background: radial-gradient(60% 120% at 85% 0%, rgba(224,178,84,.28), transparent 60%), linear-gradient(110deg, var(--wine) 0%, var(--wine-2) 55%, var(--plum) 100%); }
+    .hero-in { max-width: 1320px; margin: 0 auto; display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+    .back { display: inline-flex; align-items: center; gap: .45rem; padding: .4rem .8rem; border-radius: 999px; font-size: 12px; color: #F1DDE6; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); transition: background .2s; }
+    .back:hover { background: rgba(255,255,255,.16); }
+    .hero-title { flex: 1 1 420px; min-width: 0; }
+    .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-lt); margin: 14px 0 4px; }
+    .hero h1 { font-family: Outfit, system-ui, sans-serif; font-size: clamp(1.7rem, 2.6vw, 2.25rem); font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; color: #fff; }
+    .hero-sub { font-size: 13px; color: #D9BFCB; margin-top: 6px; }
+    .hero-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hstat { min-width: 120px; padding: 10px 14px; border-radius: 14px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); }
+    .hstat span { display: block; font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: #C9A9B8; }
+    .hstat b { display: block; font: 600 20px 'IBM Plex Mono', monospace; color: #fff; margin-top: 2px; }
+
+    .why { margin-top: 24px; }
+    .why-h { font-family: Outfit, system-ui, sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--ink); margin: 0 0 10px 4px; }
+    .matrix { border-radius: 16px; overflow: hidden; color: #F7EAF0; border: 1px solid #3E1729;
+      background: radial-gradient(60% 120% at 90% 0%, rgba(224,178,84,.22), transparent 60%), linear-gradient(110deg, var(--wine) 0%, var(--wine-2) 55%, var(--plum) 100%); box-shadow: 0 16px 34px rgba(43,15,31,.18); }
+    .matrix table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .matrix th, .matrix td { padding: 10px 16px; text-align: left; border-top: 1px solid rgba(255,255,255,.08); background: none; text-transform: none; font-family: inherit; }
+    .matrix thead th { border-top: 0; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #C9A9B8; font-weight: 600; }
+    .matrix thead th.us { color: var(--gold-lt); }
+    .matrix td:first-child { color: #D9BFCB; width: 22%; white-space: nowrap; }
+    .matrix td.us { color: #fff; font-weight: 500; background: linear-gradient(90deg, rgba(224,178,84,.14), rgba(224,178,84,.04)); }
+    .matrix td.us i { color: var(--gold-lt); margin-right: 8px; }
+    .matrix td.them { color: #B998A8; }
+    .matrix td.them i { color: #9C7F8D; margin-right: 8px; }
+    .matrix-cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 16px; border-top: 1px solid rgba(255,255,255,.1); font-size: 12.5px; color: #F1DDE6; }
+    .matrix-cta button { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem 1rem; border-radius: 10px; font-weight: 600; font-size: 13px; color: var(--wine); background: linear-gradient(135deg, var(--gold-lt), var(--gold)); }
+    @media (max-width: 700px) { .matrix td:first-child { white-space: normal; } .matrix th, .matrix td { padding: 9px 10px; } }
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 24px 28px 60px; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 22px; align-items: start; }
+    @media (max-width: 1080px) { .grid { grid-template-columns: 1fr; } .side { position: static !important; } }
+    @media (max-width: 640px) { .wrap { padding: 16px; } .hero { padding: 18px 16px 22px; } }
+
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,.04); }
+    .step { padding: 18px 20px 20px; margin-bottom: 16px; animation: rise .5s var(--ease) backwards; }
+    .step:nth-child(2) { animation-delay: .05s; } .step:nth-child(3) { animation-delay: .1s; } .step:nth-child(4) { animation-delay: .15s; } .step:nth-child(5) { animation-delay: .2s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+    .step-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .num { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font: 600 12px 'IBM Plex Mono', monospace; background: var(--raised); border: 1px solid #DCC3CE; color: var(--plum); flex: none; transition: background .3s, color .3s; }
+    .step.done .num { background: var(--plum); color: #fff; border-color: var(--plum); }
+    .step-head h2 { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .step-head p { margin-left: auto; font-size: 11px; color: var(--muted); }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .75rem; border-radius: 999px; font-size: 12px; background: var(--raised); border: 1px solid var(--line); color: #552C43; }
+    .chip i { color: var(--plum); font-size: 11px; }
+    .aud-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .link { font-size: 12px; color: var(--plum); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Creatives picker */
+    .cgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 12px; }
+    .ctile { position: relative; text-align: left; border-radius: 14px; overflow: hidden; background: #fff; border: 1.5px solid var(--line); transition: border-color .25s, box-shadow .25s, transform .25s var(--ease); }
+    .ctile:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(59,39,51,.1); }
+    .ctile[aria-pressed="true"] { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,162,74,.2), 0 10px 22px rgba(107,58,85,.14); }
+    .ctile .img { aspect-ratio: 1; background: radial-gradient(circle at 50% 40%, #FFFFFF, #F3E3EA); display: grid; place-items: center; }
+    .ctile .img img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+    .ctile .img i { font-size: 28px; color: #DCC3CE; }
+    .ctile .meta { padding: 8px 10px 10px; }
+    .ctile .meta b { display: block; font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ctile .meta span { font: 500 10px 'IBM Plex Mono', monospace; color: var(--muted); }
+    .ctile .badge { position: absolute; top: 8px; left: 8px; font: 600 10px 'IBM Plex Mono', monospace; padding: .15rem .45rem; border-radius: 999px; background: rgba(20,6,13,.6); color: #fff; }
+    .ctile .tick { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; background: rgba(255,255,255,.85); color: transparent; border: 1px solid var(--line); transition: background .2s, color .2s; }
+    .ctile[aria-pressed="true"] .tick { background: var(--gold); color: var(--wine); border-color: var(--gold); }
+    .seg { display: inline-flex; padding: 3px; border-radius: 12px; background: var(--raised); border: 1px solid var(--line); margin-top: 14px; }
+    .seg button { padding: .45rem .85rem; border-radius: 9px; font-size: 12px; color: var(--muted); transition: background .25s, color .25s; }
+    .seg button[aria-pressed="true"] { background: #fff; color: var(--plum); font-weight: 600; box-shadow: 0 2px 6px rgba(59,39,51,.08); }
+    .hint { font-size: 11px; color: var(--muted); margin-top: 8px; }
+
+    /* Channels */
+    .chgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); gap: 10px; }
+    .chtile { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff; text-align: left; transition: border-color .25s, background .25s, transform .25s var(--ease); }
+    .chtile:hover { transform: translateY(-1px); }
+    .chtile .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--raised); color: var(--plum); font-size: 15px; flex: none; transition: background .25s, color .25s; }
+    .chtile b { display: block; font-size: 13px; } .chtile span { font-size: 10.5px; color: var(--muted); }
+    .chtile[aria-pressed="true"] { border-color: var(--plum); background: #FBF5F7; }
+    .chtile[aria-pressed="true"] .ic { background: var(--plum); color: #fff; }
+
+    /* Form fields */
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+    .fields .full { grid-column: 1 / -1; }
+    @media (max-width: 640px) { .fields { grid-template-columns: 1fr; } }
+    label.f { display: block; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .req { color: var(--bad); margin-left: 2px; }
+    .in { width: 100%; margin-top: 5px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: .6rem .7rem; font-size: 13px; text-transform: none; letter-spacing: normal; font-weight: 400; color: var(--ink); transition: border-color .2s, box-shadow .2s; }
+    .in:focus { outline: none; border-color: var(--plum); box-shadow: 0 0 0 3px rgba(197,159,176,.35); }
+    .in.err { border-color: var(--bad); box-shadow: 0 0 0 3px rgba(163,48,31,.12); }
+    textarea.in { resize: vertical; min-height: 92px; line-height: 1.5; }
+    select.in { appearance: none; padding-right: 2rem; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%238A7480' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E") no-repeat right .6rem center / 16px; }
+    .count { float: right; font: 500 10px 'IBM Plex Mono', monospace; color: var(--muted); text-transform: none; letter-spacing: 0; }
+    .ferr { font-size: 11px; color: var(--bad); margin-top: 4px; text-transform: none; letter-spacing: 0; font-weight: 500; min-height: 0; }
+    .url-out { display: block; text-transform: none; letter-spacing: 0; font: 400 11px 'IBM Plex Mono', monospace; color: var(--muted); word-break: break-all; margin-top: 6px; }
+    .radios { display: flex; gap: 10px; flex-wrap: wrap; }
+    .radio { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--line); font-size: 13px; cursor: pointer; transition: border-color .2s, background .2s; }
+    .radio:has(input:checked) { border-color: var(--plum); background: #FBF5F7; }
+    .radio input { accent-color: var(--plum); }
+    .switch { display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; }
+    .switch input { appearance: none; width: 38px; height: 22px; border-radius: 999px; background: #DCC3CE; position: relative; transition: background .25s; flex: none; }
+    .switch input::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .25s var(--ease); box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .switch input:checked { background: var(--plum); }
+    .switch input:checked::after { transform: translateX(16px); }
+
+    /* Side: preview + summary */
+    .side { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 16px; max-height: calc(100vh - 32px); overflow-y: auto; scrollbar-width: none; padding-bottom: 4px; }
+    .side::-webkit-scrollbar { display: none; }
+    /* Stacked layout: no nested scroll box with a hidden scrollbar */
+    @media (max-width: 1080px) { .side { max-height: none; overflow: visible; } }
+    .pv { padding: 0; background: none; border: 0; box-shadow: none; }
+    .pv-head { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .pv-head h3 { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--plum); }
+    .pv-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; padding: 3px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+    .pv-tabs button { padding: .4rem .2rem; border-radius: 9px; font-size: 11px; white-space: nowrap; color: var(--muted); transition: background .2s, color .2s; }
+    .pv-tabs button[aria-selected="true"] { background: var(--plum); color: #fff; font-weight: 600; }
+    .pv-tabs button.inc::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #C9A24A; margin-right: 5px; vertical-align: 1px; }
+    .pv-vars { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .pv-vars:empty { display: none; }
+    .pv-vars button { min-width: 34px; padding: .3rem .6rem; border-radius: 9px; font: 600 11px 'IBM Plex Mono', monospace; color: var(--muted); background: #fff; border: 1px solid var(--line); }
+    .pv-vars button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--wine); }
+    .ctile.focus { outline: 2px solid var(--plum); outline-offset: 2px; }
+    .ctile .eye { position: absolute; left: 8px; bottom: 54px; font-size: 9.5px; font-weight: 600; padding: .12rem .45rem; border-radius: 999px; background: var(--plum); color: #fff; }
+    /* iPhone: titanium frame, side buttons, Dynamic Island, home indicator */
+    .iphone { position: relative; margin: 0 auto; width: 300px; height: 624px; border-radius: 54px; padding: 11px;
+      background: linear-gradient(145deg, #3a3a3e, #121214 45%, #2a2a2d);
+      box-shadow: inset 0 0 0 1.5px #55555a, inset 0 0 0 5px #0c0c0d, 0 34px 60px rgba(43,15,31,.28), 0 10px 20px rgba(0,0,0,.18); }
+    .iphone::before, .iphone::after { content: ''; position: absolute; width: 3px; border-radius: 2px; background: #2a2a2d; }
+    .iphone::before { left: -3px; top: 132px; height: 64px; box-shadow: 0 -46px 0 -10px #2a2a2d; }
+    .iphone::after { right: -3px; top: 168px; height: 92px; }
+    .screen { position: relative; height: 100%; border-radius: 44px; overflow: hidden; background: #F2F2F4; color: #1c1c1e; font-size: 12px; }
+    .feed { position: absolute; inset: 0; overflow-y: auto; scroll-snap-type: y proximity; scroll-behavior: smooth; scrollbar-width: none; --scr-h: 602px; }
+    .feed::-webkit-scrollbar { display: none; }
+    .feed:focus-visible { outline: none; }
+    .mode { position: relative; min-height: var(--scr-h); scroll-snap-align: start; }
+    .mode + .mode { border-top: 6px solid #E4DADF; }
+    .feed .scr { position: relative; inset: auto; min-height: var(--scr-h); overflow: visible; animation: none; }
+    .mode.off::after { content: 'Not in this campaign · add it in step 3'; position: absolute; left: 50%; bottom: 92px; translate: -50% 0; z-index: 7; white-space: nowrap;
+      font-size: 10px; font-weight: 600; padding: .25rem .6rem; border-radius: 999px; background: rgba(28,8,18,.78); color: #F3D58A; }
+    .scr { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; animation: fade .35s ease; }
+    .scr::-webkit-scrollbar { display: none; }
+    .island { position: absolute; top: 11px; left: 50%; translate: -50% 0; width: 94px; height: 28px; border-radius: 20px; background: #000; z-index: 6; }
+    .sbar { position: sticky; top: 0; z-index: 5; flex: none; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 4px 26px 0 32px; font: 600 14px Outfit, system-ui; color: var(--sb, #111); background: var(--sbg, transparent); }
+    .sbar span:last-child { display: inline-flex; gap: 5px; align-items: center; font-size: 11px; }
+    .home-ind { position: absolute; bottom: 8px; left: 50%; translate: -50% 0; width: 110px; height: 5px; border-radius: 3px; background: var(--hi, #111); z-index: 6; }
+    .apphd { flex: none; display: flex; align-items: center; gap: 8px; padding: 6px 14px 10px; }
+    .apphd b { font-size: 15px; }
+    .apphd .ico { margin-left: auto; display: flex; gap: 14px; color: #555; }
+    .pv-tag { display: inline-block; font-size: 9.5px; padding: .1rem .45rem; border-radius: 4px; background: #E8F0FE; color: #1A56C4; margin-left: 6px; vertical-align: 2px; font-weight: 600; }
+    /* WhatsApp */
+    .wa-head { flex: none; display: flex; align-items: center; gap: 8px; padding: 4px 12px 10px; background: #fff; border-bottom: 1px solid #e6e6e6; }
+    .wa-head .av, .sms-av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--plum); color: #fff; font-weight: 700; flex: none; }
+    .wa-head small { display: block; font-size: 10px; color: #667; }
+    .wa-head .ico { margin-left: auto; display: flex; gap: 16px; color: #128C7E; font-size: 14px; }
+    .wa-chat { flex: 1; padding: 10px 10px 70px; background: #EFE7DD radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px) 0 0 / 14px 14px; }
+    .day { display: table; margin: 4px auto 10px; font-size: 10px; padding: .2rem .6rem; border-radius: 6px; background: #fff; color: #667; box-shadow: 0 1px 1px rgba(0,0,0,.06); }
+    .wa-chat .bubble { background: #fff; border-radius: 4px 12px 12px 12px; padding: 5px; max-width: 92%; }
+    .wa-chat .bubble .pv-img { border-radius: 8px; }
+    .wa-chat .bubble .txt { padding: 6px 5px 2px; }
+    .meta-t { display: block; text-align: right; font-size: 9px; color: #889; margin-top: 2px; }
+    .inputbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; display: flex; align-items: center; gap: 8px; padding: 8px 12px 22px; background: rgba(246,246,246,.94); }
+    .inputbar span { flex: 1; padding: .45rem .8rem; border-radius: 999px; background: #fff; border: 1px solid #e3e3e3; color: #999; font-size: 11.5px; }
+    .inputbar i { color: #128C7E; font-size: 15px; }
+    /* SMS / iMessage */
+    .sms-head { flex: none; text-align: center; padding: 0 12px 10px; border-bottom: 1px solid #e3e3e5; background: rgba(250,250,252,.95); }
+    .sms-head .sms-av { margin: 0 auto 4px; }
+    .sms-head b { font-size: 11.5px; font-weight: 500; }
+    .sms-chat { flex: 1; padding: 12px 12px 70px; background: #fff; }
+    .sms-chat .bubble { background: #E9E9EB; border-radius: 18px 18px 18px 6px; }
+    /* Lock screen */
+    .lock { flex: 1; color: #fff; background: radial-gradient(120% 70% at 50% 0%, #8A3A60 0%, #4A1A33 45%, #1C0812 100%); padding-bottom: 60px; }
+    .lock .lk { text-align: center; font-size: 13px; opacity: .85; }
+    .lock .date { text-align: center; font-size: 13px; font-weight: 500; opacity: .9; margin-top: 4px; }
+    .lock .time { text-align: center; font: 600 64px/1 Outfit, system-ui; letter-spacing: -.02em; margin: 2px 0 26px; }
+    .lock .ntf { margin: 0 10px; }
+    .lock .ntf + .ntf { margin-top: -14px; transform: scale(.94); opacity: .55; position: relative; z-index: -1; }
+    .lock-btns { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; justify-content: space-between; padding: 0 34px; }
+    .lock-btns span { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.18); backdrop-filter: blur(8px); font-size: 14px; }
+    /* Brand app home (in-app) */
+    .ah { flex: none; color: #fff; background: linear-gradient(160deg, var(--plum), var(--wine-2)); border-radius: 0 0 26px 26px; padding-bottom: 14px; }
+    .ah-row { display: flex; align-items: center; gap: 10px; padding: 2px 14px 0; }
+    .ah-av { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.4); font-weight: 600; font-size: 14px; flex: none; }
+    .ah-row b { display: block; font-size: 14px; } .ah-row small { font-size: 11px; opacity: .85; }
+    .ah-ico { margin-left: auto; display: flex; gap: 6px; }
+    .ah-ico span { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: rgba(255,255,255,.16); font-size: 12px; }
+    .ah-body { padding: 12px 12px 74px; display: flex; flex-direction: column; gap: 12px; }
+    .banner { position: relative; display: grid; grid-template-columns: 1fr 44%; align-items: center; gap: 6px; padding: 12px; border-radius: 16px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.07); overflow: hidden; }
+    .banner h4 { font: 700 15px/1.15 Outfit, system-ui; color: var(--wine); text-transform: uppercase; letter-spacing: .01em; }
+    .banner p { font-size: 10px; color: #666; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .banner .code { display: inline-block; margin-top: 6px; font: 600 10px 'IBM Plex Mono', monospace; padding: .15rem .45rem; border-radius: 5px; background: #FBF1DC; color: #8C6A22; border: 1px dashed #E8C27A; }
+    .banner .pv-cta { margin-top: 8px; padding: .38rem .7rem; font-size: 10.5px; }
+    .banner .pv-img { aspect-ratio: 1; border-radius: 12px; }
+    .chips2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .chips2 span { display: flex; align-items: center; gap: 7px; padding: 8px 9px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.05); font-size: 11px; font-weight: 500; }
+    .chips2 i.b { width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: var(--plum); color: #fff; font-size: 10px; font-style: normal; }
+    .chips2 .fa-chevron-right { margin-left: auto; color: #aaa; font-size: 9px; }
+    .sec-t { font-size: 13px; font-weight: 600; margin: 2px 2px -4px; }
+    .hscroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -12px; padding: 2px 12px; }
+    .pcard { position: relative; flex: 0 0 118px; border-radius: 12px; background: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .pcard .pv-img { aspect-ratio: 1; border-radius: 0; }
+    .pcard div { padding: 6px 8px 8px; }
+    .pcard b { display: block; font-size: 10.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pcard small { font-size: 9.5px; color: var(--plum); font-weight: 600; }
+    .tabbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; display: flex; justify-content: space-around; padding: 9px 10px 22px; background: rgba(255,255,255,.96); border-top: 1px solid #eee; color: #999; font-size: 15px; }
+    .tabbar .on { color: var(--plum); }
+    .pv-body { padding: 10px 12px 16px; animation: fade .35s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+    .pv-img { width: 100%; aspect-ratio: 4 / 3; border-radius: 12px; object-fit: contain; background: radial-gradient(circle at 50% 40%, #FFFFFF, #F3E3EA); display: block; }
+    .pv-cta { display: inline-block; margin-top: 10px; padding: .5rem .9rem; border-radius: 8px; background: var(--plum); color: #fff; font-weight: 600; font-size: 11.5px; }
+    .em-from { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .em-av { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--plum); color: #fff; font-weight: 700; font-size: 12px; flex: none; }
+    .em-subj { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+    .em-card { background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .em-card h4 { font-family: Outfit, system-ui, sans-serif; font-size: 16px; font-weight: 700; margin: 10px 0 4px; color: var(--ink); }
+    .em-card p { color: #555; line-height: 1.45; white-space: pre-wrap; }
+    .em-foot { font-size: 9px; color: #999; margin-top: 10px; text-align: center; }
+    .bubble { max-width: 88%; padding: 8px 10px; border-radius: 14px 14px 14px 4px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.08); line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+    .wa-btn { display: block; text-align: center; margin-top: 6px; padding: 7px; border-radius: 10px; background: #fff; color: #128C7E; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+    .ntf { display: flex; gap: 8px; padding: 10px; border-radius: 16px; background: rgba(255,255,255,.88); color: #222; backdrop-filter: blur(10px); }
+    .ntf .app { width: 26px; height: 26px; border-radius: 7px; background: var(--plum); color: var(--gold-lt); display: grid; place-items: center; font-size: 12px; flex: none; }
+    .ntf b { display: block; font-size: 12px; } .ntf p { font-size: 11px; color: #444; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .ntf img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex: none; background: #F3E3EA; }
+    .pv-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 12px; }
+
+    .sum { padding: 16px 18px; }
+    .sum h3 { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .sum dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 12.5px; }
+    .sum dt { color: var(--muted); } .sum dd { text-align: right; font-weight: 500; min-width: 0; overflow-wrap: anywhere; }
+    .errs { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: rgba(163,48,31,.06); border: 1px solid rgba(163,48,31,.25); color: var(--bad); font-size: 12px; }
+    .errs li { margin-left: 16px; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; padding: .7rem .9rem; border-radius: 12px; font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: #fff; color: var(--ink); transition: transform .2s var(--ease), box-shadow .2s, background .2s; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(59,39,51,.08); }
+    .btn.primary { grid-column: 1 / -1; padding: .85rem; font-size: 14px; border: 0; color: var(--wine); background: linear-gradient(135deg, var(--gold-lt), var(--gold)); box-shadow: 0 10px 22px rgba(201,162,74,.35); }
+    .btn.primary:hover { box-shadow: 0 14px 28px rgba(201,162,74,.45); }
+    .btn.danger { grid-column: 1 / -1; color: var(--bad); border-color: rgba(163,48,31,.35); }
+    .btn.danger:hover { background: rgba(163,48,31,.06); }
+    .note { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+
+    /* History */
+    .hist { margin-top: 24px; overflow: hidden; }
+    .hist-head { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    #histBody tr:not(.active):hover td { background: #FFFBF6; }
+    .unavail { display: grid; justify-items: center; gap: 6px; color: var(--muted); }
+    .unavail i { font-size: 20px; color: var(--mauve, #C59FB0); }
+    .unavail b { color: var(--ink); font-size: 13.5px; }
+    .unavail .link { margin-top: 2px; }
+    .hist-head h2 { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .tbl-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    th { text-align: left; padding: 10px 16px; font: 500 10px 'IBM Plex Mono', monospace; text-transform: uppercase; color: var(--muted); background: var(--raised); white-space: nowrap; }
+    td { padding: 11px 16px; border-top: 1px solid var(--line); vertical-align: middle; }
+    .st { display: inline-flex; align-items: center; gap: .35rem; padding: .2rem .6rem; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .st.draft { background: var(--raised); color: var(--muted); }
+    .row-act { display: flex; gap: 6px; justify-content: flex-end; }
+    .row-act button { padding: .3rem .6rem; border-radius: 8px; font-size: 11.5px; border: 1px solid var(--line); }
+    .row-act button:hover { border-color: var(--plum); color: var(--plum); }
+    .empty-row { padding: 26px; text-align: center; color: var(--muted); font-size: 13px; }
+    .hist-filters { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: flex-end; padding: 12px 20px; border-bottom: 1px solid var(--line); background: #FFFDF9; }
+    .hf { display: flex; flex-direction: column; gap: 4px; font: 600 10px 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .hf input[type=date] { border: 1.5px solid var(--line); border-radius: 10px; padding: .4rem .6rem; font: 500 12.5px Outfit, system-ui, sans-serif; color: var(--ink); background: #fff; }
+    .hf input[type=date]:focus { border-color: var(--plum); outline: 0; }
+    details.ms { position: relative; }
+    details.ms > summary { list-style: none; cursor: pointer; background: #fff; border: 1.5px solid var(--line); border-radius: 10px; padding: .42rem .7rem;
+      font: 500 12.5px Outfit, system-ui, sans-serif; text-transform: none; letter-spacing: normal; color: var(--ink); min-width: 140px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    details.ms > summary::-webkit-details-marker { display: none; }
+    details.ms[open] > summary { border-color: var(--plum); }
+    details.ms .ms-pop { position: absolute; z-index: 30; top: calc(100% + 4px); left: 0; min-width: 200px; max-height: 260px; overflow: auto; background: #fff;
+      border: 1px solid var(--line); border-radius: 12px; padding: .35rem; box-shadow: 0 12px 28px rgba(107,58,85,.15); }
+    details.ms label.opt { display: flex; gap: .5rem; align-items: center; padding: .3rem .4rem; border-radius: 6px; font: 400 12.5px Outfit, system-ui, sans-serif;
+      text-transform: none; letter-spacing: normal; color: var(--ink); cursor: pointer; }
+    details.ms label.opt:hover { background: var(--raised); }
+    details.ms label.opt.all { font-weight: 600; border-bottom: 1px solid var(--line); margin-bottom: .2rem; }
+    .hist-pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; padding: 10px 20px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+    .hist-pager:empty { display: none; }
+    .hist-pager button { padding: .3rem .75rem; border-radius: 8px; font-size: 11.5px; border: 1px solid var(--line); background: #fff; color: var(--plum); font-weight: 600; }
+    .hist-pager button:disabled { opacity: .45; cursor: default; }
+
+    .sample-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; padding: 12px 14px 12px 12px; border-radius: 14px;
+      background: linear-gradient(90deg, #FBF1DC, #FFF8EC); border: 1px solid #E8C27A; color: #6E4C10; font-size: 13px; }
+    .sample-bar p { flex: 1 1 360px; min-width: 0; }
+    .sample-bar .sb-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: #fff; color: #C9A24A; border: 1px solid #E8C27A; flex: none; }
+    .sample-bar .btn { padding: .55rem .9rem; }
+    .next-bar { background: linear-gradient(90deg, #EAF7F0, #F5FBF7); border-color: #A9D8BD; color: #1F6B45; }
+    .next-bar .sb-ic { color: #1F6B45; border-color: #A9D8BD; }
+    body.booting #nextBar { display: none; }
+    /* Until the campaign list arrives: no sample flash before the newest campaign opens */
+    .boot-note { display: none; min-height: 220px; place-items: center; margin-bottom: 18px; color: var(--muted); font-size: 13px; }
+    .boot-note i { margin-right: 8px; color: var(--plum); }
+    body.booting .boot-note { display: grid; }
+    body.booting #noDraft, body.booting #studio { display: none; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .toast { position: fixed; left: 50%; bottom: 24px; z-index: 99; translate: -50% 20px; opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 10px; max-width: min(560px, calc(100vw - 32px));
+      padding: 12px 16px; border-radius: 14px; background: var(--wine); color: #F7EAF0; font-size: 13px; box-shadow: 0 16px 34px rgba(0,0,0,.3); transition: opacity .3s, translate .4s var(--ease); }
+    .toast.on { opacity: 1; translate: -50% 0; }
+    .toast i { color: var(--gold-lt); }
+
+    /* Campaign status pills, budget + tracking tiles */
+    .st.processing { background: #FFF7E0; color: #8A5A00; }
+    .st.ranked, .st.configured { background: #FBF1DC; color: #8C6A22; }
+    .st.launched { background: #EAF7F0; color: #1F6B45; }
+    .st.exported { background: #F3EFFB; color: #5B4B8A; }
+    .st.error, .st.ignored { background: rgba(163,48,31,.08); color: var(--bad); }
+    .st-head { margin-left: auto; }
+    .step-head .st-head + p { margin-left: 10px; }
+    .notice { margin-top: 12px; padding: 10px 12px; border-radius: 10px; font-size: 12px; }
+    .notice.wait { background: #FFF7E0; border: 1px solid #E8C46A; color: #6B4A00; }
+    .notice.bad { background: rgba(163,48,31,.06); border: 1px solid rgba(163,48,31,.25); color: var(--bad); }
+    .src-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .ctile:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+    .tile { padding: 9px 11px; border-radius: 12px; background: #fff; border: 1px solid var(--line); min-width: 0; }
+    .tile span { display: block; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    .tile b { display: block; font: 600 15px 'IBM Plex Mono', monospace; color: var(--ink); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tile small { display: block; font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .rec { padding: 14px 16px; border-radius: 14px; border: 1.5px solid var(--gold); background: linear-gradient(90deg, #FBF1DC, #FFF8EC); margin-bottom: 14px; }
+    .rec-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .rec-top .big { font: 600 24px 'IBM Plex Mono', monospace; color: var(--ink); margin-top: 2px; }
+    .rec-top .big small { font-size: 12px; color: var(--muted); font-weight: 500; }
+    .rec .range { font-size: 11.5px; color: #6E4C10; margin-top: 2px; }
+    .rec-bar { margin-top: 8px; }
+    .rec-bar .row { display: flex; justify-content: space-between; font-size: 11.5px; }
+    .rec-bar .track { height: 6px; border-radius: 6px; background: rgba(255,255,255,.7); overflow: hidden; margin-top: 3px; }
+    .rec-bar .track i { display: block; height: 100%; background: var(--plum); border-radius: 6px; }
+    .rec ul { margin-top: 8px; padding-left: 16px; font-size: 11.5px; color: #6E4C10; }
+    .sub-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 16px 0 8px; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .sub-h em { font-style: normal; text-transform: none; letter-spacing: 0; font-weight: 400; }
+    .sim { display: inline-flex; align-items: center; gap: .3rem; padding: .12rem .5rem; border-radius: 999px; font-size: 10px; font-weight: 600; text-transform: none; letter-spacing: 0; background: #FBF1DC; color: #8C6A22; border: 1px solid #E8C27A; }
+    .sim.act { background: #E8F3EA; color: #2F6B3D; border-color: #A8D2B1; }
+    .rstat { display: inline-block; padding: .1rem .5rem; border-radius: 999px; font: 600 10.5px 'Outfit', sans-serif; }
+    .rstat.ready { background: #E8F3EA; color: #2F6B3D; } .rstat.low { background: #FFF4DA; color: #8C6A22; }
+    .rstat.out { background: rgba(163,48,31,.08); color: var(--bad); } .rstat.not_in_catalog { background: var(--raised); color: var(--muted); }
+    .mini { width: 100%; font-size: 11.5px; margin-top: 8px; }
+    .an { padding: 18px 20px; margin-bottom: 22px; scroll-margin-top: 12px; }
+    .an-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .an-head h2 { font-size: 16px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+    .an-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+    @media (max-width: 900px) { .an-grid { grid-template-columns: 1fr; } }
+    .an-box { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: #fff; min-width: 0; }
+    .an-box h3 { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: flex; gap: 6px; align-items: center; }
+    .an-chart { position: relative; height: 220px; }
+    .an-err { margin-top: 10px; font-size: 12px; color: var(--bad); }
+    .pace-row { display: flex; justify-content: space-between; font-size: 11.5px; margin: 8px 0 4px; }
+    .pace-track { height: 8px; border-radius: 8px; background: var(--raised); overflow: hidden; }
+    .pace-track i { display: block; height: 100%; background: var(--plum); border-radius: 8px; }
+    .an-ins { list-style: none; padding: 0; margin: 0; font-size: 12px; color: #552C43; display: grid; gap: 8px; }
+    .an-ins li { display: flex; gap: 8px; } .an-ins i { color: var(--plum); margin-top: 2px; }
+    .start-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 24px; padding: 14px 18px; border: 1.5px solid var(--gold); background: linear-gradient(90deg, #FBF1DC, #FFF8EC); }
+    .start-bar .sb-txt { flex: 1 1 320px; min-width: 0; }
+    .start-bar .sb-txt b { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; color: var(--ink); }
+    .start-bar .sb-txt p { font-size: 12px; color: #6E4C10; margin-top: 2px; }
+    .start-bar .btn.primary { padding: .75rem 1.2rem; }
+    .insights { margin-top: 24px; padding: 18px 20px; }
+    .insights .an-chart { height: 240px; }
+    .ins-empty { padding: 26px; text-align: center; color: var(--muted); font-size: 13px; border: 1px dashed var(--line); border-radius: 14px; }
+    .mini th { padding: 6px 10px; }
+    .mini td { padding: 7px 10px; font-family: 'IBM Plex Mono', monospace; }
+    .mini td:first-child { font-family: inherit; font-weight: 600; }
+    .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filters button { padding: .3rem .7rem; border-radius: 999px; font-size: 11.5px; border: 1px solid var(--line); background: #fff; color: var(--muted); }
+    .filters button[aria-pressed="true"] { background: var(--plum); border-color: var(--plum); color: #fff; }
+    tr.active td { background: #FBF5F7; }
+    .pc-rank { position: absolute; top: 5px; left: 5px; z-index: 1; font: 600 9px 'IBM Plex Mono', monospace; padding: .1rem .35rem; border-radius: 999px; background: rgba(20,6,13,.6); color: #fff; }
+    fieldset { border: 0; min-width: 0; }
+    fieldset:disabled .step { opacity: .72; }
+    .mode.soon::after { content: 'Preview only · not sent by SuffAI yet'; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body class="booting">
+  <script>if (!SuffaiSession.requireAuth('campaigns')) { /* redirected */ }</script>
+
+  <header class="hero">
+    <div class="hero-in">
+      <div class="hero-title">
+        <button type="button" class="back" id="backBtn"><i class="fa-solid fa-chevron-left"></i> Back to Ads Lab</button>
+        <p class="eyebrow">1P Campaign Studio · <span class="sim" style="background:rgba(255,255,255,.1);color:#F3D58A;border-color:rgba(243,213,138,.5)"><i class="fa-solid fa-flask"></i> Simulated Delivery &amp; Outcomes</span></p>
+        <h1 id="heroTitle">You don't have any active campaigns yet</h1>
+        <p class="hero-sub" id="heroSub">Rank SKUs in Ads Lab, then reach that audience on In-app, WhatsApp and SMS.</p>
+      </div>
+      <div class="hero-stats" aria-live="polite">
+        <div class="hstat"><span>Reachable Customers</span><b id="hsCustomers">—</b></div>
+        <div class="hstat"><span>Ranked SKUs</span><b id="hsCreatives">0</b></div>
+        <div class="hstat"><span>Best Fit</span><b id="hsBest">—</b></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="card boot-note" id="bootNote" role="status"><span><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>Loading your campaigns…</span></p>
+    <section id="noDraft" class="sample-bar" role="note">
+      <span class="sb-ic"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+      <p><b>You're looking at a sample campaign.</b> Pick one of your campaigns below, or rank SKUs in Ads Lab and choose <b>Set Up 1P Campaign</b>.</p>
+      <button type="button" class="btn" id="goAds">Open Ads Lab <i class="fa-solid fa-arrow-right"></i></button>
+    </section>
+    <section id="nextBar" class="sample-bar next-bar" role="status" hidden>
+      <span class="sb-ic"><i class="fa-solid fa-rocket"></i></span>
+      <p><b id="nextBarTitle">This campaign is running (simulated).</b> Track it below, or start a fresh campaign with a new audience and SKUs.</p>
+      <button type="button" class="btn" id="newCampaignBtn"><i class="fa-solid fa-plus"></i> Create Another Campaign</button>
+    </section>
+
+    <div class="grid" id="studio">
+      <div>
+
+        <form id="form" novalidate>
+          <fieldset id="configFields">
+            <section class="card step" id="s1">
+              <div class="step-head"><span class="num">1</span><h2>Audience</h2><span class="st st-head" id="statusPill">Sample</span><p>From Ads Lab</p></div>
+              <div class="aud-row">
+                <div class="chips" id="audChips"></div>
+                <button type="button" class="link" id="editAud">Change in Ads Lab</button>
+              </div>
+              <p class="src-note" id="sourceNote" hidden></p>
+              <div class="notice wait" id="processingNote" hidden><i class="fa-solid fa-circle-notch fa-spin"></i> The extract &amp; rank job for this campaign is still running. You can configure it once it completes, or stop it with <b>Cancel Ranking Job</b> in the Summary.</div>
+              <div class="notice bad" id="errorNote" hidden>This campaign could not be ranked. Submit a new ranking job from Ads Lab.</div>
+            </section>
+
+            <section class="card step" id="s2">
+              <div class="step-head"><span class="num">2</span><h2>Creatives<span class="req" aria-hidden="true">*</span></h2><p id="crCount">Pick one creative</p></div>
+              <div class="cgrid" id="crGrid" role="group" aria-label="Choose creatives"></div>
+              <div class="seg" role="group" aria-label="Delivery mode">
+                <button type="button" data-mode="best" aria-pressed="true">Best Creative Only</button>
+                <button type="button" data-mode="ab" aria-pressed="false">A/B Test Selected</button>
+              </div>
+              <p class="hint" id="modeHint"></p>
+              <p class="ferr" id="eCreatives"></p>
+            </section>
+
+            <section class="card step" id="s3">
+              <div class="step-head"><span class="num">3</span><h2>Objective &amp; Channels<span class="req" aria-hidden="true">*</span></h2><p>Your first-party channels</p></div>
+              <div class="radios" role="radiogroup" aria-label="Campaign objective" id="objGroup" style="margin-bottom:14px"></div>
+              <div class="chgrid" id="chGrid" role="group" aria-label="Choose channels"></div>
+              <p class="ferr" id="eChannels"></p>
+            </section>
+
+            <section class="card step" id="s4">
+              <div class="step-head"><span class="num">4</span><h2>Message</h2><p>Placeholders: {first_name}, {brand}, {link}</p></div>
+              <div class="fields">
+                <label class="f full">Campaign Name<span class="req" aria-hidden="true">*</span><input class="in" id="fName" maxlength="120" autocomplete="off" required><span class="ferr" id="eName"></span></label>
+                <label class="f full">Headline<span class="req" aria-hidden="true">*</span> <span class="count" id="cHead">0/90</span><input class="in" id="fHead" maxlength="90" autocomplete="off" required><span class="ferr" id="eHead"></span></label>
+                <label class="f full" id="waWrap" hidden>WhatsApp Message<span class="req" aria-hidden="true">*</span> <span class="count" id="cWa">0/1000</span><textarea class="in" id="fWa" maxlength="1000" required></textarea><span class="ferr" id="eWa"></span></label>
+                <label class="f full" id="smsWrap" hidden>SMS Message<span class="req" aria-hidden="true">*</span> <span class="count" id="cSms">0/160</span><textarea class="in" id="fSms" maxlength="160" required></textarea><span class="ferr" id="eSms"></span></label>
+                <label class="f">Button Text <span class="count">optional</span><input class="in" id="fCta" maxlength="24" value="Shop now" autocomplete="off"></label>
+                <label class="f">Offer Code <span class="count">optional</span><input class="in mono" id="fCode" maxlength="15" autocomplete="off" placeholder="e.g. NEW15"><span class="ferr" id="eCode"></span></label>
+                <label class="f full">Landing Page URL <span class="count">optional</span><input class="in" id="fUrl" type="url" inputmode="url" placeholder="https://yourstore.com/collection" autocomplete="off"><span class="ferr" id="eUrl"></span>
+                  <span class="url-out" id="urlOut"></span></label>
+                <label class="switch full"><input type="checkbox" id="fUtm" checked> Add SuffAI UTM tags to the link</label>
+              </div>
+            </section>
+
+            <section class="card step" id="s5">
+              <div class="step-head"><span class="num">5</span><h2>Budget &amp; Schedule</h2><p id="tzNote"></p></div>
+              <div class="rec" id="budgetCard">
+                <div class="rec-top">
+                  <div>
+                    <label class="f">Recommended Budget <span class="sim">Simulated</span></label>
+                    <p class="big"><span id="recBudget">—</span> <small id="recDaily"></small></p>
+                    <p class="range" id="recRange"></p>
+                  </div>
+                  <button type="button" class="btn" id="useRecBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Use Recommended</button>
+                </div>
+                <div id="recBreakdown"></div>
+                <ul id="recReasons"></ul>
+              </div>
+              <div class="fields">
+                <label class="f">Media Budget (₹)<span class="req" aria-hidden="true">*</span><input class="in" id="campaignBudget" type="number" min="5000" step="500" required><span class="ferr" id="eBudget"></span></label>
+                <label class="f">Duration (Days)<span class="req" aria-hidden="true">*</span><input class="in" id="campaignDays" type="number" min="1" max="365" step="1" value="14" required><span class="ferr" id="eDays"></span></label>
+                <label class="f">Start Date <span class="count">optional</span><input class="in" id="campaignStart" type="date"><span class="ferr" id="eStart"></span></label>
+                <label class="f">Daily Budget<span class="in mono" id="dailyBudget" style="display:block;background:var(--raised)">—</span></label>
+                <label class="f">SuffAI 1P Platform Fee <span class="sim">Cost-model estimate</span><input class="in" id="platformFee" type="number" min="1" step="100"><span class="ferr" id="ePlatformFee"></span><small id="feeRange"></small></label>
+                <label class="f">Total Checkout<span class="in mono" id="totalCheckout" style="display:block;background:var(--raised)">—</span><small>Media spend + SuffAI platform fee. The fee model learns from accepted prices; it is not trained ML yet.</small></label>
+                <label class="f">Frequency Cap<select class="in" id="fCap"><option value="1d">1 message per day</option><option value="3d" selected>1 message per 3 days</option><option value="7d">1 message per week</option></select></label>
+                <label class="switch" style="align-self:end;padding-bottom:10px"><input type="checkbox" id="fQuiet" checked> Respect quiet hours (9 PM – 9 AM)</label>
+              </div>
+              <p class="sub-h">Estimated Outcomes <span class="sim">Simulated</span><em id="estimateStatus"></em></p>
+              <div class="tiles" id="estimateGrid"></div>
+              <div class="tbl-wrap" id="estimateChannels"></div>
+            </section>
+          </fieldset>
+        </form>
+      </div>
+
+      <aside class="side">
+        <section class="card pv" aria-label="Preview">
+          <div class="pv-head"><h3>Live Preview</h3><div class="pv-tabs" id="pvTabs" role="tablist"></div></div>
+          <div class="iphone"><div class="screen"><span class="island" aria-hidden="true"></span><div id="screen" class="feed" tabindex="0" aria-label="Preview of every channel. Scroll to see each one."></div><span class="home-ind" aria-hidden="true"></span></div></div>
+          <div class="pv-vars" id="pvVars" role="group" aria-label="Preview variant"></div>
+          <p class="pv-note" id="pvNote"></p>
+        </section>
+        <section class="card sum" aria-label="Summary">
+          <h3>Summary</h3>
+          <dl id="sumList"></dl>
+          <ul class="errs" id="errs" hidden aria-live="polite"></ul>
+          <div class="actions" id="actionBar">
+            <button type="button" class="btn primary" id="launchBtn"><i class="fa-solid fa-rocket"></i> Confirm &amp; Start Campaign</button>
+            <button type="button" class="btn" id="saveBtn"><i class="fa-regular fa-floppy-disk"></i> Save Draft</button>
+            <button type="button" class="btn" id="discardBtn"><i class="fa-regular fa-trash-can"></i> Discard</button>
+          </div>
+          <div class="actions" id="rankingBar" hidden>
+            <button type="button" class="btn danger" id="cancelRankBtn"><i class="fa-solid fa-circle-stop"></i> Cancel Ranking Job</button>
+          </div>
+          <p class="note">The campaign stays a draft until you confirm. Running is simulated: no messages or ads are sent to customers. Delivery, cost and outcome metrics are generated for tracking.</p>
+        </section>
+      </aside>
+    </div>
+
+    <section class="why" id="heroMatrixWrap">
+      <h2 class="why-h">Why Run It as a 1P Campaign</h2>
+      <div class="matrix" id="heroMatrix">
+        <table>
+          <thead><tr><th scope="col"></th><th scope="col" class="us">1P Campaign on SuffAI</th><th scope="col">Paid Social Ads</th></tr></thead>
+          <tbody>
+            <tr><td>Media Cost</td><td class="us"><i class="fa-solid fa-check"></i>Your own channels — pay per message, not per auction</td><td class="them"><i class="fa-solid fa-xmark"></i>Pay per impression or click</td></tr>
+            <tr><td>Who Sees It</td><td class="us"><i class="fa-solid fa-check"></i>The exact segment you ranked in Ads Lab</td><td class="them"><i class="fa-solid fa-xmark"></i>Platform lookalike audiences</td></tr>
+            <tr><td>Creative</td><td class="us"><i class="fa-solid fa-check"></i>The best-fit SKU for that segment</td><td class="them"><i class="fa-solid fa-xmark"></i>One ad for a broad audience</td></tr>
+            <tr><td>Personalisation</td><td class="us"><i class="fa-solid fa-check"></i>First name, offer code and send time</td><td class="them"><i class="fa-solid fa-xmark"></i>Limited to platform options</td></tr>
+            <tr><td>Customer Data</td><td class="us"><i class="fa-solid fa-check"></i>Stays first-party, with you</td><td class="them"><i class="fa-solid fa-xmark"></i>Shared with the ad platform</td></tr>
+            <tr><td>Frequency</td><td class="us"><i class="fa-solid fa-check"></i>Caps and quiet hours you control</td><td class="them"><i class="fa-solid fa-xmark"></i>Decided by the platform</td></tr>
+          </tbody>
+        </table>
+        <div class="matrix-cta"><span id="matrixLine">Start in Ads Lab: pick an audience and rank your SKUs.</span><button type="button" id="startBtn"><i class="fa-solid fa-arrow-right"></i> Go to Ads Lab</button></div>
+      </div>
+    </section>
+
+    <section class="card start-bar" id="startBar" hidden aria-label="Start campaign">
+      <div class="sb-txt">
+        <b><span id="sbName">—</span> <span class="st" id="sbStatus"></span></b>
+        <p id="sbHint">All details filled? Start it now. Running is simulated: nothing is sent to customers.</p>
+      </div>
+      <button type="button" class="btn primary" id="launchBtn2"><i class="fa-solid fa-rocket"></i> Create &amp; Start Campaign</button>
+    </section>
+
+    <section class="card hist">
+      <div class="hist-head">
+        <h2>Your 1P Campaigns <span class="chip" id="histCount">0</span></h2>
+        <div class="filters">
+          <button type="button" id="hfClear">Clear Filters</button>
+          <button type="button" id="refreshBtn" aria-label="Refresh campaigns"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+      </div>
+      <div class="hist-filters" id="histFilters" role="group" aria-label="Filter campaigns">
+        <div class="hf" id="hfBrandWrap" hidden><span>Brand</span><details class="ms" id="hfBrand"></details></div>
+        <div class="hf"><span>Status</span><details class="ms" id="hfStatus"></details></div>
+        <div class="hf"><span>PIN Code</span><details class="ms" id="hfPin"></details></div>
+        <div class="hf"><span>Channel</span><details class="ms" id="hfChannel"></details></div>
+        <div class="hf"><span>RFM Segment</span><details class="ms" id="hfRfm"></details></div>
+        <label class="hf"><span>Created From</span><input type="date" id="hfFrom" /></label>
+        <label class="hf"><span>Created To</span><input type="date" id="hfTo" /></label>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Campaign</th><th>Audience</th><th>Channels</th><th>SKUs</th><th>Budget</th><th>Status</th><th aria-label="Actions"></th></tr></thead>
+        <tbody id="histBody"><tr><td colspan="7" class="empty-row">Loading campaigns…</td></tr></tbody>
+      </table></div>
+      <div class="hist-pager" id="histPager"></div>
+    </section>
+
+    <section class="card insights" id="insightsSection" aria-labelledby="insTitle">
+      <div class="an-head">
+        <div>
+          <h2 id="insTitle"><i class="fa-solid fa-chart-pie" style="color:var(--plum)"></i> Campaign Insights <span class="sim">Simulated</span></h2>
+          <p class="hint" id="insNote">Running campaigns that match the filters above.</p>
+        </div>
+      </div>
+      <div id="insBody">
+        <div class="tiles" id="insTiles"></div>
+        <div class="an-grid">
+          <div class="an-box"><h3>ROAS by Campaign · Top 10 <span class="sim">Simulated</span></h3><div class="an-chart"><canvas id="insRoas"></canvas></div></div>
+          <div class="an-box"><h3>Revenue vs Spend by Campaign (₹) <span class="sim">Simulated</span></h3><div class="an-chart"><canvas id="insRevSpend"></canvas></div></div>
+          <div class="an-box"><h3>Revenue by Channel (₹) <span class="sim">Simulated</span></h3><div class="an-chart"><canvas id="insChannels"></canvas></div></div>
+          <div class="an-box"><h3>Status Mix · Filtered Campaigns</h3><div class="an-chart"><canvas id="insStatus"></canvas></div></div>
+        </div>
+      </div>
+      <p class="ins-empty" id="insEmpty" hidden>No running campaigns match these filters yet. Start one above to see insights.</p>
+    </section>
+
+    <section class="card an" id="analysisSection" hidden aria-labelledby="anTitle">
+      <div class="an-head">
+        <div>
+          <h2 id="anTitle"><i class="fa-solid fa-chart-line" style="color:var(--plum)"></i> Impact &amp; Campaign Analysis <span class="sim">Simulated</span></h2>
+          <p class="hint" id="trackingNote"></p>
+        </div>
+        <button type="button" class="btn" id="anRefreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+      <div class="tiles" id="impactGrid"></div>
+      <p class="an-err" id="anErr" hidden></p>
+      <div class="an-grid">
+        <div class="an-box"><h3>Daily Delivery · Impressions &amp; Clicks <span class="sim">Simulated</span></h3><div class="an-chart"><canvas id="anDelivery"></canvas></div></div>
+        <div class="an-box"><h3>Revenue vs Spend (₹) <span class="sim">Simulated</span></h3><div class="an-chart"><canvas id="anRevenue"></canvas></div></div>
+        <div class="an-box"><h3>Conversions by Channel <span class="sim">Simulated</span></h3><div class="an-chart"><canvas id="anChannels"></canvas></div></div>
+        <div class="an-box"><h3>Budget Pacing <span class="sim">Simulated</span></h3>
+          <div class="pace-row"><span>Spend</span><span class="mono" id="anSpendLabel">—</span></div>
+          <div class="pace-track"><i id="anSpendBar" style="width:0%"></i></div>
+          <div class="pace-row"><span>Schedule</span><span class="mono" id="anScheduleLabel">—</span></div>
+          <div class="pace-track"><i id="anTimeBar" style="width:0%;background:var(--gold)"></i></div>
+          <div class="pace-row" style="color:var(--muted)"><span id="anStart"></span><span id="anEnd"></span></div>
+          <h3 style="margin-top:14px">Insights</h3>
+          <ul class="an-ins" id="anInsights"></ul>
+        </div>
+        <div class="an-box" style="grid-column:1/-1"><h3>Product Fit for This Audience</h3><div class="an-chart" style="height:200px"><canvas id="anSkus"></canvas></div></div>
+      </div>
+      <div class="tbl-wrap"><table class="mini">
+        <thead><tr><th>Channel</th><th>Spend</th><th>Sent</th><th>Delivered</th><th>Reach</th><th>Clicks</th><th>CTR</th><th>Conv.</th><th>Revenue</th><th>ROAS</th></tr></thead>
+        <tbody id="channelTrackBody"></tbody>
+      </table></div>
+    </section>
+    <section class="card an" id="retailSection" hidden aria-labelledby="rtTitle">
+      <div class="an-head">
+        <div style="flex:1 1 320px;min-width:0">
+          <h2 id="rtTitle"><i class="fa-solid fa-store" style="color:var(--plum)"></i> Store Stock &amp; Sales <span class="sim act">Actual (POS)</span></h2>
+          <p class="hint" id="rtNote"></p>
+        </div>
+        <button type="button" class="btn" id="rtRefreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+      <div class="tiles" id="rtTiles"></div>
+      <p class="an-err" id="rtErr" hidden></p>
+      <div class="an-grid">
+        <div class="an-box"><h3>Campaign SKUs at the stores</h3>
+          <div class="tbl-wrap"><table class="mini"><thead><tr><th>SKU</th><th>Catalog SKUs</th><th>Units at stores</th><th>Status</th></tr></thead><tbody id="rtReady"></tbody></table></div></div>
+        <div class="an-box"><h3>Stores</h3>
+          <div class="tbl-wrap"><table class="mini"><thead><tr><th>Store</th><th>PIN</th><th>Campaign units</th></tr></thead><tbody id="rtStores"></tbody></table></div></div>
+      </div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const apiBase = () => (window.DASHBOARD_API || '').replace(/\/$/, '');
+    const endpoint = (path) => apiBase() + path;
+    const session = SuffaiSession.getSession() || {};
+    const CHANNELS = {
+      in_app: { name: 'In-app', ic: 'fa-solid fa-mobile-screen', sub: 'Style Assistant feed · CPM-based' },
+      whatsapp: { name: 'WhatsApp', ic: 'fa-brands fa-whatsapp', sub: '₹0.80 / message · simulated' },
+      sms: { name: 'SMS', ic: 'fa-solid fa-comment-sms', sub: '₹0.20 / message · simulated' },
+    };
+    // Preview-only phone screens: not deliverable by the campaign API yet
+    const PREVIEW_ONLY = { email: 'Email', push: 'Push' };
+    const PV_NAMES = { ...Object.fromEntries(Object.entries(CHANNELS).map(([k, c]) => [k, c.name])), ...PREVIEW_ONLY };
+    const OBJECTIVES = [
+      ['awareness', 'Awareness', 'Reach most of the audience'],
+      ['consideration', 'Consideration', 'Drive product views and clicks'],
+      ['conversion', 'Conversion', 'Fewer, higher-intent customers'],
+    ];
+    const EDITABLE = ['ranked', 'configured', 'exported'];
+    const MAX_CREATIVES = 6;
+    const state = {
+      campaigns: [], histPage: 1, current: null, skus: [], thumbs: {}, rec: null, estimate: null,
+      sourceContext: null, busy: false, pollTimer: null,
+      picked: [], focus: null, mode: 'best', channels: ['in_app'], preview: 'in_app',
+    };
+
+    const inr = (v) => v == null || v === '' || !Number.isFinite(Number(v)) ? '—' : '₹' + Math.round(Number(v)).toLocaleString('en-IN');
+    const num = (v) => v == null || v === '' || !Number.isFinite(Number(v)) ? '—' : Math.round(Number(v)).toLocaleString('en-IN');
+    const pct = (v, d = 2) => v == null || v === '' ? '—' : Number(v).toFixed(d) + '%';
+    const roas = (v) => v == null || v === '' ? '—' : Number(v).toFixed(1) + 'x';
+    const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) || 'campaign';
+    function toast(msg, ic = 'fa-circle-check') {
+      const t = $('toast'); t.innerHTML = `<i class="fa-solid ${ic}"></i><span>${esc(msg)}</span>`;
+      t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 3600);
+    }
+    function goTab(tab, href) {
+      if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'open-tab', tab }, location.origin);
+      else location.href = href;
+    }
+    async function api(path, opts = {}) {
+      let res;
+      try {
+        res = await fetch(endpoint(path), {
+          ...opts,
+          headers: { Accept: 'application/json', ...(opts.body ? { 'Content-Type': 'application/json' } : {}), ...SuffaiSession.authHeaders() },
+        });
+      } catch (_) {
+        throw Object.assign(new Error('Could not reach the server. Check your connection and try again.'), { status: 0 });
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw Object.assign(new Error(SuffaiSession.formatApiDetail(data && data.detail, 'Request failed (HTTP ' + res.status + ')')), { status: res.status });
+      return data;
+    }
+    // 503 = no campaign database behind this backend; 0 = network down. Both mean "storage offline", not "you did something wrong".
+    const storageOffline = (e) => e && (e.status === 503 || e.status === 0);
+    const scrollBehavior = () => (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+    // created_at is an ISO timestamp; show / filter by the viewer's local calendar day, not the UTC one.
+    function localDay(v) {
+      const d = v ? new Date(v) : null;
+      if (!d || isNaN(d)) return String(v || '').slice(0, 10);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    // Remove utm_* params properly (a regex on the raw string broke links like ?utm_source=x&page=2).
+    function stripUtm(raw) {
+      const s = String(raw || '').trim();
+      if (!s) return '';
+      try {
+        const u = new URL(s);
+        [...u.searchParams.keys()].filter(k => /^utm_/i.test(k)).forEach(k => u.searchParams.delete(k));
+        return u.toString().replace(/\?$/, '');
+      } catch (_) { return s; }
+    }
+    const splitList = (v) => String(v ?? '').split(',').map(s => s.trim()).filter(Boolean);
+    function displayGender(g) {
+      const parts = splitList(g);
+      return parts.length ? parts.map(p => p.toLowerCase().startsWith('m') ? 'Male' : p.toLowerCase().startsWith('f') ? 'Female' : p).join(', ') : 'All genders';
+    }
+    function audienceParts(c) {
+      const pins = c.pin_codes || [];
+      return [pins.length ? (pins.length <= 2 ? 'PIN ' + pins.join(', ') : pins.length + ' PINs') : 'No PIN',
+        c.age_group || 'All ages', displayGender(c.gender), c.rfm_segment || 'All RFM'];
+    }
+    function defaultName(c) {
+      const pins = c.pin_codes || [];
+      return `${c.brand_name || 'Brand'} · ${!pins.length ? 'All PINs' : pins.length <= 2 ? pins.join(', ') : pins.length + ' PINs'}${c.rfm_segment ? ' · ' + c.rfm_segment : ''}`;
+    }
+    const campaignTitle = (c) => c.campaign_name || defaultName(c);
+    const statusLabel = (s) => ({ draft: 'Draft', processing: 'Ranking…', ranked: 'Draft · Needs Setup', configured: 'Draft · Needs Setup', launched: 'Running', exported: 'Exported · Draft for 1P', ignored: 'Discarded', error: 'Error' }[s] || s);
+    function todayIso() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    function defaultTemplates(brand, name) {
+      const n = (name || 'our new collection').trim();
+      return {
+        whatsapp: `Hi {first_name}! ${brand} picked styles from ${n} that match your wardrobe. Tap to see your picks: {link}`,
+        sms: `${brand}: styles picked for you from ${n}. See them: {link}`,
+      };
+    }
+    const editable = () => !!(state.current && EDITABLE.includes(state.current.status));
+    const usable = (s) => s.extract_ok && s.process_status !== 'failed' && s.process_status !== 'pending';
+    const skuScore = (s) => s.rank_score != null ? Math.round(Number(s.rank_score)) : (s.pin_fit != null ? Math.round(Number(s.pin_fit) * 100) : null);
+    const skuById = (id) => state.skus.find(s => s.sku_uuid === id);
+    const brandName = () => (state.current && state.current.brand_name) || session.brand_name || 'Your brand';
+
+    function garmentImg(kind, c1, c2, o) {
+      const body = {
+        shirt: 'M72 50L48 62L34 150L50 155L62 98V206H138V98L150 155L166 150L152 62L128 50L112 50L100 70L88 50Z',
+        skirt: 'M70 70H130L164 206Q100 222 36 206Z',
+        tee: 'M76 50L44 66L56 98L70 90V202H130V90L144 98L156 66L124 50Q100 68 76 50Z',
+        dress: 'M82 50Q100 62 118 50L124 104L160 210Q100 224 40 210L76 104Z',
+      }[kind];
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>
+        <path d="M100 40v-9a8 8 0 1 1 8-8" fill="none" stroke="#9C8B94" stroke-width="3" stroke-linecap="round"/><path d="M56 56Q100 34 144 56" fill="none" stroke="#9A6534" stroke-width="7" stroke-linecap="round"/>
+        <path d="${body}" fill="url(#g)" stroke="${o}" stroke-width="1.6" stroke-linejoin="round"/>${kind === 'skirt' ? `<path d="M70 58H130V70H70Z" fill="${c2}" stroke="${o}"/>` : ''}</svg>`;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+    const SAMPLE_CAMPAIGN = { brand_name: 'Your brand', pin_codes: ['560102'], age_group: '25-34', gender: 'F', rfm_segment: 'Loyal', est_audience: null, status: 'sample', channels: ['in_app', 'whatsapp'] };
+    const SAMPLE_SKUS = [
+      ['linen-shirt-beige.jpg', 94, 'shirt', '#F6EAD7', '#E0C9A8', '#8C7052', 'Beige', 'Shirt'],
+      ['pleated-skirt-mustard.jpg', 90, 'skirt', '#E8BC5A', '#B9852A', '#6E4C10', 'Mustard', 'Skirt'],
+      ['graphic-tee-rose.jpg', 86, 'tee', '#EDC3CF', '#C98FA2', '#8E5368', 'Rose', 'T-Shirt'],
+      ['wrap-dress-burgundy.jpg', 81, 'dress', '#9A3657', '#5E1A33', '#3D0F21', 'Burgundy', 'Dress'],
+    ].map(([name, score, kind, c1, c2, o, color, commodity], i) => ({
+      sku_uuid: 'sample-' + i, original_filename: name, extract_ok: true, process_status: 'done', rank: i + 1, rank_score: score,
+      attributes: { color, name: commodity }, thumb: garmentImg(kind, c1, c2, o),
+    }));
+
+    /* Ads Lab hands over local thumbnails for the campaign it just opened; used when the API has no signed image URL. */
+    function readThumbs(campaignId) {
+      try {
+        const h = JSON.parse(localStorage.getItem('suffai_1p_handoff') || 'null');
+        if (!h || h.campaign_id !== campaignId || !Array.isArray(h.creatives)) return {};
+        return Object.fromEntries(h.creatives.filter(c => c.thumb).map(c => [String(c.name).toLowerCase(), c.thumb]));
+      } catch (_) { return {}; }
+    }
+    const brokenImgs = new Set(); // signed URLs that failed (expired / unreachable): fall back instead of retrying
+    const thumbOf = (s) => {
+      if (!s) return '';
+      const url = s.image_url && !brokenImgs.has(s.image_url) ? s.image_url : '';
+      return s.thumb || url || state.thumbs[String(s.original_filename || '').toLowerCase()] || '';
+    };
+    document.addEventListener('error', (e) => {
+      const img = e.target;
+      if (img.tagName !== 'IMG' || !(state.skus || []).some(s => s.image_url === img.getAttribute('src'))) return;
+      brokenImgs.add(img.getAttribute('src'));
+      renderCreatives(); renderPreview();
+    }, true);
+
+    /* ---------- Campaign list ---------- */
+    async function loadCampaigns() {
+      try {
+        const data = await api('/v1/ads-lab/campaigns?limit=200');
+        state.campaigns = (data.campaigns || []).filter(c => c.status !== 'ignored');
+        refreshHistOptions();
+        renderHistory();
+        renderInsights();
+        if (state.current) {
+          const fresh = state.campaigns.find(c => c.campaign_id === state.current.campaign_id);
+          if (fresh && fresh.status !== state.current.status) loadCampaign(fresh.campaign_id);
+        } else if (!loadsInFlight && state.campaigns.length && state.campaigns[0].campaign_id !== autoOpened) {
+          // Showing the sample but the brand has campaigns (opened directly, or one was just created / discarded):
+          // open the newest. Tried once per campaign so a failing load doesn't repeat on every refresh.
+          autoOpened = state.campaigns[0].campaign_id;
+          loadCampaign(autoOpened);
+        }
+        clearTimeout(state.pollTimer);
+        if (state.campaigns.some(c => c.status === 'processing')) state.pollTimer = setTimeout(loadCampaigns, 10000);
+      } catch (e) {
+        clearTimeout(state.pollTimer);
+        $('histCount').textContent = '—';
+        $('histPager').innerHTML = '';
+        const offline = storageOffline(e);
+        $('histBody').innerHTML = `<tr><td colspan="7" class="empty-row"><div class="unavail">
+          <i class="fa-solid ${offline ? 'fa-database' : 'fa-triangle-exclamation'}" aria-hidden="true"></i>
+          <b>${offline ? 'Campaign history is unavailable right now' : 'Could not load your campaigns'}</b>
+          <span>${offline ? 'Campaign storage isn’t connected to this server. You can still explore the sample campaign above.' : esc(e.message)}</span>
+          <button type="button" class="link" data-retry="1">Try again</button></div></td></tr>`;
+        $('insNote').textContent = 'Insights appear once campaign history is available.';
+        $('insBody').hidden = true; $('insEmpty').hidden = true;
+      }
+    }
+    /* ---------- History filters (multi-select dropdowns + created-date range) ---------- */
+    const HIST_PAGE = 10;
+    const STATUS_GROUPS = { Draft: ['draft', 'ranked', 'configured'], Ranking: ['processing'], Running: ['launched'], Exported: ['exported'], Error: ['error'] };
+    const statusGroup = (s) => Object.keys(STATUS_GROUPS).find(k => STATUS_GROUPS[k].includes(s)) || s;
+    const chanName = (ch) => CHANNELS[ch]?.name || ch;
+    function msRender(id, label, options) {
+      const el = $(id);
+      const keep = new Set(msValues(id)), wasOpen = el.open; // the 10s poll re-renders: keep the dropdown open
+      el.dataset.label = label;
+      el.innerHTML = '<summary></summary><div class="ms-pop">' + (options.length
+        ? (options.length > 1 ? '<label class="opt all"><input type="checkbox" data-all="1" /> Select All</label>' : '')
+          + options.map(o => `<label class="opt"><input type="checkbox" value="${esc(o)}"${keep.has(o) ? ' checked' : ''} /> ${esc(o)}</label>`).join('')
+        : '<div class="empty-row" style="padding:8px">No options</div>') + '</div>';
+      el.querySelectorAll('input:not([data-all])').forEach(i => i.addEventListener('change', () => { msSummary(el); applyHistFilters(); }));
+      const all = el.querySelector('input[data-all]');
+      if (all) all.addEventListener('change', () => {
+        el.querySelectorAll('input:not([data-all])').forEach(i => { i.checked = all.checked; });
+        msSummary(el); applyHistFilters();
+      });
+      msSummary(el);
+      el.open = wasOpen && options.length > 0;
+    }
+    function msSummary(el) {
+      if (!el.querySelector('summary')) return; // not rendered yet (campaign list failed to load)
+      const vals = msValues(el.id);
+      const total = el.querySelectorAll('input:not([data-all])').length;
+      const all = el.querySelector('input[data-all]');
+      if (all) { all.checked = total > 0 && vals.length === total; all.indeterminate = vals.length > 0 && vals.length < total; }
+      el.querySelector('summary').textContent = !vals.length ? 'All ' + el.dataset.label
+        : (total > 1 && vals.length === total) ? 'All selected (' + total + ')'
+        : (vals.length <= 2 ? vals.join(', ') : vals.length + ' selected');
+    }
+    function msValues(id) { return [...document.querySelectorAll('#' + id + ' input:not([data-all]):checked')].map(i => i.value); }
+    const uniqSorted = (vals) => [...new Set(vals.filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
+    function refreshHistOptions() {
+      const cs = state.campaigns;
+      const brands = uniqSorted(cs.map(c => c.brand_name));
+      $('hfBrandWrap').hidden = brands.length < 2;
+      msRender('hfBrand', 'brands', brands);
+      msRender('hfStatus', 'statuses', Object.keys(STATUS_GROUPS).filter(g => cs.some(c => statusGroup(c.status) === g)));
+      msRender('hfPin', 'PINs', uniqSorted(cs.flatMap(c => c.pin_codes || [])));
+      msRender('hfChannel', 'channels', uniqSorted(cs.flatMap(c => (c.channels || []).map(chanName))));
+      msRender('hfRfm', 'segments', uniqSorted(cs.flatMap(c => splitList(c.rfm_segment).length ? splitList(c.rfm_segment) : ['All RFM'])));
+    }
+    function filteredCampaigns() {
+      const set = (id) => new Set(msValues(id));
+      const brand = set('hfBrand'), status = set('hfStatus'), pin = set('hfPin'), chan = set('hfChannel'), rfm = set('hfRfm');
+      const from = $('hfFrom').value, to = $('hfTo').value;
+      return state.campaigns.filter(c => {
+        const day = localDay(c.created_at);
+        return (!brand.size || brand.has(c.brand_name))
+          && (!status.size || status.has(statusGroup(c.status)))
+          && (!pin.size || (c.pin_codes || []).some(p => pin.has(p)))
+          && (!chan.size || (c.channels || []).some(ch => chan.has(chanName(ch))))
+          && (!rfm.size || (splitList(c.rfm_segment).length ? splitList(c.rfm_segment) : ['All RFM']).some(r => rfm.has(r)))
+          && (!from || (day && day >= from))
+          && (!to || (day && day <= to));
+      });
+    }
+    function applyHistFilters() { state.histPage = 1; renderHistory(); renderInsights(); }
+
+    /* ---------- Campaign insights (aggregate of filtered running campaigns) ---------- */
+    const insCharts = {};
+    function insChart(key, config) {
+      if (insCharts[key]) { insCharts[key].destroy(); delete insCharts[key]; }
+      if (!window.Chart || !config) return;
+      insCharts[key] = new Chart($(key), config);
+    }
+    const n0 = (v) => Number.isFinite(Number(v)) ? Number(v) : 0;
+    const shortName = (c) => { const t = campaignTitle(c); return t.length > 26 ? t.slice(0, 25) + '…' : t; };
+    function renderInsights() {
+      const matching = filteredCampaigns();
+      const running = matching.filter(c => c.status === 'launched' && c.impact);
+      $('insNote').textContent = `${running.length} running campaign${running.length === 1 ? '' : 's'} of ${matching.length} matching the filters above. Nothing is delivered to customers; all figures are simulated.`;
+      const empty = !running.length;
+      $('insBody').hidden = empty;
+      $('insEmpty').hidden = !empty;
+      if (empty) { Object.keys(insCharts).forEach(k => insChart(k, null)); return; }
+
+      const t = { spend: 0, revenue: 0, reach: 0, impressions: 0, clicks: 0, conversions: 0, liftW: 0 };
+      running.forEach(c => {
+        const i = c.impact;
+        ['spend', 'revenue', 'reach', 'impressions', 'clicks', 'conversions'].forEach(k => { t[k] += n0(i[k]); });
+        t.liftW += n0(i.lift) * n0(i.spend);
+      });
+      const ratio = (a, b) => b > 0 ? a / b : null;
+      const tiles = [
+        ['Spend', inr(t.spend)], ['Revenue', inr(t.revenue)], ['ROAS', roas(ratio(t.revenue, t.spend))],
+        ['Reach', num(t.reach)], ['Impressions', num(t.impressions)], ['Clicks', num(t.clicks)],
+        ['CTR', pct(ratio(t.clicks * 100, t.impressions))], ['Conversions', num(t.conversions)],
+        ['CVR', pct(ratio(t.conversions * 100, t.clicks))], ['Avg Lift', pct(ratio(t.liftW, t.spend), 1)],
+      ];
+      $('insTiles').innerHTML = tiles.map(([l, v]) => `<div class="tile"><span>${esc(l)}</span><b>${esc(v)}</b><small>Simulated</small></div>`).join('');
+
+      const base = {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { boxWidth: 10, font: { size: 10 } } } },
+        scales: { x: { ticks: { font: { size: 9 } }, grid: { display: false } }, y: { ticks: { font: { size: 9 } } } },
+      };
+      const byRoas = running.slice().sort((a, b) => n0(b.impact.roas) - n0(a.impact.roas)).slice(0, 10);
+      insChart('insRoas', {
+        type: 'bar',
+        data: { labels: byRoas.map(shortName), datasets: [{ label: 'ROAS (x)', data: byRoas.map(c => n0(c.impact.roas)), backgroundColor: '#6B3A55', borderRadius: 4 }] },
+        options: { ...base, indexAxis: 'y', plugins: { legend: { display: false } },
+          scales: { x: { ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 10 } }, grid: { display: false } } } },
+      });
+      const recent = running.slice(0, 10);
+      insChart('insRevSpend', {
+        type: 'bar',
+        data: { labels: recent.map(shortName), datasets: [
+          { label: 'Revenue', data: recent.map(c => n0(c.impact.revenue)), backgroundColor: '#6B3A55' },
+          { label: 'Spend', data: recent.map(c => n0(c.impact.spend)), backgroundColor: '#C9A24A' },
+        ] },
+        options: base,
+      });
+      const chRev = {};
+      running.forEach(c => {
+        const br = c.impact.channel_breakdown || {};
+        const entries = Object.keys(br).length ? Object.entries(br) : [['in_app', c.impact]];
+        entries.forEach(([ch, r]) => { chRev[ch] = (chRev[ch] || 0) + n0(r.revenue); });
+      });
+      const chKeys = Object.keys(chRev);
+      const palette = ['#6B3A55', '#25D366', '#C9A24A', '#7D8FB3', '#B5838D'];
+      insChart('insChannels', chKeys.length ? {
+        type: 'doughnut',
+        data: { labels: chKeys.map(chanName), datasets: [{ data: chKeys.map(k => Math.round(chRev[k])), backgroundColor: chKeys.map((_, k) => palette[k % palette.length]) }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } } },
+      } : null);
+      const mix = {};
+      matching.forEach(c => { const g = statusGroup(c.status); mix[g] = (mix[g] || 0) + 1; });
+      const mixKeys = Object.keys(mix);
+      const statusColor = { Running: '#1F6B45', Draft: '#C9A24A', Ranking: '#E8C46A', Exported: '#5B4B8A', Error: '#A3301F' };
+      insChart('insStatus', {
+        type: 'doughnut',
+        data: { labels: mixKeys, datasets: [{ data: mixKeys.map(k => mix[k]), backgroundColor: mixKeys.map(k => statusColor[k] || '#7D8FB3') }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } } },
+      });
+    }
+    function renderHistPager(total) {
+      const pages = Math.max(1, Math.ceil(total / HIST_PAGE));
+      $('histPager').innerHTML = total > HIST_PAGE
+        ? `<span>Page ${state.histPage} of ${pages}</span>
+           <button type="button" data-hp="${state.histPage - 1}"${state.histPage <= 1 ? ' disabled' : ''}>Previous</button>
+           <button type="button" data-hp="${state.histPage + 1}"${state.histPage >= pages ? ' disabled' : ''}>Next</button>`
+        : '';
+    }
+
+    function renderHistory() {
+      const matching = filteredCampaigns();
+      const pages = Math.max(1, Math.ceil(matching.length / HIST_PAGE));
+      state.histPage = Math.min(Math.max(1, state.histPage), pages);
+      const rows = matching.slice((state.histPage - 1) * HIST_PAGE, state.histPage * HIST_PAGE);
+      $('histCount').textContent = matching.length === state.campaigns.length ? matching.length : `${matching.length} of ${state.campaigns.length}`;
+      renderHistPager(matching.length);
+      $('histBody').innerHTML = rows.length ? rows.map(c => {
+        const active = state.current && state.current.campaign_id === c.campaign_id;
+        const chans = (c.channels || []).map(ch => CHANNELS[ch]?.name || ch).join(', ') || '—';
+        const i = c.impact || {};
+        return `<tr class="${active ? 'active' : ''}">
+          <td><b>${esc(campaignTitle(c))}</b><div style="font-size:11px;color:var(--muted)">${esc(localDay(c.created_at))}</div></td>
+          <td style="max-width:260px">${esc(audienceParts(c).join(' · '))}</td>
+          <td>${esc(chans)}</td>
+          <td>${esc(c.sku_count ?? 0)}</td>
+          <td class="mono">${esc(c.budget_inr ? inr(c.budget_inr) : '—')}${c.status === 'launched' && i.roas != null ? `<div style="font-size:10.5px;color:#1F6B45" title="Simulated">ROAS ${esc(roas(i.roas))}</div>` : ''}</td>
+          <td><span class="st ${esc(c.status)}">${esc(statusLabel(c.status))}</span></td>
+          <td><div class="row-act"><button type="button" data-load="${esc(c.campaign_id)}">${c.status === 'launched' ? 'Track' : 'Open'}</button></div></td>
+        </tr>`;
+      }).join('') : `<tr><td colspan="7" class="empty-row">${state.campaigns.length ? 'No campaigns match these filters.' : 'No campaigns yet. Create one from Ads Lab.'}</td></tr>`;
+      renderHero();
+    }
+    function renderHero() {
+      const running = state.campaigns.filter(c => c.status === 'launched');
+      const c = state.current;
+      if (c) {
+        $('heroTitle').textContent = campaignTitle(c);
+        $('heroSub').textContent = `${c.brand_name || brandName()} · ${audienceParts(c).join(' × ')}`;
+        const ok = state.skus.filter(usable);
+        const best = Math.max(...ok.map(skuScore).filter(Number.isFinite));
+        $('hsCustomers').textContent = num(c.est_audience);
+        $('hsCreatives').textContent = ok.length;
+        $('hsBest').textContent = Number.isFinite(best) ? `${best}/100` : '—';
+      } else {
+        $('heroTitle').textContent = running.length ? `${running.length} campaign${running.length === 1 ? '' : 's'} running` : "You don't have any active campaigns yet";
+        $('heroSub').textContent = 'Rank SKUs in Ads Lab, then reach that audience on In-app, WhatsApp and SMS.';
+        // don't leave a discarded campaign's numbers in the hero
+        $('hsCustomers').textContent = '—'; $('hsCreatives').textContent = '0'; $('hsBest').textContent = '—';
+      }
+      $('heroMatrixWrap').hidden = running.length > 0;
+    }
+    $('histBody').addEventListener('click', (e) => {
+      if (e.target.closest('[data-retry]')) { $('histBody').innerHTML = '<tr><td colspan="7" class="empty-row">Loading campaigns…</td></tr>'; loadCampaigns(); return; }
+      const b = e.target.closest('[data-load]');
+      if (!b) return;
+      const row = state.campaigns.find(c => c.campaign_id === b.dataset.load);
+      if (row && row.status === 'launched') loadCampaign(b.dataset.load, null, { focus: 'analysis' });
+      else { loadCampaign(b.dataset.load); window.scrollTo({ top: 0, behavior: scrollBehavior() }); }
+    });
+
+    /* ---------- Load + fill ---------- */
+    let loadSeq = 0, loadsInFlight = 0, autoOpened = null;
+    async function loadCampaign(id, sourceContext, opts) {
+      if (!id) return;
+      const seq = ++loadSeq; // a slower, older response must not overwrite the campaign the user picked last
+      loadsInFlight++;
+      try {
+        const data = await api('/v1/ads-lab/campaigns/' + encodeURIComponent(id));
+        if (seq !== loadSeq) return;
+        if (sourceContext && typeof sourceContext === 'object') state.sourceContext = sourceContext;
+        const c = data.campaign || {};
+        if (!state.current || state.current.campaign_id !== c.campaign_id) {
+          if (!sourceContext) state.sourceContext = c.source_context || readStoredSource(c.campaign_id);
+          state.rec = null;
+          state.estimate = null;
+        }
+        state.current = c;
+        state.skus = (Array.isArray(data.skus) ? data.skus : []).slice().sort((a, b) => (a.rank || 999) - (b.rank || 999));
+        state.thumbs = readThumbs(c.campaign_id);
+        autoOpened = null; // only a failed auto-open is remembered
+        endBoot();
+        fillStudio(c);
+        renderHistory();
+        publishContext();
+        if (opts && opts.focus === 'analysis') requestAnimationFrame(focusAnalysis);
+      } catch (e) {
+        if (seq !== loadSeq) return;
+        endBoot();
+        toast(storageOffline(e) ? 'Campaign storage is unavailable right now.' + (state.current ? '' : ' Showing the sample campaign.') : e.message, 'fa-triangle-exclamation');
+      } finally {
+        loadsInFlight--;
+      }
+    }
+    function endBoot() {
+      if (!document.body.classList.contains('booting')) return;
+      document.body.classList.remove('booting');
+      syncPreviewTabs(); // the active channel is read from the layout, which was empty while hidden
+    }
+    function readStoredSource(id) {
+      try { const raw = sessionStorage.getItem('suffai_campaign_source_' + id); return raw ? JSON.parse(raw) : null; } catch (_) { return null; }
+    }
+
+    function showSample() {
+      state.current = null;
+      state.skus = SAMPLE_SKUS;
+      state.thumbs = {};
+      state.rec = null; state.estimate = null; state.sourceContext = null;
+      $('noDraft').hidden = false;
+      $('nextBar').hidden = true;
+      fillStudio(SAMPLE_CAMPAIGN);
+      $('configFields').disabled = false; // let people play with the sample
+      $('fName').value = 'Your brand · Loyal';
+      $('fHead').value = 'New beige shirts picked for you';
+      $('campaignBudget').value = 25000;
+      $('actionBar').hidden = false;
+      $('launchBtn').innerHTML = '<i class="fa-solid fa-ranking-star"></i> Rank Your SKUs in Ads Lab to Launch';
+      ['saveBtn', 'discardBtn'].forEach(id => { $(id).disabled = true; $(id).title = 'Available for a real campaign'; });
+      renderRecommendation(null, 'Sample — the recommended budget appears for a real campaign.');
+      renderAll();
+    }
+
+    function fillStudio(c) {
+      // drop any in-flight recommendation / estimate for the previous campaign
+      recSeq++; estSeq++; clearTimeout(recTimer); clearTimeout(estTimer);
+      $('noDraft').hidden = c.status !== 'sample';
+      $('nextBar').hidden = c.status !== 'launched';
+      if (c.status === 'launched') $('nextBarTitle').textContent = `“${campaignTitle(c)}” is running (simulated).`;
+      $('launchBtn').innerHTML = '<i class="fa-solid fa-rocket"></i> Confirm &amp; Start Campaign';
+      ['saveBtn', 'discardBtn'].forEach(id => { $(id).disabled = false; $(id).title = ''; });
+      const brand = c.brand_name || brandName();
+      const icons = ['fa-location-dot', 'fa-cake-candles', 'fa-venus-mars', 'fa-gem'];
+      $('audChips').innerHTML = [`<span class="chip"><i class="fa-solid fa-tag"></i>${esc(brand)}</span>`]
+        .concat(audienceParts(c).map((p, i) => `<span class="chip"><i class="fa-solid ${icons[i]}"></i>${esc(p)}</span>`))
+        .concat([`<span class="chip"><i class="fa-solid fa-users"></i>${c.status === 'sample' ? 'Sample audience' : esc(num(c.est_audience)) + ' customers'}</span>`])
+        .join('');
+      $('statusPill').className = 'st st-head ' + c.status;
+      $('statusPill').textContent = c.status === 'sample' ? 'Sample' : statusLabel(c.status);
+      const src = state.sourceContext;
+      $('sourceNote').hidden = !src;
+      $('sourceNote').textContent = src ? 'From Geo: ' + (src.insight || 'opportunity carried over from the Geo tab.') : '';
+      $('processingNote').hidden = c.status !== 'processing';
+      $('errorNote').hidden = c.status !== 'error';
+
+      const creative = c.creative && typeof c.creative === 'object' ? c.creative : {};
+      const ok = state.skus.filter(usable).map(s => s.sku_uuid);
+      const saved = (c.selected_sku_ids || []).filter(id => ok.includes(id));
+      state.mode = creative.delivery_mode === 'ab' && saved.length > 1 ? 'ab' : 'best';
+      const hero = ok.includes(creative.hero_sku_id) ? creative.hero_sku_id : (saved[0] || ok[0] || null);
+      state.picked = state.mode === 'ab' ? saved : (hero ? [hero] : []);
+      state.focus = hero;
+      state.channels = (c.channels && c.channels.length ? c.channels : ['in_app']).filter(ch => CHANNELS[ch]);
+
+      document.querySelectorAll('input[name="objective"]').forEach(r => { r.checked = r.value === (c.objective || 'consideration'); });
+      const tpl = { ...defaultTemplates(brand, c.campaign_name), ...(c.message_template || {}) };
+      $('fName').value = c.campaign_name || defaultName(c);
+      $('fHead').value = creative.headline || '';
+      $('fWa').value = tpl.whatsapp || '';
+      $('fSms').value = tpl.sms || '';
+      $('fCta').value = creative.cta || 'Shop now';
+      $('fCode').value = creative.offer_code || '';
+      $('fUrl').value = stripUtm(creative.landing_url);
+      $('fUtm').checked = creative.utm !== false;
+      $('fCap').value = creative.frequency_cap || '3d';
+      if (!$('fCap').value) $('fCap').value = '3d'; // unknown saved cap: no option selected would break the summary
+      $('fQuiet').checked = creative.quiet_hours !== false;
+      $('campaignDays').value = c.duration_days || 14;
+      // a draft saved days ago may carry a start date that is now in the past: move it to today
+      const savedStart = c.start_date ? String(c.start_date).slice(0, 10) : '';
+      $('campaignStart').value = savedStart && (savedStart >= todayIso() || !EDITABLE.includes(c.status)) ? savedStart : todayIso();
+      $('campaignStart').min = EDITABLE.includes(c.status) || c.status === 'sample' ? todayIso() : '';
+      $('campaignBudget').value = c.budget_inr != null ? Math.round(Number(c.budget_inr)) : '';
+      $('platformFee').value = c.platform_fee_final != null ? Math.round(Number(c.platform_fee_final))
+        : (c.platform_fee_recommended != null ? Math.round(Number(c.platform_fee_recommended)) : '');
+      state.fee = null;
+      clearFieldErrs();
+
+      const canEdit = editable();
+      $('configFields').disabled = !canEdit;
+      $('actionBar').hidden = !canEdit;
+      $('rankingBar').hidden = c.status !== 'processing';
+      renderAnalysis(c);
+      loadRetail(c);
+      renderCreatives(); renderChannels(); renderAll();
+      if (canEdit) fetchRecommendation(c.budget_inr == null);
+      else { renderRecommendation(null); renderPlatformFee(); $('estimateGrid').innerHTML = ''; $('estimateChannels').innerHTML = ''; $('estimateStatus').textContent = ''; }
+      if (canEdit && c.status === 'exported') toast('Exported for 3P. You can still run it on SuffAI.', 'fa-circle-info');
+    }
+
+    /* ---------- Creatives ---------- */
+    function renderCreatives() {
+      $('crGrid').innerHTML = state.skus.length ? state.skus.map(s => {
+        const ok = usable(s), on = state.picked.includes(s.sku_uuid), focus = on && s.sku_uuid === state.focus;
+        const score = skuScore(s), a = s.attributes || {}, thumb = thumbOf(s);
+        const sub = ok ? (score == null ? 'not scored' : `fit ${score}/100`) : (s.process_status === 'pending' ? 'pending' : 'failed');
+        return `<button type="button" class="ctile ${focus ? 'focus' : ''}" data-id="${esc(s.sku_uuid)}" aria-pressed="${on}" ${ok ? '' : 'disabled'} title="${esc([a.color, a.pattern, a.name || a.commodity].filter(Boolean).join(' · '))}">${focus ? '<span class="eye"><i class="fa-regular fa-eye"></i> In Preview</span>' : ''}
+          <div class="img">${thumb ? `<img src="${esc(thumb)}" alt="">` : '<i class="fa-solid fa-shirt"></i>'}</div>
+          <span class="badge">#${esc(s.rank ?? '—')}</span><span class="tick"><i class="fa-solid fa-check"></i></span>
+          <div class="meta"><b>${esc(s.original_filename || 'SKU')}</b><span>${esc(sub)}</span></div>
+        </button>`;
+      }).join('') : '<p class="hint">No SKUs in this campaign.</p>';
+      $('crCount').textContent = state.mode === 'ab' ? `${state.picked.length} selected · 2 to ${MAX_CREATIVES}` : 'Pick one creative';
+      const letters = 'ABCDEF';
+      $('pvVars').innerHTML = state.mode === 'ab' && state.picked.length > 1
+        ? state.picked.map((id, i) => `<button type="button" data-var="${esc(id)}" aria-pressed="${id === state.focus}" title="${esc(skuById(id)?.original_filename || '')}">${letters[i]}</button>`).join('') : '';
+      document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
+      const first = skuById(state.picked[0]);
+      $('modeHint').textContent = state.mode === 'ab'
+        ? (state.picked.length > 1 ? `The audience is split evenly across ${state.picked.length} creatives. Tap a selected creative to preview it; tap it again to remove it.` : 'Pick at least two creatives to A/B test.')
+        : (first ? `Everyone gets “${first.original_filename}”. Tap another creative to switch.` : 'Tap a creative to send it.');
+    }
+    const rankOrder = (a, b) => (skuById(a)?.rank || 999) - (skuById(b)?.rank || 999);
+    $('crGrid').addEventListener('click', (e) => {
+      const t = e.target.closest('.ctile'); if (!t || t.disabled) return;
+      const id = t.dataset.id, i = state.picked.indexOf(id);
+      if (state.mode === 'best') { state.picked = [id]; state.focus = id; }
+      else if (i >= 0 && state.focus !== id) state.focus = id;
+      else if (i >= 0) { state.picked.splice(i, 1); state.focus = state.picked[0] || null; }
+      else if (state.picked.length >= MAX_CREATIVES) { toast(`You can pick up to ${MAX_CREATIVES} creatives per campaign.`, 'fa-circle-info'); return; }
+      else { state.picked.push(id); state.focus = id; }
+      state.picked.sort(rankOrder);
+      renderCreatives(); renderAll();
+    });
+    document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+      if (state.mode === b.dataset.mode || $('configFields').disabled) return;
+      state.mode = b.dataset.mode;
+      if (state.mode === 'best') state.picked = state.focus ? [state.focus] : state.picked.slice(0, 1);
+      else if (state.picked.length < 2) { // start the test with the next best-ranked creative
+        const next = state.skus.find(s => usable(s) && !state.picked.includes(s.sku_uuid));
+        if (next) state.picked.push(next.sku_uuid);
+        state.picked.sort(rankOrder);
+      }
+      state.focus = state.picked.includes(state.focus) ? state.focus : state.picked[0];
+      renderCreatives(); renderAll();
+    }));
+    $('pvVars').addEventListener('click', (e) => { const v = e.target.closest('[data-var]'); if (!v) return; state.focus = v.dataset.var; renderCreatives(); renderPreview(); });
+
+    /* ---------- Objective + channels ---------- */
+    $('objGroup').innerHTML = OBJECTIVES.map(([v, label, sub]) =>
+      `<label class="radio"><input type="radio" name="objective" value="${v}" ${v === 'consideration' ? 'checked' : ''}><span><b style="display:block;font-size:13px">${label}</b><span style="font-size:10.5px;color:var(--muted)">${sub}</span></span></label>`).join('');
+    const selectedObjective = () => (document.querySelector('input[name="objective"]:checked') || {}).value || 'consideration';
+    function renderChannels() {
+      $('chGrid').innerHTML = Object.entries(CHANNELS).map(([k, c]) =>
+        `<button type="button" class="chtile" data-ch="${k}" aria-pressed="${state.channels.includes(k)}"><span class="ic"><i class="${c.ic}"></i></span><span><b>${c.name}</b><span>${c.sub}</span></span></button>`).join('');
+      $('eChannels').textContent = state.channels.length ? '' : 'Select at least one channel.';
+      $('waWrap').hidden = !state.channels.includes('whatsapp');
+      $('smsWrap').hidden = !state.channels.includes('sms');
+    }
+    $('chGrid').addEventListener('click', (e) => {
+      const t = e.target.closest('.chtile'); if (!t) return;
+      const k = t.dataset.ch, i = state.channels.indexOf(k);
+      if (i >= 0) state.channels.splice(i, 1); else state.channels.push(k);
+      state.channels.sort((a, b) => Object.keys(CHANNELS).indexOf(a) - Object.keys(CHANNELS).indexOf(b));
+      renderChannels(); renderAll(); scheduleRecommendation();
+      showChannel(k); // land the phone on the channel you just touched
+    });
+    $('pvTabs').addEventListener('click', (e) => { const t = e.target.closest('[data-pv]'); if (t) showChannel(t.dataset.pv); });
+
+    /* ---------- Link ---------- */
+    function finalUrl() {
+      const raw = $('fUrl').value.trim();
+      if (!raw) return '';
+      try {
+        const u = new URL(raw);
+        if (!/^https?:$/.test(u.protocol)) return '';
+        if ($('fUtm').checked) {
+          u.searchParams.set('utm_source', 'suffai');
+          u.searchParams.set('utm_medium', state.channels.length > 1 ? 'multi' : (state.channels[0] || 'in_app'));
+          u.searchParams.set('utm_campaign', slug($('fName').value));
+        }
+        return u.toString();
+      } catch (_) { return ''; }
+    }
+
+    /* ---------- Preview ---------- */
+    function fill(text) {
+      return String(text || '').replace(/\{first_name\}/g, 'Ananya').replace(/\{brand\}/g, brandName()).replace(/\{link\}/g, 'suff.ai/' + slug($('fName').value).slice(0, 10));
+    }
+    function previewHTML(ch) {
+      const s = skuById(state.focus) || skuById(state.picked[0]) || state.skus[0];
+      const imgOf = (x) => thumbOf(x) ? `<img class="pv-img" src="${esc(thumbOf(x))}" alt="">` : '<div class="pv-img"></div>';
+      const img = imgOf(s);
+      const brand = esc(brandName()), initial = esc(brandName().charAt(0).toUpperCase());
+      const head = esc($('fHead').value || 'Your headline'), cta = esc($('fCta').value || 'Shop now');
+      const codeV = esc($('fCode').value.trim().toUpperCase());
+      const code = codeV ? `\nUse code ${codeV}` : '';
+      const t = new Date();
+      const body = esc(fill($('fWa').value || $('fSms').value) || 'Your message');
+      const hhmm = t.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }).replace(/\s?[ap]m/i, '');
+      const sbar = (fg, bg = 'transparent') => `<div class="sbar" style="--sb:${fg};--sbg:${bg}"><span>${hhmm}</span><span><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-three-quarters"></i></span></div>`;
+      if (ch === 'email') return `<div class="scr" style="background:#fff">${sbar('#111', '#fff')}
+        <div class="apphd"><i class="fa-solid fa-chevron-left" style="color:#1A56C4"></i><span style="color:#1A56C4">Inbox</span><span class="ico"><i class="fa-regular fa-folder"></i><i class="fa-regular fa-trash-can"></i><i class="fa-regular fa-envelope"></i></span></div>
+        <div class="pv-body" style="padding-top:0"><div class="em-subj">${head}<span class="pv-tag">Promotions</span></div>
+          <div class="em-from"><span class="em-av">${initial}</span><div><b>${brand}</b><div style="font-size:10px;color:#888">to me · ${hhmm}</div></div></div>
+          <div class="em-card">${img}<h4>${head}</h4><p>${body}${code}</p><span class="pv-cta">${cta}</span></div>
+          <div class="em-foot">You're receiving this because you shop with ${brand}. Unsubscribe</div></div></div>`;
+      if (ch === 'push') return `<div class="scr"><div class="lock">${sbar('#fff')}
+        <div class="lk"><i class="fa-solid fa-lock"></i></div><div class="date">${t.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+        <div class="time">${hhmm}</div>
+        <div class="ntf"><span class="app"><i class="fa-solid fa-bag-shopping"></i></span><div style="flex:1;min-width:0"><b>${head}</b><p>${body}</p></div>${thumbOf(s) ? `<img src="${esc(thumbOf(s))}" alt="">` : ''}</div>
+        <div class="ntf"><span class="app"></span><div style="flex:1"><b>&nbsp;</b><p>&nbsp;</p></div></div>
+        <div class="lock-btns"><span><i class="fa-solid fa-lightbulb"></i></span><span><i class="fa-solid fa-camera"></i></span></div></div></div>`;
+      if (ch === 'whatsapp') return `<div class="scr">${sbar('#111', '#fff')}
+        <div class="wa-head"><i class="fa-solid fa-chevron-left" style="color:#128C7E"></i><span class="av">${initial}</span><div><b>${brand}</b><small>Business account <i class="fa-solid fa-circle-check" style="color:#25D366"></i></small></div><span class="ico"><i class="fa-solid fa-video"></i><i class="fa-solid fa-phone"></i></span></div>
+        <div class="wa-chat"><span class="day">Today</span><div class="bubble">${img}<div class="txt"><b>${head}</b>\n${esc(fill($('fWa').value) || 'Your WhatsApp message')}${code}<span class="meta-t">${hhmm}</span></div></div><span class="wa-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${cta}</span></div>
+        <div class="inputbar"><i class="fa-solid fa-plus"></i><span>Message</span><i class="fa-solid fa-microphone"></i></div></div>`;
+      if (ch === 'sms') return `<div class="scr">${sbar('#111', 'rgba(250,250,252,.95)')}
+        <div class="sms-head"><span class="sms-av">${initial}</span><b>${brand} <i class="fa-solid fa-chevron-right" style="font-size:8px;color:#999"></i></b></div>
+        <div class="sms-chat"><span class="day" style="box-shadow:none;background:none">Text Message · Today ${hhmm}</span><div class="bubble">${esc(fill($('fSms').value) || 'Your SMS message')}${code}</div></div>
+        <div class="inputbar"><i class="fa-solid fa-camera" style="color:#8e8e93"></i><span>Text Message</span><i class="fa-solid fa-microphone" style="color:#8e8e93"></i></div></div>`;
+      // In-app: the brand's own app home, campaign as the hero banner + picked-for-you rail
+      const c = state.current || {};
+      const area = esc((c.pin_codes || [])[0] ? 'PIN ' + c.pin_codes[0] : 'Your area');
+      const picks = state.picked.map(skuById).filter(Boolean);
+      return `<div class="scr">
+        <div class="ah">${sbar('#fff')}<div class="ah-row"><span class="ah-av">AN</span><div><b>Ananya</b><small><i class="fa-solid fa-location-dot"></i> ${area} <i class="fa-solid fa-chevron-down" style="font-size:8px"></i></small></div>
+          <span class="ah-ico"><span><i class="fa-regular fa-heart"></i></span><span><i class="fa-solid fa-bag-shopping"></i></span><span><i class="fa-regular fa-bell"></i></span></span></div></div>
+        <div class="ah-body">
+          <div class="banner"><div><h4>${head}</h4><p>Styles picked for you by ${brand}.</p>${codeV ? `<span class="code">${codeV}</span><br>` : ''}<span class="pv-cta">${cta}</span></div>${img}</div>
+          <div class="chips2"><span><i class="b">%</i>View Coupons<i class="fa-solid fa-chevron-right"></i></span><span><i class="b">%</i>Refer &amp; Earn<i class="fa-solid fa-chevron-right"></i></span></div>
+          <p class="sec-t">Picked for You</p>
+          <div class="hscroll">${(picks.length ? picks : [s || {}]).map(x => `<div class="pcard"><span class="pc-rank">#${esc(x.rank ?? '—')}</span>${imgOf(x)}<div><b>${esc(x.original_filename || 'Your SKU')}</b><small>${skuScore(x) == null ? cta : 'Fit ' + skuScore(x) + '/100'} ›</small></div></div>`).join('')}</div>
+        </div>
+        <div class="tabbar"><i class="fa-solid fa-house on"></i><i class="fa-solid fa-magnifying-glass"></i><i class="fa-solid fa-bag-shopping"></i><i class="fa-regular fa-user"></i></div></div>`;
+    }
+    const PV_ORDER = ['email', 'whatsapp', 'sms', 'push', 'in_app'];
+    const modeClass = (ch) => PREVIEW_ONLY[ch] ? 'off soon' : (state.channels.includes(ch) ? '' : 'off');
+    // Update in place: replacing the nodes on every keystroke re-decodes the images and replays the fade-in, so the phone blinks.
+    function patchChildren(from, to) {
+      const olds = Array.from(from.childNodes), news = Array.from(to.childNodes);
+      news.forEach((n, i) => {
+        const o = olds[i];
+        if (!o) from.appendChild(n);
+        else if (o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) from.replaceChild(n, o);
+        else if (o.nodeType !== Node.ELEMENT_NODE) { if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue; }
+        else {
+          for (const a of Array.from(o.attributes)) if (!n.hasAttribute(a.name)) o.removeAttribute(a.name);
+          for (const a of Array.from(n.attributes)) if (o.getAttribute(a.name) !== a.value) o.setAttribute(a.name, a.value);
+          patchChildren(o, n);
+        }
+      });
+      olds.slice(news.length).forEach(o => o.remove());
+    }
+    function patchHTML(el, html) {
+      const tpl = document.createElement('template');
+      tpl.innerHTML = html;
+      patchChildren(el, tpl.content);
+    }
+    function renderPreview() {
+      const feed = $('screen'), top = feed.scrollTop;
+      patchHTML(feed, PV_ORDER.map(ch => `<section class="mode ${modeClass(ch)}" data-mode="${ch}" aria-label="${PV_NAMES[ch]} preview">${previewHTML(ch)}</section>`).join(''));
+      feed.scrollTop = top; // keep the reader's place while they type
+      syncPreviewTabs();
+    }
+    function syncPreviewTabs() {
+      const feed = $('screen'), modes = Array.from(feed.children);
+      const cur = modes.reduce((acc, m) => (m.offsetTop <= feed.scrollTop + 60 ? m : acc), modes[0]);
+      if (cur) state.preview = cur.dataset.mode;
+      patchHTML($('pvTabs'), PV_ORDER.map(k => `<button type="button" role="tab" data-pv="${k}" class="${state.channels.includes(k) ? 'inc' : ''}" aria-selected="${k === state.preview}">${PV_NAMES[k]}</button>`).join(''));
+      feed.parentElement.style.setProperty('--hi', state.preview === 'push' ? '#fff' : '#111');
+      const n = PV_ORDER.indexOf(state.preview) + 1, len = $('fSms').value.length;
+      $('pvNote').textContent = `${PV_NAMES[state.preview]} · ${n} of ${PV_ORDER.length}`
+        + (state.preview === 'sms' ? ` · ≈ ${Math.max(1, Math.ceil(len / 160))} SMS segment${len > 160 ? 's' : ''}, no images` : '')
+        + (PREVIEW_ONLY[state.preview] ? ' · preview only, not sent by SuffAI yet' : state.channels.includes(state.preview) ? '' : ' · not in this campaign') + ' · scroll the phone for every channel';
+    }
+    function showChannel(ch) {
+      const sec = $('screen').querySelector(`[data-mode="${ch}"]`);
+      if (sec) $('screen').scrollTo({ top: sec.offsetTop, behavior: scrollBehavior() });
+    }
+    let pvRaf = 0;
+    $('screen').addEventListener('scroll', () => { cancelAnimationFrame(pvRaf); pvRaf = requestAnimationFrame(syncPreviewTabs); }, { passive: true });
+
+    /* ---------- Budget recommendation + estimate (simulated, from the API) ---------- */
+    let recTimer = null, recSeq = 0, estTimer = null, estSeq = 0, feeSeq = 0;
+    const daysValue = () => Math.max(1, Math.min(365, Math.round(Number($('campaignDays').value) || 14)));
+    function scheduleRecommendation() { clearTimeout(recTimer); recTimer = setTimeout(() => fetchRecommendation(false), 350); }
+    async function fetchRecommendation(applyIfEmpty) {
+      if (!editable()) return;
+      if (!state.channels.length) { renderRecommendation(null); scheduleEstimate(); return; }
+      const seq = ++recSeq;
+      try {
+        const data = await api('/v1/ads-lab/campaigns/' + encodeURIComponent(state.current.campaign_id) + '/budget-recommendation', {
+          method: 'POST',
+          body: JSON.stringify({ objective: selectedObjective(), duration_days: daysValue(), channels: state.channels }),
+        });
+        if (seq !== recSeq) return;
+        state.rec = data.recommendation;
+        renderRecommendation(state.rec);
+        if (applyIfEmpty && !Number($('campaignBudget').value)) $('campaignBudget').value = Math.round(state.rec.recommended);
+        fetchPlatformFee(applyIfEmpty);
+      } catch (e) {
+        if (seq !== recSeq) return;
+        renderRecommendation(null, e.message);
+      }
+      scheduleEstimate();
+    }
+    async function fetchPlatformFee(applyIfEmpty) {
+      if (!editable() || !state.current || !state.channels.length) return;
+      const seq = ++feeSeq, media = Number($('campaignBudget').value || state.rec?.recommended || 0);
+      try {
+        const data = await api('/v1/ads-lab/campaigns/' + encodeURIComponent(state.current.campaign_id) + '/fee-recommendation', {
+          method: 'POST',
+          body: JSON.stringify({ objective: selectedObjective(), duration_days: daysValue(), channels: state.channels, media_budget_inr: media }),
+        });
+        if (seq !== feeSeq) return;
+        state.fee = data.recommendation;
+        if (applyIfEmpty && !Number($('platformFee').value)) $('platformFee').value = Math.round(state.fee.recommended);
+        renderPlatformFee();
+      } catch (e) {
+        if (seq !== feeSeq) return;
+        state.fee = null; renderPlatformFee(e.message);
+      }
+    }
+    function renderPlatformFee(error) {
+      const fee = state.fee, media = Number($('campaignBudget').value || 0);
+      $('feeRange').textContent = fee ? `Range ${inr(fee.min)} – ${inr(fee.max)} · ${fee.model_version}` : (error || '');
+      const selected = Number($('platformFee').value || fee?.recommended || 0);
+      $('totalCheckout').textContent = media > 0 && selected > 0 ? inr(media + selected) : '—';
+    }
+    function renderRecommendation(rec, error) {
+      $('useRecBtn').disabled = !rec || !editable();
+      if (!rec) {
+        $('recBudget').textContent = '—';
+        $('recDaily').textContent = '';
+        $('recRange').textContent = error || (state.channels.length ? '' : 'Select a channel to get a recommendation.');
+        $('recBreakdown').innerHTML = '';
+        $('recReasons').innerHTML = '';
+        return;
+      }
+      $('recBudget').textContent = inr(rec.recommended);
+      $('recDaily').textContent = '(' + inr(rec.daily_budget) + ' / day)';
+      $('recRange').textContent = `Range ${inr(rec.min)} – ${inr(rec.max)} · expected ROAS ${roas(rec.expected_roas)} · target reach ${num(rec.target_reach)} of ${num(rec.audience)} customers`;
+      $('recBreakdown').innerHTML = (rec.breakdown || []).map(b => `<div class="rec-bar">
+        <div class="row"><b>${esc(b.label)}</b><span class="mono">${esc(inr(b.budget))} · ${esc(b.share_pct)}% · ${esc(num(b.units))} ${esc(b.unit)}</span></div>
+        <div class="track"><i style="width:${Math.max(2, Math.min(100, Number(b.share_pct) || 0))}%"></i></div></div>`).join('');
+      $('recReasons').innerHTML = (rec.reasons || []).map(r => `<li>${esc(r)}</li>`).join('');
+    }
+    function scheduleEstimate() { clearTimeout(estTimer); estTimer = setTimeout(fetchEstimate, 350); }
+    async function fetchEstimate() {
+      const budget = Number($('campaignBudget').value || 0), days = daysValue();
+      $('dailyBudget').textContent = budget > 0 ? inr(budget / days) + ' / day' : '—';
+      if (!editable()) return;
+      if (!(budget > 0) || !state.channels.length) {
+        $('estimateStatus').textContent = !state.channels.length ? 'Select a channel.' : 'Enter a budget.';
+        $('estimateGrid').innerHTML = ''; $('estimateChannels').innerHTML = '';
+        state.estimate = null; renderSummary();
+        return;
+      }
+      const seq = ++estSeq;
+      $('estimateStatus').textContent = 'Estimating…';
+      try {
+        const data = await api('/v1/ads-lab/campaigns/' + encodeURIComponent(state.current.campaign_id) + '/estimate', {
+          method: 'POST',
+          body: JSON.stringify({ objective: selectedObjective(), budget_inr: budget, duration_days: days, channels: state.channels }),
+        });
+        if (seq !== estSeq) return;
+        state.estimate = data.estimate;
+        renderEstimate(data.estimate);
+      } catch (e) {
+        if (seq !== estSeq) return;
+        $('estimateStatus').textContent = e.message;
+      }
+      renderSummary();
+    }
+    function renderEstimate(est) {
+      const tiles = [['Reach', 'reach', num], ['Impressions / Reads', 'impressions', num], ['CTR', 'ctr', v => pct(v)],
+        ['Conversions', 'conversions', num], ['Revenue', 'revenue', inr], ['Lift', 'lift', v => pct(v, 1)], ['ROAS', 'roas', roas]];
+      $('estimateGrid').innerHTML = tiles.map(([label, key, fmt]) => `<div class="tile"><span>${esc(label)}</span><b>${esc(fmt(est.expected[key]))}</b><small>${esc(fmt(est.low[key]))} – ${esc(fmt(est.high[key]))}</small></div>`).join('');
+      const unspent = Number(est.expected.unspent || 0);
+      $('estimateStatus').textContent = ` · audience ${num(est.audience)} · ${est.objective}` + (unspent > 0 ? ` · ${inr(unspent)} of budget would go unspent` : '');
+      const rows = Object.entries(est.by_channel || {});
+      $('estimateChannels').innerHTML = rows.length > 1 || (rows.length === 1 && rows[0][0] !== 'in_app') ? `<table class="mini">
+        <thead><tr><th>Channel</th><th>Budget</th><th>Sent</th><th>Reach</th><th>Clicks</th><th>Conv.</th><th>ROAS</th></tr></thead>
+        <tbody>${rows.map(([, r]) => `<tr><td>${esc(r.label)}</td><td>${esc(inr(r.budget))}</td><td>${esc(r.expected.messages != null ? num(r.expected.messages) : num(r.expected.impressions) + ' impr.')}</td><td>${esc(num(r.expected.reach))}</td><td>${esc(num(r.expected.clicks))}</td><td>${esc(num(r.expected.conversions))}</td><td>${esc(roas(r.expected.roas))}</td></tr>`).join('')}</tbody></table>` : '';
+    }
+
+    /* ---------- Impact & campaign analysis (launched) ---------- */
+    const anCharts = {};
+    function anChart(key, config) {
+      if (anCharts[key]) { anCharts[key].destroy(); delete anCharts[key]; }
+      if (!window.Chart || !config) return;
+      anCharts[key] = new Chart($(key), config);
+    }
+    function renderImpactTiles(c) {
+      const i = c.impact || {};
+      const tiles = [['Spend', inr(i.spend)], ['Reach', num(i.reach)], ['Impressions', num(i.impressions)], ['Clicks', num(i.clicks)],
+        ['CTR', pct(i.ctr)], ['Conversions', num(i.conversions)], ['Revenue', inr(i.revenue)], ['ROAS', roas(i.roas)]];
+      $('impactGrid').innerHTML = tiles.map(([l, v]) => `<div class="tile"><span>${esc(l)}</span><b>${esc(v)}</b></div>`).join('');
+      const br = i.channel_breakdown || {};
+      const entries = Object.keys(br).length ? Object.entries(br) : [['in_app', { label: 'In-app', ...i }]];
+      $('channelTrackBody').innerHTML = entries.map(([ch, r]) => `<tr>
+        <td>${esc(r.label || CHANNELS[ch]?.name || ch)}</td><td>${esc(inr(r.spend))}</td>
+        <td>${esc(r.messages != null ? num(r.messages) : '—')}</td><td>${esc(r.delivered != null ? num(r.delivered) : '—')}</td>
+        <td>${esc(num(r.reach))}</td><td>${esc(num(r.clicks))}</td><td>${esc(pct(r.ctr))}</td>
+        <td>${esc(num(r.conversions))}</td><td>${esc(inr(r.revenue))}</td><td>${esc(roas(r.roas))}</td></tr>`).join('');
+    }
+    function renderAnalysis(c) {
+      const show = c.status === 'launched';
+      $('analysisSection').hidden = !show;
+      if (!show) { Object.keys(anCharts).forEach(k => anChart(k, null)); return; }
+      $('trackingNote').textContent = `${campaignTitle(c)} · started ${String(c.launched_at || '').slice(0, 10)} · ${c.duration_days || '—'} days from ${c.start_date || '—'} · ${inr(c.budget_inr)} budget`
+        + (c.budget_recommended ? ` (recommended ${inr(c.budget_recommended)})` : '') + '. Nothing is delivered to customers; all figures are simulated.';
+      renderImpactTiles(c);
+      loadAnalysis(c.campaign_id);
+    }
+    /* ---------- Store stock & actual POS sales (retail suite) ---------- */
+    const RSTAT = { ready: 'Ready', low: 'Low', out: 'Out at stores', not_in_catalog: 'Not in catalog' };
+    function retailEnabled() {
+      const s = SuffaiSession.getSession() || {};
+      return ['brand', 'admin'].includes(s.role) && (s.allowed_tabs || []).includes('inventory');
+    }
+    async function loadRetail(c) {
+      const sec = $('retailSection');
+      sec.hidden = !(c && c.campaign_id && c.status !== 'sample' && retailEnabled());
+      if (sec.hidden) return;
+      const id = c.campaign_id;
+      $('rtErr').hidden = true;
+      let d;
+      try {
+        d = await api('/v1/retail/campaigns/' + encodeURIComponent(id));
+      } catch (e) {
+        if (!state.current || state.current.campaign_id !== id) return;
+        $('rtTiles').innerHTML = ''; $('rtReady').innerHTML = ''; $('rtStores').innerHTML = '';
+        $('rtNote').textContent = '';
+        $('rtErr').textContent = 'Store stock and sales are unavailable right now: ' + e.message;
+        $('rtErr').hidden = false;
+        return;
+      }
+      if (!state.current || state.current.campaign_id !== id) return;
+      const rupees = (p) => inr(Number(p || 0) / 100);
+      const change = (v) => (v == null ? 'no sales before' : (v > 0 ? '+' : '') + v + '% vs before');
+      const s = d.sales;
+      const storeUnits = (d.stores || []).reduce((a, r) => a + Number(r.units || 0), 0);
+      const tiles = [
+        ['Units at stores', num(storeUnits), `${(d.stores || []).length} store${(d.stores || []).length === 1 ? '' : 's'}`],
+        ['In warehouses', num(d.warehouse_units), 'Campaign items'],
+      ];
+      if (s) {
+        tiles.unshift(
+          ['Net sales', rupees(s.all_items.net_paise), change(s.all_items.change_pct)],
+          ['Campaign items sold', num(s.campaign_items.units), change(s.campaign_items.change_pct)],
+          ['Bills tagged', num(s.tagged_bills.invoices), rupees(s.tagged_bills.net_paise)],
+        );
+      }
+      $('rtTiles').innerHTML = tiles.map(([l, v, sub]) => `<div class="tile"><span>${esc(l)}</span><b>${esc(v)}</b><small>${esc(sub)}</small></div>`).join('');
+      const basis = s ? (s.stores_basis === 'none' ? 'No stores in or near the campaign PINs yet.'
+        : `Sales ${s.window.from} to ${s.window.to} at stores in the ${s.stores_basis}, compared with the ${s.window.days} days before.`)
+        : 'Sales appear here once the campaign window starts.';
+      $('rtNote').textContent = basis + ' ' + (d.notes || '');
+      $('rtReady').innerHTML = (d.readiness || []).length ? d.readiness.map(r => `<tr><td>${esc(r.label)}</td><td>${esc(num(r.matched_variants))}</td>
+        <td>${esc(num(r.store_units))}</td><td><span class="rstat ${esc(r.status)}">${esc(RSTAT[r.status] || r.status)}</span></td></tr>`).join('')
+        : '<tr><td colspan="4" style="color:var(--muted)">No SKUs on this campaign.</td></tr>';
+      $('rtStores').innerHTML = (d.stores || []).length ? d.stores.map(r => `<tr><td>${esc(r.code)} · ${esc(r.name)}${r.in_campaign_pins ? '' : ' <small style="color:var(--muted)">(nearby)</small>'}</td>
+        <td>${esc(r.pin_code || '—')}</td><td>${esc(num(r.units))}</td></tr>`).join('')
+        : '<tr><td colspan="3" style="color:var(--muted)">No stores in or near these PINs.</td></tr>';
+    }
+    $('rtRefreshBtn').addEventListener('click', () => { if (state.current) loadRetail(state.current); });
+
+    function splitSeries(delivered, projected, field) {
+      const all = delivered.concat(projected), n = delivered.length;
+      return {
+        solid: all.map((d, i) => (i < n ? d[field] : null)),
+        dashed: all.map((d, i) => (i >= n || (n && i === n - 1) ? d[field] : null)),
+      };
+    }
+    async function loadAnalysis(id) {
+      $('anErr').hidden = true;
+      let data;
+      try {
+        data = await api('/v1/ads-lab/campaigns/' + encodeURIComponent(id) + '/monitor');
+      } catch (e) {
+        if (!state.current || state.current.campaign_id !== id) return;
+        Object.keys(anCharts).forEach(k => anChart(k, null)); // don't leave the previous campaign's charts on screen
+        $('anErr').textContent = 'Trend charts are unavailable right now: ' + e.message;
+        $('anErr').hidden = false;
+        return;
+      }
+      if (!state.current || state.current.campaign_id !== id) return;
+      const c = data.campaign || state.current;
+      renderImpactTiles(c);
+      const daily = data.daily || {};
+      const delivered = daily.delivered || [], projected = daily.projected || [];
+      const all = delivered.concat(projected), n = delivered.length;
+      const labels = all.map(d => String(d.day).slice(5));
+      const base = {
+        responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { boxWidth: 10, font: { size: 10 } } } },
+        scales: { x: { ticks: { font: { size: 9 } }, grid: { display: false } }, y: { ticks: { font: { size: 9 } } } },
+      };
+      const impr = splitSeries(delivered, projected, 'impressions'), clicks = splitSeries(delivered, projected, 'clicks');
+      anChart('anDelivery', all.length ? {
+        type: 'line',
+        data: { labels, datasets: [
+          { label: 'Impressions', data: impr.solid, borderColor: '#6B3A55', backgroundColor: 'rgba(107,58,85,.15)', fill: true, tension: .3, pointRadius: 0, yAxisID: 'y' },
+          { label: 'Impressions (projected)', data: impr.dashed, borderColor: '#6B3A55', borderDash: [5, 4], pointRadius: 0, tension: .3, yAxisID: 'y' },
+          { label: 'Clicks', data: clicks.solid, borderColor: '#C9A24A', tension: .3, pointRadius: 0, yAxisID: 'y1' },
+          { label: 'Clicks (projected)', data: clicks.dashed, borderColor: '#C9A24A', borderDash: [5, 4], pointRadius: 0, tension: .3, yAxisID: 'y1' },
+        ] },
+        options: { ...base, scales: { ...base.scales, y1: { position: 'right', grid: { display: false }, ticks: { font: { size: 9 } } } } },
+      } : null);
+      anChart('anRevenue', all.length ? {
+        type: 'bar',
+        data: { labels, datasets: [
+          { label: 'Revenue', data: all.map(d => d.revenue), backgroundColor: all.map((_, i) => (i < n ? '#6B3A55' : 'rgba(107,58,85,.3)')) },
+          { label: 'Spend', data: all.map(d => d.spend), backgroundColor: all.map((_, i) => (i < n ? '#C9A24A' : 'rgba(201,162,74,.3)')) },
+        ] },
+        options: base,
+      } : null);
+      const chDaily = data.channel_daily || [];
+      const chKeys = [...new Set(chDaily.map(r => r.channel))];
+      const days = [...new Set(chDaily.map(r => r.day))].sort();
+      const palette = ['#6B3A55', '#25D366', '#C9A24A', '#7D8FB3'];
+      anChart('anChannels', chKeys.length ? {
+        type: 'line',
+        data: { labels: days.map(d => String(d).slice(5)), datasets: chKeys.map((ch, k) => ({
+          label: CHANNELS[ch]?.name || ch, tension: .3, pointRadius: 0, borderColor: palette[k % palette.length],
+          data: days.map(d => { const r = chDaily.find(x => x.day === d && x.channel === ch); return r ? r.conversions : 0; }),
+        })) },
+        options: base,
+      } : null);
+      const total = all.length;
+      const spent = delivered.reduce((t, d) => t + Number(d.spend || 0), 0);
+      const budget = Number(c.budget_inr || 0);
+      const spentPct = budget ? Math.min(100, spent / budget * 100) : 0;
+      const timePct = total ? n / total * 100 : 0;
+      $('anSpendLabel').textContent = `${inr(spent)} / ${inr(budget)} (${spentPct.toFixed(0)}%)`;
+      $('anSpendBar').style.width = spentPct + '%';
+      $('anScheduleLabel').textContent = `Day ${n} of ${total || '—'}`;
+      $('anTimeBar').style.width = timePct + '%';
+      $('anStart').textContent = c.start_date || '';
+      $('anEnd').textContent = c.end_date || '';
+      const ins = data.insights || [];
+      $('anInsights').innerHTML = ins.length
+        ? ins.map(t => `<li><i class="fa-solid fa-lightbulb"></i><span>${esc(t)}</span></li>`).join('')
+        : '<li style="color:var(--muted)">No insights yet.</li>';
+      const skus = (data.skus || []).slice(0, 8);
+      anChart('anSkus', skus.length ? {
+        type: 'bar',
+        data: { labels: skus.map(s => String((s.attributes || {}).name || s.original_filename || 'SKU').slice(0, 24)),
+          datasets: [{ label: 'Avg PIN Fit', data: skus.map(s => Math.round((s.pin_fit || 0) * 100)), backgroundColor: '#6B3A55', borderRadius: 4 }] },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+          scales: { x: { min: 0, max: 100, ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 10 } } } } },
+      } : null);
+    }
+    function focusAnalysis() {
+      const el = $('analysisSection');
+      if (el.hidden) return;
+      el.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+    }
+    /* ---------- Summary + validation ---------- */
+    function renderSummary() {
+      const c = state.current || {};
+      const budget = Number($('campaignBudget').value || 0), days = daysValue();
+      const est = state.estimate && state.estimate.expected;
+      $('sumList').innerHTML = [
+        ['Audience', state.current ? `${num(c.est_audience)} customers` : 'Sample audience'],
+        ['Creatives', `${state.picked.length}${state.mode === 'ab' ? ' · A/B test' : ''}`],
+        ['Channels', state.channels.map(k => CHANNELS[k].name).join(', ') || '—'],
+        ['Objective', (OBJECTIVES.find(o => o[0] === selectedObjective()) || [])[1] || '—'],
+        ['Budget', budget > 0 ? `${inr(budget)} · ${inr(budget / days)}/day` : '—'],
+        ['Schedule', `${$('campaignStart').value || '—'} · ${days} days`],
+        ['Est. ROAS', est ? roas(est.roas) + ' (sim)' : '—'],
+        ['Frequency', $('fCap').selectedOptions[0].text],
+        ['Quiet Hours', $('fQuiet').checked ? 'On' : 'Off'],
+      ].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+    }
+    function renderAll() {
+      $('cHead').textContent = `${$('fHead').value.length}/90`;
+      $('cWa').textContent = `${$('fWa').value.length}/1000`;
+      $('cSms').textContent = `${$('fSms').value.length}/160`;
+      const u = finalUrl(); $('urlOut').textContent = u ? `→ ${u}` : '';
+      $('dailyBudget').textContent = Number($('campaignBudget').value) > 0 ? inr(Number($('campaignBudget').value) / daysValue()) + ' / day' : '—';
+      $('s1').classList.add('done');
+      $('s2').classList.toggle('done', state.picked.length > 0);
+      $('s3').classList.toggle('done', state.channels.length > 0);
+      $('s4').classList.toggle('done', !!($('fName').value.trim() && $('fHead').value.trim()));
+      $('s5').classList.toggle('done', Number($('campaignBudget').value) > 0);
+      renderSummary();
+      renderPreview();
+      syncStartBar();
+      if (!$('errs').hidden) showErrs(validate(configBody()));
+    }
+    function syncStartBar() {
+      const c = state.current;
+      const show = !c || editable();
+      $('startBar').hidden = !show;
+      if (!show) return;
+      $('sbName').textContent = c ? ($('fName').value.trim() || campaignTitle(c)) : 'Sample campaign';
+      $('sbStatus').className = 'st ' + (c ? c.status : 'ranked');
+      $('sbStatus').textContent = c ? statusLabel(c.status) : 'Sample';
+      $('sbHint').textContent = c
+        ? 'All details filled? Start it now. Running is simulated: nothing is sent to customers.'
+        : 'This is a sample. Rank your SKUs in Ads Lab and choose Set Up 1P Campaign to create a real one.';
+      $('launchBtn2').innerHTML = c
+        ? '<i class="fa-solid fa-rocket"></i> Create &amp; Start Campaign'
+        : '<i class="fa-solid fa-ranking-star"></i> Rank Your SKUs in Ads Lab to Launch';
+    }
+    function setLaunching(on) {
+      ['launchBtn', 'launchBtn2'].forEach(id => { $(id).disabled = on; });
+    }
+    function configBody() {
+      const tpl = {};
+      if (state.channels.includes('whatsapp')) tpl.whatsapp = $('fWa').value.trim();
+      if (state.channels.includes('sms')) tpl.sms = $('fSms').value.trim();
+      return {
+        campaign_name: $('fName').value.trim(),
+        objective: selectedObjective(),
+        budget_inr: Number($('campaignBudget').value || 0),
+        duration_days: daysValue(),
+        start_date: $('campaignStart').value || null,
+        selected_sku_ids: state.picked.slice(),
+        creative: {
+          headline: $('fHead').value.trim(), cta: $('fCta').value.trim() || 'Shop now',
+          hero_sku_id: state.focus || state.picked[0] || null, delivery_mode: state.mode,
+          offer_code: $('fCode').value.trim().toUpperCase() || null, landing_url: finalUrl() || null, utm: $('fUtm').checked,
+          frequency_cap: $('fCap').value, quiet_hours: $('fQuiet').checked,
+        },
+        source_context: state.sourceContext || null,
+        channels: state.channels.slice(),
+        message_template: tpl,
+        platform_fee_inr: Number($('platformFee').value || 0) || null,
+      };
+    }
+    function validate(body) {
+      const errs = [], mark = (id, eid, msg) => {
+        $(id).classList.toggle('err', !!msg); $(id).setAttribute('aria-invalid', String(!!msg));
+        $(eid).textContent = msg || ''; if (msg) errs.push(msg);
+      };
+      mark('fName', 'eName', body.campaign_name ? '' : 'Campaign name is required.');
+      mark('fHead', 'eHead', body.creative.headline ? '' : 'Headline is required.');
+      mark('fWa', 'eWa', body.channels.includes('whatsapp') && !body.message_template.whatsapp ? 'WhatsApp message is required.' : '');
+      mark('fSms', 'eSms', body.channels.includes('sms') && !body.message_template.sms ? 'SMS message is required.' : '');
+      const code = $('fCode').value.trim();
+      mark('fCode', 'eCode', !code || /^[A-Za-z0-9_-]{3,15}$/.test(code) ? '' : 'Use 3–15 letters, numbers, - or _ (no spaces).');
+      const url = $('fUrl').value.trim();
+      let urlErr = '';
+      if (url) { try { if (!/^https?:$/.test(new URL(url).protocol)) urlErr = 'Link must start with http:// or https://.'; } catch (_) { urlErr = 'Enter a full link, e.g. https://yourstore.com/sale'; } }
+      mark('fUrl', 'eUrl', urlErr);
+      const b = body.budget_inr;
+      mark('campaignBudget', 'eBudget', !$('campaignBudget').value.trim() ? 'Budget is required. Enter an amount or use the recommended budget.'
+        : !(Number.isFinite(b) && b >= 5000) ? 'Enter a media budget of at least ₹5,000.'
+        : b > 100000000 ? 'Budget can be at most ₹10,00,00,000.' : '');
+      const fee = body.platform_fee_inr;
+      mark('platformFee', 'ePlatformFee', fee != null && (!Number.isFinite(fee) || fee <= 0) ? 'Enter a positive platform fee.' : '');
+      const rawDays = $('campaignDays').value.trim(), d = Number(rawDays);
+      mark('campaignDays', 'eDays', !rawDays ? 'Duration is required.'
+        : Number.isInteger(d) && d >= 1 && d <= 365 ? '' : 'Enter a whole number of days from 1 to 365.');
+      const start = $('campaignStart').value;
+      mark('campaignStart', 'eStart', !start ? '' : !/^\d{4}-\d{2}-\d{2}$/.test(start) ? 'Pick a valid start date.'
+        : start < todayIso() ? 'Start date can’t be in the past.' : '');
+      const crErr = !body.selected_sku_ids.length ? 'Select at least one creative.'
+        : state.mode === 'ab' && body.selected_sku_ids.length < 2 ? 'A/B testing needs two or more creatives.' : '';
+      $('eCreatives').textContent = crErr;
+      if (crErr) errs.push(crErr);
+      const chErr = body.channels.length ? '' : 'Select at least one channel.';
+      $('eChannels').textContent = chErr;
+      if (chErr) errs.push(chErr);
+      return errs;
+    }
+    function showErrs(errs) {
+      $('errs').hidden = !errs.length;
+      $('errs').innerHTML = errs.map(e => `<li>${esc(e)}</li>`).join('');
+    }
+    function clearFieldErrs() {
+      showErrs([]);
+      document.querySelectorAll('#form .in.err').forEach(el => { el.classList.remove('err'); el.setAttribute('aria-invalid', 'false'); });
+      document.querySelectorAll('#form .ferr').forEach(el => { el.textContent = ''; });
+    }
+    function checked() {
+      const body = configBody(), errs = validate(body);
+      showErrs(errs);
+      if (errs.length) {
+        toast('Fix the highlighted fields first.', 'fa-triangle-exclamation');
+        const first = document.querySelector('#form .in.err, #form p.ferr:not(:empty)');
+        if (first?.matches('.in')) first.focus(); else first?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return null;
+      }
+      return body;
+    }
+    $('form').addEventListener('input', (e) => {
+      renderAll();
+      if (e.target.id === 'campaignDays' || e.target.name === 'objective') scheduleRecommendation();
+      if (e.target.id === 'campaignBudget') { scheduleEstimate(); fetchPlatformFee(false); }
+      if (e.target.id === 'platformFee') renderPlatformFee();
+    });
+    $('form').addEventListener('submit', (e) => e.preventDefault()); // Enter in a field must not reload the page
+    $('form').addEventListener('change', (e) => { renderAll(); if (e.target.name === 'objective') scheduleRecommendation(); });
+
+    /* ---------- Actions ---------- */
+    async function saveConfig(body) {
+      const data = await api('/v1/ads-lab/campaigns/' + encodeURIComponent(state.current.campaign_id) + '/config', { method: 'PATCH', body: JSON.stringify(body) });
+      return data.campaign;
+    }
+    async function onSave() {
+      if (state.busy || !editable()) return;
+      const body = checked(); if (!body) return;
+      state.busy = true;
+      try {
+        const c = await saveConfig(body);
+        toast('Saved');
+        await loadCampaign(c.campaign_id); loadCampaigns();
+      } catch (e) { toast(e.message, 'fa-triangle-exclamation'); }
+      finally { state.busy = false; }
+    }
+    async function onLaunch() {
+      if (!state.current) { goTab('ads', './ads_lab.html'); return; }
+      if (state.busy || !editable()) return;
+      const body = checked(); if (!body) return;
+      const chans = body.channels.map(c => CHANNELS[c].name).join(', ');
+      const obj = (OBJECTIVES.find(o => o[0] === body.objective) || [])[1] || body.objective;
+      if (!confirm(`Confirm and start this campaign?\n\nName: ${body.campaign_name}\nObjective: ${obj}\nChannels: ${chans}\nBudget: ${inr(body.budget_inr)}\nSchedule: ${body.start_date || todayIso()} for ${body.duration_days} days\n\nRunning is simulated: no messages or ads are sent. Simulated performance is generated for tracking.`)) return;
+      state.busy = true;
+      setLaunching(true);
+      try {
+        const c = await saveConfig(body);
+        await api('/v1/ads-lab/campaigns/' + encodeURIComponent(c.campaign_id) + '/launch', { method: 'POST' });
+        toast(`“${body.campaign_name}” is running (simulated)`, 'fa-rocket');
+        notifyShell({ type: 'cc-campaign-launched', campaign_id: c.campaign_id });
+        state.histPage = 1;
+        await loadCampaign(c.campaign_id, null, { focus: 'analysis' }); loadCampaigns();
+      } catch (e) { toast(e.message, 'fa-triangle-exclamation'); }
+      finally { state.busy = false; setLaunching(false); }
+    }
+    async function onDiscard() {
+      if (state.busy || !editable()) return;
+      if (!confirm('Discard this campaign? It will be hidden and cannot be launched.')) return;
+      state.busy = true;
+      try {
+        await api('/v1/ads-lab/campaigns/' + encodeURIComponent(state.current.campaign_id) + '/ignore', { method: 'POST' });
+        showSample();
+        toast('Campaign discarded', 'fa-trash-can');
+        loadCampaigns();
+        publishContext();
+      } catch (e) { toast(e.message, 'fa-triangle-exclamation'); }
+      finally { state.busy = false; }
+    }
+    async function onCancelRanking() {
+      const c = state.current;
+      if (state.busy || !c || c.status !== 'processing') return;
+      if (!confirm('Cancel the ranking job for this campaign? It stops after the image in progress, nothing is saved and the campaign is discarded.')) return;
+      state.busy = true;
+      const btn = $('cancelRankBtn');
+      btn.disabled = true;
+      try {
+        const list = await api('/v1/ads-lab/campaign-jobs?active=true&limit=100');
+        const job = (list.jobs || []).find(j => j.campaign_id === c.campaign_id);
+        if (!job) {
+          toast('The ranking job has already finished.', 'fa-circle-info');
+          await loadCampaign(c.campaign_id);
+          return;
+        }
+        await api('/v1/ads-lab/campaign-jobs/' + encodeURIComponent(job.job_id) + '/cancel', { method: 'POST' });
+        showSample();
+        toast('Ranking job cancelled', 'fa-circle-stop');
+        loadCampaigns();
+        publishContext();
+      } catch (e) {
+        toast(e.status === 409 ? 'The ranking job has already finished.' : e.message, 'fa-triangle-exclamation');
+        if (e.status === 409) loadCampaign(c.campaign_id);
+      } finally { state.busy = false; btn.disabled = false; }
+    }
+    /* ---------- Shell messaging ---------- */
+    const inShell = () => !!window.parent && window.parent !== window;
+    function notifyShell(msg) {
+      if (!inShell()) return;
+      try { window.parent.postMessage(msg, location.origin); } catch (_) { /* ignore */ }
+    }
+    function startAnotherCampaign() {
+      if (inShell()) notifyShell({ type: 'cc-new-campaign', source: 'campaigns' });
+      else location.href = './ads_lab.html?new=1';
+    }
+    function publishContext() {
+      if (!window.parent || window.parent === window) return;
+      try {
+        window.parent.postMessage({
+          type: 'cc-context', source: 'campaigns',
+          campaign_id: state.current ? (state.current.campaign_id || null) : null,
+          campaign_name: state.current ? (state.current.campaign_name || null) : null,
+          status: state.current ? state.current.status : null,
+        }, '*');
+      } catch (_) { /* ignore */ }
+    }
+    window.addEventListener('message', (ev) => {
+      const data = ev.data;
+      if (ev.source !== window.parent || window.parent === window) return; // only the Command Center shell may drive this page
+      if (!data || typeof data !== 'object') return;
+      if (data.type === 'cc-context-request') { publishContext(); return; }
+      if (data.type !== 'cc-agent-command') return;
+      const cmd = data.command || {};
+      const t = String(cmd.type || '');
+      if (t === 'load_campaign') { loadCampaign(String(cmd.campaign_id || ''), cmd.source_context, { focus: cmd.focus }); loadCampaigns(); }
+      else if (t === 'refresh_campaigns') { loadCampaigns(); if (state.current) loadCampaign(state.current.campaign_id); }
+      else return;
+      try { window.parent.postMessage({ type: 'cc-agent-ack', source: 'campaigns', command: t, ok: true }, '*'); } catch (_) { /* ignore */ }
+    });
+
+    /* ---------- Wiring ---------- */
+    ['backBtn', 'editAud', 'goAds', 'startBtn'].forEach(id => $(id).addEventListener('click', () => goTab('ads', './ads_lab.html')));
+    $('useRecBtn').addEventListener('click', () => { if (state.rec) { $('campaignBudget').value = Math.round(state.rec.recommended); renderAll(); scheduleEstimate(); } });
+    $('saveBtn').addEventListener('click', onSave);
+    $('launchBtn').addEventListener('click', onLaunch);
+    $('launchBtn2').addEventListener('click', onLaunch);
+    $('newCampaignBtn').addEventListener('click', startAnotherCampaign);
+    $('discardBtn').addEventListener('click', onDiscard);
+    $('cancelRankBtn').addEventListener('click', onCancelRanking);
+    $('anRefreshBtn').addEventListener('click', () => { if (state.current) loadCampaign(state.current.campaign_id); });
+    $('refreshBtn').addEventListener('click', loadCampaigns);
+    $('histPager').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-hp]');
+      if (!b || b.disabled) return;
+      state.histPage = Number(b.dataset.hp);
+      renderHistory();
+    });
+    ['hfFrom', 'hfTo'].forEach(id => $(id).addEventListener('change', () => {
+      $('hfTo').min = $('hfFrom').value;
+      $('hfFrom').max = $('hfTo').value;
+      applyHistFilters();
+    }));
+    $('hfClear').addEventListener('click', () => {
+      document.querySelectorAll('#histFilters details.ms input').forEach(i => { i.checked = false; i.indeterminate = false; });
+      document.querySelectorAll('#histFilters details.ms').forEach(msSummary);
+      $('hfFrom').value = ''; $('hfTo').value = ''; $('hfFrom').max = ''; $('hfTo').min = '';
+      applyHistFilters();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('details.ms[open]').forEach(d => { d.removeAttribute('open'); if (d.contains(document.activeElement)) d.querySelector('summary').focus(); });
+    });
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('details.ms[open]').forEach(d => { if (!d.contains(e.target)) d.removeAttribute('open'); });
+    });
+    $('tzNote').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+
+    showSample();
+    const initialParams = new URLSearchParams(location.search);
+    const initialId = initialParams.get('campaign_id');
+    if (initialId) loadCampaign(initialId, null, { focus: initialParams.get('focus') });
+    // loadCampaigns opens the newest campaign unless a load from the URL / AURA / Ads Lab is already running;
+    // whichever load runs ends the boot state, otherwise (no campaigns, storage offline) the sample shows now.
+    loadCampaigns().then(() => { if (!loadsInFlight) endBoot(); });
+    setTimeout(endBoot, 10000); // requests have no timeout: never keep the studio hidden
+  </script>
+</body>
+</html>

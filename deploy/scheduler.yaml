@@ -1,0 +1,50 @@
+# Cloud Scheduler → Cloud Run Jobs (apply via gcloud after jobs exist)
+# Prerequisites:
+#   - Cloud Run Jobs: suffai-bq-sync, suffai-cdc
+#   - Scheduler SA with roles/run.developer (or Job Invoker)
+#
+# Example create (asia-south1):
+#
+# gcloud run jobs create suffai-bq-sync \
+#   --image=REGION-docker.pkg.dev/PROJECT/suffai/suffai-job:latest \
+#   --region=asia-south1 \
+#   --set-env-vars=GOOGLE_CLOUD_PROJECT=PROJECT,USE_BIGQUERY_MARTS=true \
+#   --command=python --args=-m,jobs.bq_sync
+#
+# gcloud run jobs create suffai-cdc \
+#   --image=REGION-docker.pkg.dev/PROJECT/suffai/suffai-job:latest \
+#   --region=asia-south1 \
+#   --set-env-vars=GOOGLE_CLOUD_PROJECT=PROJECT,MONGO_URI=... \
+#   --command=python --args=-m,jobs.cdc_ingest
+#
+# gcloud scheduler jobs create http suffai-cdc-hourly \
+#   --location=asia-south1 \
+#   --schedule="0 * * * *" \
+#   --uri="https://REGION-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/PROJECT/jobs/suffai-cdc:run" \
+#   --http-method=POST \
+#   --oauth-service-account-email=SCHEDULER_SA@PROJECT.iam.gserviceaccount.com
+#
+# gcloud scheduler jobs create http suffai-bq-marts-daily \
+#   --location=asia-south1 \
+#   --schedule="15 2 * * *" \
+#   --time-zone="Asia/Kolkata" \
+#   --uri="https://REGION-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/PROJECT/jobs/suffai-bq-sync:run" \
+#   --http-method=POST \
+#   --oauth-service-account-email=SCHEDULER_SA@PROJECT.iam.gserviceaccount.com
+
+jobs:
+  - name: suffai-cdc-hourly
+    schedule: "0 * * * *"
+    timezone: Asia/Kolkata
+    target_job: suffai-cdc
+    description: Incremental Mongo/JSON ingest + BigQuery refresh
+  - name: suffai-bq-marts-daily
+    schedule: "15 2 * * *"
+    timezone: Asia/Kolkata
+    target_job: suffai-bq-sync
+    description: Full mart rebuild into BigQuery
+  - name: suffai-campaign-fee-features-daily
+    schedule: "45 2 * * *"
+    timezone: Asia/Kolkata
+    target_job: suffai-campaign-fee-features
+    description: Aggregate-only 1P fee features for offline model evaluation

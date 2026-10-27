@@ -1,0 +1,2391 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#FAF6EE] text-[#3B2733]">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuffAI · Ads Lab</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: Outfit, system-ui, sans-serif; background-color: #FAF6EE; color: #3B2733; }
+    .font-mono { font-family: 'IBM Plex Mono', monospace; }
+    .font-display { font-family: Outfit, system-ui, sans-serif; }
+    :focus-visible { outline: 3px solid rgba(197,159,176,.7); outline-offset: 2px; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #F6EEF0; }
+    ::-webkit-scrollbar-thumb { background: #DCC3CE; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6B3A55; }
+    
+    /* Same surface system as Campaigns: white cards on plain cream, dark wine hero */
+    .glass-panel { background: #FFFFFF; border: 1px solid #EAD9E0; border-radius: 16px; box-shadow: 0 1px 2px rgba(59,39,51,.04), 0 10px 25px rgba(107,58,85,.06); }
+    .holographic-grid { background: radial-gradient(60% 40% at 100% 0%, rgba(197,159,176,.16), transparent 60%), #FAF6EE; }
+    #mainScroll { isolation: isolate; } /* keep deck/sticky-bar z-indexes below the loading overlay, nav tab and modal */
+    #mainScroll > * { scroll-margin-top: 90px; }
+    /* Phones: one page scroll (sidebar, then steps → ranking → campaign) instead of two stacked scroll boxes */
+    @media (max-width: 767px) {
+      body { height: auto !important; min-height: 100vh; overflow-y: auto !important; }
+      body > main, body > main > section, #mainScroll { overflow: visible !important; min-height: 0; }
+      #sidebar { max-height: none !important; overflow: visible !important; }
+      #mainScroll > * { scroll-margin-top: 110px; } /* step jumps land below the sticky step bar, not under it */
+      #wizardSteps { margin-left: 40px; } /* clear the sidebar toggle tab */
+    }
+    .lab-hero { position: relative; overflow: hidden; color: #F7EAF0; border-bottom: 1px solid #3E1729;
+      background: radial-gradient(60% 140% at 85% 0%, rgba(224,178,84,.26), transparent 60%), linear-gradient(110deg, #2A0F1F 0%, #4A1A33 55%, #6B3A55 100%); }
+    .lab-hero .lh-ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; flex: none; color: #2A0F1F; font-size: 17px; background: linear-gradient(135deg, #F3D58A, #C9A24A); box-shadow: 0 6px 16px rgba(201,162,74,.3); }
+    .lab-hero h1 { color: #fff; }
+    .lab-hero .lh-pill { font-family: Outfit, system-ui, sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; padding: .15rem .55rem; border-radius: 999px; color: #F3D58A; background: rgba(255,255,255,.08); border: 1px solid rgba(243,213,138,.45); vertical-align: middle; }
+    .lab-hero p { color: #D9BFCB; }
+    .lab-hero .tag { color: #F1DDE6; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.18); padding: .35rem .75rem; font-size: 11px; font-weight: 500; }
+    
+    .upload-zone { border: 2px dashed #6B3A55; transition: all .2s ease; background: #F6EEF0; }
+    .upload-zone.dragover { border-color: #3B2733; background: #EAD9E0; }
+    
+    .field { width: 100%; background: #FFFFFF; border: 1px solid #EAD9E0; color: #3B2733; border-radius: .5rem; padding: .55rem .65rem; font-size: .75rem; }
+    .field:focus { outline: none; border-color: #6B3A55; box-shadow: 0 0 0 3px rgba(197,159,176,.35); }
+    details.ms { position: relative; text-transform: none; letter-spacing: normal; font-weight: 400; }
+    details.ms > summary { list-style: none; cursor: pointer; background: #FFFFFF; border: 1px solid #EAD9E0; color: #3B2733; border-radius: .5rem; padding: .55rem 2.2rem .55rem .65rem; font-size: .75rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%238A7480' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right .7rem center; background-size: 16px; }
+    details.ms > summary::-webkit-details-marker { display: none; }
+    details.ms[open] > summary, details.ms > summary:focus-visible { border-color: #6B3A55; outline: none; box-shadow: 0 0 0 3px rgba(197,159,176,.35); }
+    details.ms .ms-pop { position: absolute; z-index: 40; top: calc(100% + 4px); left: 0; right: 0; max-height: 240px; overflow: auto; background: #FFFFFF; border: 1px solid #EAD9E0; border-radius: .6rem; padding: .3rem; box-shadow: 0 12px 28px rgba(107,58,85,.15); }
+    details.ms label.opt { display: flex; gap: .5rem; align-items: center; padding: .3rem .4rem; border-radius: .35rem; font-size: .75rem; color: #3B2733; cursor: pointer; }
+    details.ms label.opt:hover { background: #F6EEF0; }
+    details.ms label.opt.all { font-weight: 600; border-bottom: 1px solid #EAD9E0; margin-bottom: .2rem; }
+    details.ms label.opt input { accent-color: #6B3A55; }
+    details.ms .ms-empty { padding: .4rem; font-size: .75rem; color: #8A7480; }
+    .form-err { padding: .55rem .7rem; border-radius: 10px; background: rgba(180,60,60,.08); border: 1px solid rgba(180,60,60,.3); color: #a03a3a; font-size: 12px; }
+    .req { color: #a03a3a; margin-left: 2px; }
+    .field-err { margin-top: .3rem; font-size: 11px; font-weight: 500; color: #a03a3a; text-transform: none; letter-spacing: normal; }
+    .field-err:empty { display: none; }
+    .field[aria-invalid="true"], details.ms.invalid > summary { border-color: #c45a5a; }
+    .upload-zone.invalid { border-color: #c45a5a; }
+    
+    .tag { display: inline-flex; align-items: center; gap: .3rem; border-radius: 999px; border: 1px solid #EAD9E0; padding: .15rem .5rem; font-size: 10px; color: #552C43; background: #F6EEF0; }
+    .muted { color: #8A7480; }
+
+    /* Audience taste: one horizontal rail; categories never stack vertically. */
+    .taste-rail {
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 12px;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 2px 2px 12px;
+      scroll-behavior: smooth;
+      scroll-snap-type: x proximity;
+      overscroll-behavior-x: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #6B3A55 #F6EEF0;
+    }
+
+    .taste-card {
+      flex: 0 0 240px;
+      width: 240px;
+      min-width: 240px;
+      height: 185px;
+      max-height: 185px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      scroll-snap-align: start;
+      background: #FFFFFF;
+      border: 1px solid #EAD9E0;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    
+    .taste-card .taste-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #6B3A55 transparent;
+      padding-right: 2px;
+    }
+    
+    .taste-card .taste-title {
+      color: #6B3A55;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ---- Creative ranking deck (dark burgundy stage) ----
+       Coverflow-style: the selected card is always centred; the others stack behind it symmetrically
+       (left ones to the left, right ones to the right). JS sets --x/--s/--o/--z per card. */
+    .deck-canvas {
+      border: 1px solid #3E1729; border-radius: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 22px 44px rgba(28,8,18,.22);
+    }
+    .deck {
+      --cw: clamp(240px, 23vw, 310px); --ease: cubic-bezier(.22,.8,.24,1);
+      position: relative; height: 540px; overflow: hidden; outline: none; touch-action: pan-y; user-select: none;
+    }
+    .deck:focus-visible { box-shadow: inset 0 0 0 2px rgba(201,162,74,.55); }
+    .deck-glow {
+      position: absolute; left: 50%; top: 50%; z-index: 45; pointer-events: none;
+      width: calc(var(--cw) * 2.1); height: calc(var(--cw) * 2.1); translate: -50% -53%; border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(245,205,110,.62), rgba(212,160,60,.32) 40%, rgba(120,40,75,.25) 64%, transparent 76%);
+      filter: blur(18px); animation: glowPulse 3.4s ease-in-out infinite alternate;
+    }
+    @keyframes glowPulse { from { opacity: .7; scale: .93; } to { opacity: 1; scale: 1.05; } }
+    .cr-card {
+      --x: 0%; --y: 0px; --s: 1; --o: 1;
+      position: absolute; left: 50%; top: 50%; width: var(--cw); height: 440px; z-index: var(--z, 1);
+      display: flex; flex-direction: column; overflow: hidden; cursor: pointer;
+      background: linear-gradient(180deg, #FFF9FB, #F6E9EF); border: 1px solid #EAD9E0; border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.45);
+      transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(var(--s));
+      opacity: var(--o); filter: saturate(.8) brightness(.78);
+      transition: transform .8s var(--ease), opacity .6s ease, filter .6s ease, box-shadow .6s ease, border-color .5s ease;
+      will-change: transform; color: #3B2733;
+    }
+    .cr-card.is-active {
+      cursor: default; filter: none; border-color: #C9A24A;
+      box-shadow: 0 0 0 1px rgba(201,162,74,.6), 0 0 0 6px rgba(201,162,74,.12), 0 0 60px rgba(224,178,84,.4), 0 34px 70px rgba(0,0,0,.55);
+    }
+    .cr-card.is-gone { pointer-events: none; }
+    .deck-nav {
+      position: absolute; top: 50%; z-index: 60; translate: -50% -50%;
+      width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+      background: linear-gradient(145deg, #4A2F3E, #1F0B16); color: #F3D58A; border: 1px solid rgba(201,162,74,.7);
+      box-shadow: 0 8px 22px rgba(0,0,0,.45), 0 0 0 4px rgba(201,162,74,.14);
+      transition: transform .25s var(--ease), background .25s ease, opacity .25s ease;
+    }
+    .deck-nav.prev { left: calc(50% - var(--cw) / 2 - 30px); }
+    .deck-nav.next { left: calc(50% + var(--cw) / 2 + 30px); }
+    .deck-nav:hover:not(:disabled) { transform: scale(1.1); background: linear-gradient(145deg, #7A3A5C, #3B2733); }
+    .deck-nav:disabled { opacity: 0; pointer-events: none; }
+    .deck-nav:focus-visible { outline: 3px solid rgba(201,162,74,.7); outline-offset: 2px; }
+    .deck-dots { position: absolute; left: 50%; bottom: 12px; translate: -50% 0; z-index: 60; display: flex; gap: 6px; }
+    .deck-dots i { width: 6px; height: 6px; border-radius: 99px; background: rgba(255,255,255,.22); transition: width .4s var(--ease), background .4s ease; }
+    .deck-dots i.on { width: 22px; background: linear-gradient(90deg, #E0B654, #C9A24A); }
+
+    .cr-media { position: relative; flex: 0 0 205px; overflow: hidden; border-bottom: 1px solid #EAD9E0;
+      background: radial-gradient(circle at 50% 40%, #FFFFFF 0%, #F8EAF0 55%, #EDD5DF 100%); }
+    .cr-media img, .cr-media svg { width: 100%; height: 100%; object-fit: contain; padding: 14px; transition: transform .9s var(--ease); }
+    .cr-media img { border-radius: 16px; }
+    .cr-media svg { filter: drop-shadow(0 12px 14px rgba(59,39,51,.28)); }
+    .cr-card.is-active .cr-media :is(img, svg) { transform: scale(1.04); }
+    .cr-rank, .cr-status { position: absolute; top: 12px; border-radius: 999px; background: rgba(255,255,255,.94); border: 1px solid #EAD9E0; color: #3B2733; box-shadow: 0 2px 8px rgba(59,39,51,.08); }
+    .cr-rank { left: 12px; display: inline-flex; align-items: baseline; gap: .45rem; padding: .3rem .85rem .35rem; font-family: 'IBM Plex Mono', monospace; }
+    .cr-rank b { font-size: 22px; font-weight: 700; line-height: 1; letter-spacing: -.01em; }
+    .cr-rank em { font-style: normal; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .cr-status { right: 12px; padding: .25rem .65rem; font-size: 10.5px; color: #8A7480; }
+    .cr-card.top .cr-rank { background: linear-gradient(135deg, #F3D58A, #C9A24A); border-color: #C9A24A; color: #2A0F1F; }
+    .cr-status.bad { color: #a03a3a; border-color: rgba(180,60,60,.3); }
+    .cr-ring { position: absolute; right: 12px; bottom: 12px; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
+      box-shadow: 0 6px 14px rgba(59,39,51,.18); }
+    .cr-ring::before { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: #fff; }
+    .cr-ring b { position: relative; font: 600 15px 'IBM Plex Mono', monospace; }
+    .cr-ring.na b { font-size: 11px; color: #8A7480; }
+
+    /* Details: scrollable on the centre card */
+    .cr-body { flex: 1 1 auto; min-height: 0; padding: 12px 14px 16px; display: flex; flex-direction: column; gap: 10px; overflow: hidden;
+      scrollbar-width: thin; scrollbar-color: rgba(201,162,74,.6) transparent; }
+    .cr-card.is-active .cr-body { overflow-y: auto; }
+    .cr-body::-webkit-scrollbar { width: 6px; }
+    .cr-body::-webkit-scrollbar-thumb { background: rgba(201,162,74,.55); border-radius: 6px; }
+    .cr-name { font-weight: 600; font-size: 14px; color: #3B2733; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cr-sub { font-size: 10.5px; color: #8A7480; text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+    .cr-bar { flex: none; height: 4px; border-radius: 4px; background: #EAD9E0; overflow: hidden; }
+    .cr-bar i { display: block; height: 100%; width: calc(var(--p, 0) * 1%); border-radius: 4px; }
+    .cr-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .cr-card .tag { background: #fff; border-color: #EAD9E0; color: #552C43; }
+    .cr-sec { border-top: 1px solid #EAD9E0; padding-top: 9px; }
+    .cr-sec h5 { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8C6A22; margin-bottom: 6px; }
+    .cr-sec p { font-size: 11px; line-height: 1.5; color: #552C43; }
+    .cr-row { display: grid; grid-template-columns: 58px minmax(0,1fr) auto; gap: 3px 8px; align-items: baseline; font-size: 11px; padding: 4px 0; }
+    .cr-row span { color: #8A7480; }
+    .cr-row b { font-weight: 600; color: #3B2733; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cr-row em { font: 500 10px 'IBM Plex Mono', monospace; font-style: normal; color: #8A7480; }
+    .cr-row em.hit { color: #8C6A22; font-weight: 600; }
+    .cr-row u { grid-column: 1 / -1; height: 3px; border-radius: 3px; background: #EAD9E0; overflow: hidden; text-decoration: none; }
+    .cr-row u::after { content: ''; display: block; height: 100%; width: calc(var(--p, 0) * 1%); background: linear-gradient(90deg, #C59FB0, #C9A24A); border-radius: 3px; }
+    .cr-row small { grid-column: 1 / -1; font-size: 10px; color: #8A7480; }
+    .cr-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .cr-kv div { padding: 6px 8px; border-radius: 9px; background: #fff; border: 1px solid #EAD9E0; min-width: 0; }
+    .cr-kv span { display: block; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #8A7480; }
+    .cr-kv b { display: block; font: 600 12px 'IBM Plex Mono', monospace; color: #3B2733; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cr-scroll-hint { font-size: 9.5px; color: #8A7480; text-align: center; letter-spacing: .06em; }
+    .cr-card:not(.is-active) .cr-scroll-hint { visibility: hidden; }
+    @media (max-width: 640px) { .deck { --cw: 66vw; height: 510px; } .cr-card { height: 420px; } .deck-nav.prev { left: 26px; } .deck-nav.next { left: calc(100% - 26px); } }
+
+    /* 1P activation bar */
+    .launch-bar { position: relative; overflow: hidden; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 18px 20px; border-radius: 16px;
+      background: linear-gradient(110deg, #2A0F1F 0%, #4A1A33 55%, #6B3A55 100%); border: 1px solid #3E1729; color: #F7EAF0; box-shadow: 0 16px 34px rgba(43,15,31,.22); }
+    .launch-bar::after { content: ''; position: absolute; right: -60px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(closest-side, rgba(224,178,84,.35), transparent); pointer-events: none; }
+    .lb-ic { flex: none; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: rgba(224,178,84,.15); border: 1px solid rgba(224,178,84,.45); color: #F3D58A; font-size: 18px; }
+    .lb-text { flex: 1 1 320px; min-width: 0; }
+    .lb-text h3 { font-family: Outfit, system-ui, sans-serif; font-size: 1.25rem; font-weight: 700; line-height: 1.1; color: #fff; }
+    .lb-text p { font-size: 12px; color: #D9BFCB; margin-top: 4px; }
+    .lb-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+    .lb-meta span { font: 500 11px 'IBM Plex Mono', monospace; padding: .3rem .65rem; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: #F1DDE6; }
+    .lb-link { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1.1rem; border-radius: 12px; font-weight: 600; font-size: 13px;
+      background: linear-gradient(135deg, #F3D58A, #C9A24A); color: #2A0F1F; box-shadow: 0 8px 20px rgba(201,162,74,.35); transition: transform .25s var(--ease, ease), box-shadow .25s ease; }
+    .lb-link:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(201,162,74,.45); }
+    .lb-link i { transition: transform .25s ease; } .lb-link:hover i { transform: translateX(3px); }
+    .lb-link:focus-visible { outline: 3px solid #F3D58A; outline-offset: 3px; }
+    /* ---- Colour accents for the ranking deck ---- */
+    .deck-canvas { background:
+        radial-gradient(40% 50% at 12% 85%, rgba(20,184,166,.16), transparent 70%),
+        radial-gradient(40% 50% at 88% 15%, rgba(59,130,246,.16), transparent 70%),
+        radial-gradient(60% 55% at 50% 42%, rgba(201,162,74,.10), transparent 70%),
+        radial-gradient(90% 85% at 50% 30%, #4A1A33 0%, #2E0F20 55%, #1C0812 100%); }
+    .cr-card { --band: #8A7480; --band2: #C59FB0; }
+    .cr-card.fit-hi { --band: #15803D; --band2: #4ADE80; }
+    .cr-card.fit-mid { --band: #C2410C; --band2: #FBBF24; }
+    .cr-card.fit-lo { --band: #BE123C; --band2: #FB7185; }
+    .cr-ring, .cr-card.is-active .cr-ring { background: conic-gradient(var(--band2), var(--band) calc(var(--p, 0) * 1%), #EAD9E0 0); }
+    .cr-ring b { color: var(--band); }
+    .cr-bar i, .cr-card.is-active .cr-bar i { background: linear-gradient(90deg, var(--band2), var(--band)); }
+    .cr-card.r2 .cr-rank { background: linear-gradient(135deg, #F3F4F6, #A1A1AA); border-color: #A1A1AA; color: #27272A; }
+    .cr-card.r3 .cr-rank { background: linear-gradient(135deg, #FAD3B0, #B4632B); border-color: #B4632B; color: #3B1A08; }
+    .cr-card .tag.tg-color, .cr-card .tag.tg-colour { background: #E0F2FE; border-color: #BAE6FD; color: #0369A1; }
+    .cr-card .tag.tg-pattern { background: #EDE9FE; border-color: #DDD6FE; color: #6D28D9; }
+    .cr-card .tag.tg-type { background: #CCFBF1; border-color: #99F6E4; color: #0F766E; }
+    .cr-card .tag.tg-material { background: #FEF3C7; border-color: #FDE68A; color: #B45309; }
+    .cr-card .tag.tg-size { background: #E0E7FF; border-color: #C7D2FE; color: #4338CA; }
+    .cr-card .tag.tg-brand { background: #FFE4E6; border-color: #FECDD3; color: #BE123C; }
+    .rank-stat:nth-child(1) i.ic { background: #FEF3C7; color: #B45309; }
+    .rank-stat:nth-child(2) i.ic { background: #E0F2FE; color: #0369A1; }
+    .rank-stat:nth-child(3) i.ic { background: #DCFCE7; color: #15803D; }
+    .rank-stat:nth-child(4) i.ic { background: #EDE9FE; color: #6D28D9; }
+    /* ---- Live demo while a ranking job runs ---- */
+    .demo-stage.ranking .demo-badge { background: rgba(37,99,235,.18); border-color: rgba(96,165,250,.6); color: #BFDBFE; }
+    .demo-stage.ranking .demo-badge::before { background: #60A5FA; }
+    .demo-stage.ranking .cr-media::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); background-size: 250% 100%; animation: cardShimmer 1.6s linear infinite; }
+    @keyframes cardShimmer { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+    .demo-stage.ranking .cr-media :is(img, svg) { filter: saturate(.55) blur(.4px); }
+    .demo-stage.ranking .cr-ring { background: #EAD9E0; }
+    .demo-stage.ranking .cr-ring b { visibility: hidden; }
+    .demo-stage.ranking .cr-ring::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 5px solid transparent; border-top-color: #2563EB; border-right-color: #60A5FA; animation: ringSpin .9s linear infinite; }
+    @keyframes ringSpin { to { transform: rotate(360deg); } }
+    .demo-stage.ranking .cr-bar i { width: 40% !important; background: linear-gradient(90deg, transparent, #2563EB, transparent); animation: barSweep 1.3s ease-in-out infinite; }
+    @keyframes barSweep { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+    /* No ranks or scores while the job runs — they don't exist yet */
+    .demo-stage.ranking .cr-rank { background: rgba(255,255,255,.94); border-color: #BFDBFE; color: #1D4ED8; }
+    .demo-stage.ranking .cr-rank > * { display: none; }
+    .demo-stage.ranking .cr-rank::after { content: 'Ranking…'; font: 600 11px 'IBM Plex Mono', monospace; letter-spacing: .04em; }
+    .demo-stage.ranking :is(.cr-sub, .cr-tags, .cr-sec, .cr-scroll-hint) { display: none; }
+    .demo-stage.ranking .cr-body::after { content: ''; display: block; height: 64px; border-radius: 8px;
+      background: linear-gradient(#EAD9E0, #EAD9E0) 0 0 / 70% 10px no-repeat, linear-gradient(#EAD9E0, #EAD9E0) 0 22px / 92% 10px no-repeat,
+        linear-gradient(#EAD9E0, #EAD9E0) 0 44px / 55% 10px no-repeat; animation: skel 1.4s ease-in-out infinite; }
+    @keyframes skel { 50% { opacity: .45; } }
+    #demoTitle .spin { display: inline-block; margin-right: .5rem; color: #93C5FD; animation: ringSpin 1.2s linear infinite; }
+    /* Current target (collapsible) */
+    .target > summary { list-style: none; }
+    .target > summary::-webkit-details-marker { display: none; }
+    .target-sum { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; cursor: pointer; }
+    .target-h { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #6B3A55; margin-right: 4px; }
+    .target-chips { display: contents; }
+    .tchip { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .65rem; border-radius: 999px; font-size: 11.5px; background: #F6EEF0; border: 1px solid #EAD9E0; color: #552C43; }
+    .tchip i { color: #6B3A55; font-size: 10px; }
+    .tchip.muted { color: #8A7480; }
+    .tchip.warn { background: #FBF1DC; border-color: #E8C27A; color: #8C6A22; }
+    .target-cust { display: inline-flex; align-items: center; gap: .35rem; font-size: 12px; color: #8A7480; }
+    .target-cust b { font: 600 15px 'IBM Plex Mono', monospace; color: #3B2733; }
+    .target-cust i { color: #6B3A55; }
+    .target-chev { margin-left: auto; color: #8A7480; transition: transform .25s; }
+    .target[open] .target-chev { transform: rotate(180deg); }
+    .target[open] > summary { margin-bottom: 14px; }
+    /* Job stages: active stage pulses, done stages tick */
+    .job-stages { display: flex; align-items: flex-start; list-style: none; margin: 0; padding: 4px 0 2px; }
+    .job-stages li[data-stage] { flex: none; width: 110px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; }
+    .job-stages b { font-size: 11px; color: #8A7480; } .job-stages small { font-size: 9.5px; color: #8A7480; }
+    .js-dot { position: relative; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: #F6EEF0; border: 2px solid #EAD9E0; color: #C59FB0; transition: background .3s, border-color .3s, color .3s; }
+    .js-line { flex: 1; height: 3px; margin-top: 18px; border-radius: 3px; background: #EAD9E0; overflow: hidden; position: relative; }
+    .js-line.done { background: #16A34A; }
+    .js-line.active::after { content: ''; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, #2563EB, transparent); animation: lineflow 1.2s linear infinite; }
+    @keyframes lineflow { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+    .job-stages li.active .js-dot { background: #2563EB; border-color: #2563EB; color: #fff; animation: jsglow 1.6s ease-out infinite; }
+    .job-stages li.active .js-dot i { animation: jsbob 1.6s ease-in-out infinite; }
+    .job-stages li.active b { color: #2563EB; }
+    .job-stages li.done .js-dot { background: #16A34A; border-color: #16A34A; color: #fff; }
+    .job-stages li.done b { color: #16A34A; }
+    .job-stages li.fail .js-dot { background: #DC2626; border-color: #DC2626; color: #fff; }
+    .job-stages li.fail b { color: #DC2626; }
+    @keyframes jsglow { 0% { box-shadow: 0 0 0 0 rgba(37,99,235,.45); } 100% { box-shadow: 0 0 0 14px rgba(37,99,235,0); } }
+    @keyframes jsbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px) scale(1.08); } }
+    .job-live { font-size: 12px; color: #2563EB; font-weight: 600; min-height: 1.2em; }
+    .job-live .dots::after { content: ''; animation: dots 1.4s steps(4, end) infinite; }
+    @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+    .job-live.ok { color: #16A34A; } .job-live.bad { color: #DC2626; }
+    #jobStatusTag.live { border-color: #93B4F5; color: #1D4ED8; background: #EEF3FE; }
+    #jobStatusTag.live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #2563EB; animation: blink 1.2s ease-in-out infinite; }
+    /* Sidebar thumbnails get a scan line while the job works on them */
+    .thumbs.scanning .ph { position: relative; }
+    .thumbs.scanning .ph::after { content: ''; position: absolute; left: 0; right: 0; height: 30%; top: -30%;
+      background: linear-gradient(180deg, transparent, rgba(37,99,235,.28), transparent); animation: scan 1.6s ease-in-out infinite; }
+    @keyframes scan { to { top: 100%; } }
+    /* Ranking job: hourglass while running; bar is blue → green (done) / red (failed) */
+    .hourglass { color: #2563EB; font-size: 13px; animation: hourglass 2.4s ease-in-out infinite; }
+    @keyframes hourglass { 0%, 40% { transform: rotate(0); } 50%, 90% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+    .job-bar { background: #2563EB; }
+    .job-bar.running { background-image: linear-gradient(45deg, rgba(255,255,255,.28) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.28) 50%, rgba(255,255,255,.28) 75%, transparent 75%); background-size: 16px 16px; animation: barflow 1s linear infinite; }
+    @keyframes barflow { to { background-position: 16px 0; } }
+    .job-bar.succeeded { background: #16A34A; }
+    .job-bar.failed { background: #DC2626; }
+    .job-bar.cancelled { background: #A8949E; }
+    .job-stages li.stopped .js-dot { background: #8A7480; border-color: #8A7480; color: #fff; }
+    .job-stages li.stopped b { color: #6E5A65; }
+    .job-live.stopped { color: #6E5A65; }
+    .job-cancel { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .75rem; border-radius: 8px; font-size: 11px; font-weight: 700; color: #B42318; background: #fff; border: 1px solid #F1B8B0; transition: background .2s, border-color .2s; }
+    .job-cancel:hover:not(:disabled) { background: #FEF3F2; border-color: #B42318; }
+    .job-cancel:focus-visible { outline: 2px solid #B42318; outline-offset: 2px; }
+    .job-cancel:disabled { opacity: .55; cursor: not-allowed; }
+    .overlay-cancel { margin-top: 14px; padding: .45rem 1rem; border-radius: 10px; font-size: 12px; font-weight: 700; color: #3B2733; background: #fff; border: 1px solid #DCC3CE; transition: border-color .2s, color .2s; }
+    .overlay-cancel:hover { border-color: #B42318; color: #B42318; }
+    .lb-link:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+    .lb-text .lb-note { color: #F3D58A; }
+
+    /* Ranking summary strip */
+    .rank-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 4px; }
+    .rank-stat { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #fff; border: 1px solid #EAD9E0; min-width: 0; }
+    .rank-stat i.ic { width: 32px; height: 32px; flex: none; border-radius: 10px; display: grid; place-items: center; background: #F6EEF0; color: #6B3A55; font-size: 13px; }
+    .rank-stat p { font-size: 9.5px; text-transform: uppercase; letter-spacing: .08em; color: #8A7480; }
+    .rank-stat b { display: block; font: 600 14px 'IBM Plex Mono', monospace; color: #3B2733; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    @keyframes slotIn { from { opacity: 0; translate: 0 12px; } }
+    /* Collapsible sidebar (same toggle as Geo) */
+    .sidebar { transition: margin-left .3s cubic-bezier(.22,.8,.24,1), opacity .2s ease; }
+    @media (min-width: 768px) { .sidebar.collapsed { margin-left: -20rem; opacity: 0; pointer-events: none; } }
+    @media (max-width: 767px) { .sidebar.collapsed { display: none; } }
+    /* Edge tab hugging the sidebar's right edge, top of the content area */
+    .nav-toggle { position: absolute; left: 0; top: 18px; z-index: 40; width: 50px; height: 40px; padding: 0 2px 0 0; gap: 5px;
+      display: inline-flex; flex-direction: row; align-items: center; justify-content: center; line-height: 0;
+      border: 1px solid #EAD9E0; border-left: 0; border-radius: 0 14px 14px 0; background: #FFFFFF; color: #6B3A55;
+      box-shadow: 4px 6px 16px rgba(59,39,51,.10); transition: background .2s, color .2s, border-color .2s, width .2s; }
+    .nav-toggle:hover { width: 54px; border-color: #C59FB0; }
+    @media (max-width: 767px) { .nav-toggle { top: 10px; } }
+    .nav-toggle svg { display: block; flex: none; }
+    .nav-toggle .arrow { transition: transform .25s ease; transform-origin: 50% 50%; }
+    .nav-toggle[aria-expanded="true"] .arrow { transform: rotate(180deg); }
+    .nav-toggle[aria-expanded="true"] { background: #6B3A55; border-color: #6B3A55; color: #fff; }
+    /* Upload thumbnails */
+    .thumbs { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-height: 280px; overflow-y: auto; padding: 7px 7px 4px 2px; scrollbar-width: thin; }
+    .thumbs:empty { display: none; }
+    .thumb { position: relative; min-width: 0; animation: slotIn .4s cubic-bezier(.22,.8,.24,1) backwards; }
+    .thumb .ph { aspect-ratio: 1; border-radius: 10px; border: 1px solid #EAD9E0; overflow: hidden; display: grid; place-items: center;
+      background: radial-gradient(circle at 50% 40%, #FFFFFF, #F3E3EA); transition: border-color .2s, box-shadow .2s; }
+    .thumb:hover .ph { border-color: #C59FB0; box-shadow: 0 4px 12px rgba(59,39,51,.1); }
+    .thumb img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+    .thumb small { display: block; margin-top: 3px; font-size: 9.5px; color: #8A7480; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .thumb .rm { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+      background: #3B2733; color: #fff; font-size: 10px; border: 2px solid #F6EEF0; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .2s, background .2s; }
+    .thumb .rm:hover { transform: scale(1.12); background: #a03a3a; }
+    .thumb .rm:focus-visible { outline: 2px solid #6B3A55; outline-offset: 1px; }
+    .icon-btn { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #6B3A55; background: #fff; border: 1px solid #EAD9E0; transition: transform .3s, border-color .2s, color .2s; }
+    .icon-btn:hover:not(:disabled) { border-color: #6B3A55; transform: rotate(-90deg); }
+    .icon-btn:disabled { opacity: .35; cursor: not-allowed; }
+    /* Run button stays visible at the bottom of the sidebar */
+    .run-dock { position: sticky; bottom: -16px; z-index: 5; margin: 0 -16px -16px; padding: 14px 16px 16px;
+      background: linear-gradient(to top, #F6EEF0 78%, rgba(246,238,240,0)); }
+    .stale { display: inline-flex; align-items: center; gap: .4rem; font-size: 11px; padding: .3rem .7rem; border-radius: 999px; background: #FBF1DC; border: 1px solid #E8C27A; color: #8C6A22; }
+
+    /* Empty state: the same deck, looping a demo */
+    .demo-stage { position: relative; overflow: hidden; padding-top: 8px; }
+    .demo-badge { position: absolute; top: 14px; left: 16px; z-index: 70; display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .7rem; border-radius: 999px; background: rgba(224,178,84,.14); border: 1px solid rgba(224,178,84,.5); color: #F3D58A; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+    .demo-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #E0B654; animation: blink 1.4s ease-in-out infinite; }
+    @keyframes blink { 50% { opacity: .25; } }
+    .demo-copy { position: relative; z-index: 70; text-align: center; padding: 4px 16px 22px; }
+
+    .wiz-step { display: inline-flex; align-items: center; gap: .45rem; padding: .4rem .7rem; border-radius: 8px; font-size: 11px; font-weight: 700; color: #8A7480; }
+    .wiz-step:hover { background: #F6EEF0; color: #3B2733; }
+    .wiz-num { width: 20px; height: 20px; border-radius: 999px; border: 1px solid #DCC3CE; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; background: #FFFFFF; }
+    .wiz-step.current { color: #3B2733; background: #F6EEF0; }
+    .wiz-step.current .wiz-num { border-color: #6B3A55; color: #6B3A55; }
+    .wiz-step.done .wiz-num { background: #6B3A55; border-color: #6B3A55; color: #FFFFFF; }
+    .wiz-sep { width: 18px; height: 1px; background: #DCC3CE; }
+    .wiz-new { display: inline-flex; align-items: center; gap: .4rem; padding: .4rem .75rem; border-radius: 8px; border: 1px solid #6B3A55; background: #FFFFFF; color: #6B3A55; font-size: 11px; font-weight: 700; }
+    .wiz-new:hover { background: #F6EEF0; }
+    .wiz-new:focus-visible { outline: 2px solid #C9A24A; outline-offset: 1px; }
+    .wiz-new:disabled { opacity: .5; cursor: wait; }
+    #wizardSteps .wiz-new { margin-left: .4rem; }
+    @media (max-width: 639px) { #wizardSteps .wiz-new { margin-left: auto; } } /* the "Configure on Campaigns" tag is hidden below sm */
+    .sim-badge { border-color: #6B3A55; color: #552C43; background: #F6EEF0; font-weight: 600; }
+    .est-tile { background: #FFFFFF; border: 1px solid #EAD9E0; border-radius: 10px; padding: .6rem .7rem; }
+    .est-tile .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #8A7480; font-weight: 600; }
+    .est-tile .val { font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #3B2733; margin-top: .2rem; }
+    .est-tile .rng { font-size: 10px; color: #8A7480; margin-top: .1rem; }
+
+    /* Same blanket rule as Campaigns: covers spinners, hourglass, bar stripes, skeletons, blink dots, deck */
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+  <script>
+    if (!SuffaiSession.requireAuth('ads')) { /* redirected */ }
+  </script>
+
+  <header class="lab-hero z-30 px-4 sm:px-6 py-3.5 flex-none flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3 min-w-0">
+      <span class="lh-ic" aria-hidden="true"><i class="fa-solid fa-ranking-star"></i></span>
+      <div class="min-w-0">
+        <h1 class="font-display font-bold text-[1.7rem] leading-none">Ads Lab <span class="lh-pill">Segment Fit</span></h1>
+        <p class="text-[12px] mt-1 truncate">Rank your creatives for a chosen area, age, gender and RFM audience.</p>
+      </div>
+    </div>
+    <div id="apiStatus" aria-live="polite" class="tag flex-none hidden sm:inline-flex"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Loading audience data…</div>
+  </header>
+
+  <main class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
+    <aside id="sidebar" aria-label="Brand, audience and upload" class="sidebar w-full md:w-80 md:max-w-[45vw] max-h-[50vh] md:max-h-none flex-none border-b md:border-b-0 md:border-r border-[#EAD9E0] bg-[#F6EEF0] flex flex-col p-4 gap-5 overflow-y-auto z-20">
+      <section class="space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-[#3B2733] flex items-center gap-2"><span class="w-5 h-5 rounded bg-[#EAD9E0] text-[#3B2733] flex items-center justify-center text-[10px] border border-[#DCC3CE]">1</span> Brand &amp; Audience</h2>
+        <div><label class="block text-[10px] text-[#8A7480] uppercase tracking-wider font-semibold">Brand Name<span class="req" aria-hidden="true">*</span><input id="filterBrand" type="text" class="field mt-1" placeholder="e.g. Nike" autocomplete="organization" required aria-describedby="brandErr" /></label>
+          <p id="brandErr" class="field-err" aria-live="polite"></p></div>
+        <div class="block text-[10px] text-[#8A7480] uppercase tracking-wider font-semibold">PIN Codes<span class="req" aria-hidden="true">*</span> <span id="pinCount" class="normal-case tracking-normal font-normal text-[#6B3A55]"></span>
+          <details class="ms mt-1" id="msArea"><summary>Loading areas…</summary></details>
+          <select id="filterArea" multiple hidden aria-hidden="true" tabindex="-1"></select>
+          <p id="pinErr" class="field-err" aria-live="polite"></p></div>
+        <div class="block text-[10px] text-[#8A7480] uppercase tracking-wider font-semibold">Age Bucket
+          <details class="ms mt-1" id="msAge"><summary>All age groups</summary></details>
+          <select id="filterAge" multiple hidden aria-hidden="true" tabindex="-1"></select></div>
+        <div class="block text-[10px] text-[#8A7480] uppercase tracking-wider font-semibold">Gender
+          <details class="ms mt-1" id="msGender"><summary>All genders</summary></details>
+          <select id="filterGender" multiple hidden aria-hidden="true" tabindex="-1"></select></div>
+        <div class="block text-[10px] text-[#8A7480] uppercase tracking-wider font-semibold">RFM Segment
+          <details class="ms mt-1" id="msRfm"><summary>All RFM segments</summary></details>
+          <select id="filterRfm" multiple hidden aria-hidden="true" tabindex="-1"></select></div>
+        <p class="text-[10px] text-[#8A7480] leading-relaxed">These filters define the audience your creatives are ranked against.</p>
+      </section>
+
+      <section class="space-y-3 flex-1 flex flex-col min-h-[180px]">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-[#3B2733] flex items-center gap-2"><span class="w-5 h-5 rounded bg-[#EAD9E0] text-[#3B2733] flex items-center justify-center text-[10px] border border-[#DCC3CE]">2</span> <span>SKUs<span class="req" aria-hidden="true">*</span></span></h2>
+          <button type="button" id="clearSkus" class="icon-btn" title="Clear selection" aria-label="Clear selection" disabled><i class="fa-solid fa-rotate-right text-[12px]"></i></button>
+        </div>
+        <div class="flex gap-1 p-0.5 rounded-lg bg-[#EAD9E0]/60" role="tablist" aria-label="SKU source">
+          <button type="button" id="tabCatalog" role="tab" aria-selected="true" class="sku-tab flex-1 py-1.5 rounded-md text-[11px] font-bold text-[#3B2733] bg-white shadow-sm">From your catalog</button>
+          <button type="button" id="tabUpload" role="tab" aria-selected="false" class="sku-tab flex-1 py-1.5 rounded-md text-[11px] font-semibold text-[#8A7480]">Upload photos</button>
+        </div>
+        <div id="panelCatalog" class="space-y-2 flex-1 flex flex-col min-h-0">
+          <div class="flex gap-2">
+            <input id="catQ" type="search" class="field flex-1 text-xs" placeholder="Search style, name, colour" autocomplete="off">
+            <select id="catCat" class="field text-xs" style="width:auto;min-width:7rem"><option value="">All</option></select>
+          </div>
+          <p id="catPickCount" class="text-[10px] text-[#6B3A55] font-semibold">0 / 15 selected · style × colour, sizes ignored</p>
+          <div id="catGrid" class="flex-1 overflow-y-auto space-y-1.5 max-h-[280px] min-h-[100px]" aria-label="Catalog SKUs"></div>
+          <p id="catEmpty" class="text-[10px] text-[#8A7480] hidden">No catalog styles yet. Add them under Inventory › Catalog, with a photo per colour. Or use Upload photos.</p>
+        </div>
+        <div id="panelUpload" class="space-y-2 flex-1 flex flex-col min-h-0 hidden">
+          <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
+          <div id="dropzone" role="button" tabindex="0" aria-describedby="skuErr" class="upload-zone rounded-xl flex flex-col items-center justify-center text-center p-5 cursor-pointer min-h-[110px]">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl text-[#6B3A55] mb-3"></i>
+            <span class="text-xs text-[#3B2733] font-semibold">Click or drop SKU images</span>
+            <span class="text-[10px] text-[#8A7480] mt-1">JPG or PNG · fallback when a style has no catalog photo.</span>
+          </div>
+          <div id="thumbs" class="thumbs" aria-label="Selected SKUs"></div>
+        </div>
+        <p id="skuErr" class="field-err" aria-live="polite"></p>
+        <p id="uploadSummary" class="text-[10px] text-[#8A7480]">Pick up to 15 styles from your catalog, or upload photos.</p>
+        <p class="text-[11px] text-[#3B2733]">Campaign brand: <strong id="brandUploadLabel" class="text-[#6B3A55]">(enter brand name above)</strong></p>
+        <div class="run-dock">
+        <button id="runButton" type="button" class="w-full py-3 bg-[#6B3A55] hover:bg-[#552C43] disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold flex justify-center items-center gap-2 transition-all shadow-sm"><i class="fa-solid fa-wand-magic-sparkles text-[#C59FB0]"></i><span>Rank SKUs</span></button>
+        <p id="runError" class="form-err hidden mt-2" role="alert"></p>
+        </div>
+        <p class="text-[10px] text-[#8A7480] leading-relaxed">Ranking runs in the background against photographed garments in the selected PINs. Catalog picks use your style × colour photo and trusted attributes (sizes are ignored).</p>
+      </section>
+    </aside>
+
+    <section class="flex-1 min-w-0 relative flex flex-col holographic-grid overflow-hidden">
+      <button type="button" class="nav-toggle" id="btnToggle" title="Hide brand &amp; upload panel" aria-label="Hide brand and upload panel" aria-controls="sidebar" aria-expanded="true">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+        <svg class="arrow" viewBox="0 0 10 16" width="10" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.25 4.5L6.75 8L3.25 11.5"/></svg>
+      </button>
+      <div id="loadingOverlay" role="status" class="absolute inset-0 z-50 hidden items-center justify-center bg-[#FAF6EE]/80 backdrop-blur-sm"><div class="text-center"><i class="fa-solid fa-circle-notch text-4xl text-[#6B3A55] animate-spin mb-4"></i><p id="loadingText" class="text-sm font-mono text-[#3B2733]">Loading…</p><button id="cancelSubmitBtn" type="button" class="overlay-cancel hidden"><i class="fa-solid fa-xmark mr-1"></i>Cancel Upload</button></div></div>
+      <div id="mainScroll" class="flex-1 overflow-y-auto p-4 sm:p-6 md:pl-14 space-y-5">
+        <nav id="wizardSteps" class="glass-panel rounded-xl p-2 sticky top-0 z-[80] flex flex-wrap items-center gap-1 bg-white/95 backdrop-blur" aria-label="Campaign steps">
+          <button type="button" class="wiz-step" data-step="opportunity" data-target="stepOpportunity"><span class="wiz-num">1</span><span>Opportunity</span></button>
+          <span class="wiz-sep" aria-hidden="true"></span>
+          <button type="button" class="wiz-step" data-step="job" data-target="stepJob"><span class="wiz-num">2</span><span>SKUs &amp; Ranking Job</span></button>
+          <span class="wiz-sep" aria-hidden="true"></span>
+          <button type="button" class="wiz-step" data-step="runmode" data-target="stepRunMode"><span class="wiz-num">3</span><span>Choose Run Mode</span></button>
+          <span class="ml-auto tag sim-badge hidden sm:inline-flex" title="Campaign name, channels, budget and tracking live on the Campaigns tab."><i class="fa-solid fa-bullhorn"></i> Configure on Campaigns</span>
+          <button type="button" id="newCampaignBtn" class="wiz-new" title="Clear this campaign and start a fresh one. Launched and saved campaigns stay on the Campaigns tab."><i class="fa-solid fa-plus" aria-hidden="true"></i><span>New Campaign</span></button>
+        </nav>
+
+        <section id="geoContextCard" class="glass-panel rounded-xl p-4 hidden" aria-live="polite">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-[10px] uppercase tracking-[.2em] text-[#6B3A55] font-bold"><i class="fa-solid fa-location-dot mr-1"></i>Opportunity from Geo</p>
+              <p id="geoContextInsight" class="text-xs text-[#3B2733] mt-1"></p>
+              <div id="geoContextChips" class="flex flex-wrap gap-1.5 mt-2"></div>
+            </div>
+            <button id="clearGeoContextBtn" type="button" class="text-[10px] text-[#8A7480] hover:text-[#6B3A55] flex-none">Clear</button>
+          </div>
+        </section>
+
+        <details id="stepOpportunity" class="target glass-panel rounded-xl p-4 sm:p-5" open>
+          <summary class="target-sum">
+            <span class="target-h">Current Target</span>
+            <span id="segmentTitle" class="target-chips"><span class="tchip muted">Loading audience…</span></span>
+            <span class="target-cust"><i class="fa-solid fa-users"></i><b id="audienceCustomers">—</b> customers</span>
+            <span id="targetWarn" class="tchip warn hidden"></span>
+            <i class="fa-solid fa-chevron-down target-chev" aria-hidden="true"></i>
+          </summary>
+          <!-- Audience Taste Profile - Single Horizontal Scrollable Row (6 Categories) -->
+          <div class="mt-4">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#3B2733] mb-2">Audience Taste Profile</h3>
+
+            <div id="tasteRail" class="taste-rail" tabindex="0" role="region" aria-label="Audience taste categories, scroll horizontally">
+              <div class="taste-card">
+                <h4 class="taste-title"><i class="fa-solid fa-palette mr-1"></i> Colours</h4>
+                <div id="insightColors" class="taste-body space-y-1.5"><span class="muted text-xs">No profile loaded</span></div>
+              </div>
+              <div class="taste-card">
+                <h4 class="taste-title"><i class="fa-solid fa-shapes mr-1"></i> Patterns</h4>
+                <div id="insightPatterns" class="taste-body space-y-1.5"><span class="muted text-xs">No profile loaded</span></div>
+              </div>
+              <div class="taste-card">
+                <h4 class="taste-title"><i class="fa-solid fa-ruler mr-1"></i> Sizes</h4>
+                <div id="insightSizes" class="taste-body space-y-1.5"><span class="muted text-xs">No profile loaded</span></div>
+              </div>
+              <div class="taste-card">
+                <h4 class="taste-title"><i class="fa-solid fa-shirt mr-1"></i> Garment Types</h4>
+                <div id="insightCommodities" class="taste-body space-y-1.5"><span class="muted text-xs">No profile loaded</span></div>
+              </div>
+              <div class="taste-card">
+                <h4 class="taste-title"><i class="fa-solid fa-vest mr-1"></i> Materials</h4>
+                <div id="insightMaterials" class="taste-body space-y-1.5"><span class="muted text-xs">No profile loaded</span></div>
+              </div>
+              <div class="taste-card">
+                <h4 class="taste-title"><i class="fa-solid fa-tag mr-1"></i> Brands</h4>
+                <div id="insightBrands" class="taste-body space-y-1.5"><span class="muted text-xs">No profile loaded</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <section id="stepJob" class="glass-panel rounded-xl p-4 sm:p-5 space-y-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#3B2733]"><i class="fa-solid fa-gears text-[#6B3A55] mr-2"></i>Extract &amp; Rank Job</h3>
+              <p id="jobNote" class="text-[10px] text-[#8A7480] mt-1">Select PINs, upload SKU images and press <b>Extract &amp; Rank SKUs</b>. You can leave this page; the job keeps running.</p>
+            </div>
+            <div class="flex items-center gap-2 flex-none">
+              <span id="jobStatusTag" class="tag hidden"></span>
+              <button id="cancelJobBtn" type="button" class="job-cancel hidden" title="Stop this Extract &amp; Rank job"><i class="fa-solid fa-circle-stop"></i><span>Cancel Job</span></button>
+            </div>
+          </div>
+          <div id="jobCard" class="hidden space-y-3">
+            <ol class="job-stages" id="jobStages" aria-label="Job stages">
+              <li data-stage="0"><span class="js-dot"><i class="fa-solid fa-cloud-arrow-up"></i></span><b>Upload</b><small>SKU images</small></li>
+              <li class="js-line" aria-hidden="true"></li>
+              <li data-stage="1"><span class="js-dot"><i class="fa-solid fa-wand-magic-sparkles"></i></span><b>Extract</b><small>colour · pattern · fabric</small></li>
+              <li class="js-line" aria-hidden="true"></li>
+              <li data-stage="2"><span class="js-dot"><i class="fa-solid fa-ranking-star"></i></span><b>Rank</b><small>against the audience</small></li>
+            </ol>
+            <p class="job-live" id="jobLive" aria-live="polite"></p>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+              <div class="est-tile"><p class="lbl">Customers</p><p id="jobCustomers" class="val">—</p><p id="jobCustomersSub" class="rng">in target audience</p></div>
+              <div class="est-tile"><p class="lbl">Images</p><p id="jobImages" class="val">—</p><p id="jobImagesSub" class="rng">SKUs to rank</p></div>
+              <div class="est-tile"><p class="lbl">Photographed garments</p><p id="jobGarments" class="val">—</p><p class="rng">in selected PINs</p></div>
+              <div class="est-tile"><p class="lbl">Comparisons</p><p id="jobComparisons" class="val">—</p><p class="rng">image × photographed garment</p></div>
+              <div class="est-tile"><p class="lbl">Est. Completion</p><p class="val flex items-center gap-2"><i id="jobHourglass" class="fa-solid fa-hourglass-half hourglass hidden" aria-hidden="true"></i><span id="jobEta">—</span></p><p id="jobEtaSub" class="rng">—</p></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[10px] text-[#8A7480] mb-1"><span id="jobProgressLabel">Queued</span><span id="jobProgressPct">0%</span></div>
+              <div class="h-2 rounded-full bg-[#F6EEF0] border border-[#EAD9E0] overflow-hidden"><div id="jobProgressBar" class="job-bar h-full transition-all" style="width:0%"></div></div>
+            </div>
+            <p id="jobError" class="text-xs text-red-700 hidden"></p>
+          </div>
+        </section>
+
+        <section>
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-3">
+            <div><h3 class="text-sm font-bold text-[#3B2733]"><i class="fa-solid fa-layer-group text-[#6B3A55] mr-2"></i>Creative Ranking for This Segment</h3><p class="text-[10px] text-[#8A7480] mt-1">One card per uploaded file. Hover or click a card to bring it to the centre · use ‹ › or the arrow keys to browse.</p></div>
+            <div class="flex items-center gap-2">
+              <span id="staleNote" class="stale hidden"><i class="fa-solid fa-triangle-exclamation"></i> Audience changed — run Extract &amp; Rank again</span>
+              <span id="rankCount" class="tag">0 creatives</span>
+            </div>
+          </div>
+          <div id="emptyState" class="demo-stage deck-canvas">
+            <span class="demo-badge" id="demoBadge">Live Demo</span>
+            <div id="demoRail"></div>
+            <div class="demo-copy">
+              <p id="demoTitle" class="font-display text-2xl text-[#F7EAF0]">Your SKUs will be ranked like this</p>
+              <p id="demoSub" class="text-xs text-[#C9A9B8] mt-1">Pick a brand and audience, upload SKU images, then <strong class="text-[#F3D58A]">Extract &amp; Rank</strong>. Hover any card to bring it to the centre.</p>
+            </div>
+          </div>
+          <div id="rankStats" class="rank-stats hidden" aria-live="polite"></div>
+          <div id="creativeGrid" class="deck-canvas hidden"></div>
+        </section>
+
+        <section id="stepRunMode" class="launch-bar" aria-labelledby="lbTitle">
+          <div class="lb-ic" aria-hidden="true"><i class="fa-solid fa-rocket"></i></div>
+          <div class="lb-text">
+            <h3 id="lbTitle">Activate on SuffAI · 1P Campaign</h3>
+            <p>Send your top-ranked creatives to this exact audience through your own channels — in-app, WhatsApp and SMS.</p>
+            <p id="runModeNote" class="lb-note">Available once the ranking job completes.</p>
+          </div>
+          <div class="lb-meta" id="launchMeta"><span>— customers</span><span>0 creatives ranked</span></div>
+          <button type="button" id="run1pBtn" class="lb-link" disabled>Set Up 1P Campaign <i class="fa-solid fa-arrow-right"></i></button>
+        </section>
+
+        <section class="glass-panel rounded-xl overflow-hidden">
+          <div class="p-4 border-b border-[#EAD9E0] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"><div><h3 class="text-xs font-bold uppercase tracking-wider text-[#3B2733]"><i class="fa-solid fa-table text-[#6B3A55] mr-2"></i>Segment Ranking Matrix</h3><p class="text-[10px] text-[#8A7480] mt-1">Same ranked SKUs as the cards above. Export to run the campaign on other platforms (3P).</p></div><button id="downloadButton" type="button" class="px-3 py-2 bg-[#6B3A55] hover:bg-[#552C43] rounded-lg text-xs font-bold text-white shadow-sm"><i class="fa-solid fa-file-csv mr-2"></i>Export for 3P (CSV)</button></div>
+          <div class="overflow-x-auto"><table class="w-full text-left text-xs whitespace-nowrap"><thead class="bg-[#F6EEF0] text-[#8A7480] font-mono text-[10px] uppercase"><tr><th class="px-4 py-3">Rank</th><th class="px-4 py-3">Creative</th><th class="px-4 py-3">Geo</th><th class="px-4 py-3">Age</th><th class="px-4 py-3">Gender</th><th class="px-4 py-3">RFM</th><th class="px-4 py-3">Extracted Taste</th><th class="px-4 py-3 text-right">Segment Fit</th></tr></thead><tbody id="matrixBody" class="divide-y divide-[#EAD9E0]"><tr><td colspan="8" class="px-4 py-8 text-center text-[#8A7480]">Upload images to populate the matrix.</td></tr></tbody></table></div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="createdModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-[#3B2733]/40 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="createdTitle">
+    <div class="glass-panel bg-white max-w-md w-full p-6 space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="h-10 w-10 rounded-full bg-[#F6EEF0] border border-[#6B3A55] flex items-center justify-center flex-none"><i class="fa-solid fa-check text-[#6B3A55]"></i></div>
+        <div>
+          <h2 id="createdTitle" class="text-base font-bold text-[#3B2733]">Your SKUs Are Ranked</h2>
+          <p id="createdSummary" class="text-xs text-[#8A7480] mt-1"></p>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2 justify-end">
+        <button id="createdCloseBtn" type="button" class="px-3 py-2 border border-[#EAD9E0] bg-white rounded-lg text-xs font-bold text-[#3B2733] hover:border-[#6B3A55]">View Ranking</button>
+        <button id="created3pBtn" type="button" class="px-3 py-2 border border-[#6B3A55] bg-white rounded-lg text-xs font-bold text-[#6B3A55] hover:bg-[#F6EEF0]"><i class="fa-solid fa-file-csv mr-1"></i>Run on Other Platforms (3P)</button>
+        <button id="created1pBtn" type="button" class="px-3 py-2 rounded-lg text-xs font-bold text-[#2A0F1F] bg-gradient-to-br from-[#F3D58A] to-[#C9A24A] shadow-[0_8px_20px_rgba(201,162,74,.35)] hover:brightness-105"><i class="fa-solid fa-bullhorn mr-1"></i>Set Up on SuffAI (1P)</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const state = {
+      metrics: null, assets: [], profile: null, loading: false, campaign: null, campaignItems: [],
+      sourceContext: null, pendingDraft: null, pendingCampaignId: null, pendingCampaignOpts: null, job: null,
+      skuMode: 'catalog', catalogItems: [], catalogPicks: {}, catalogMax: 15, catalogLoaded: false,
+    };
+    const CAMPAIGN_DRAFT_KEY = 'suffai_campaign_draft';
+    const FILTER_KEYS = ['pin_code', 'age_group', 'gender', 'rfm_segment'];
+    const GROUPS = {
+      color: { keys: ['colors', 'color_counts', 'primary_colors', 'color_distribution'] },
+      pattern: { keys: ['patterns', 'pattern_counts', 'pattern_distribution'] },
+      commodity: { keys: ['commodities', 'commodity_types', 'garment_types', 'names'] },
+      material: { keys: ['materials', 'material_types', 'material_counts'] },
+      size: { keys: ['sizes', 'size_counts', 'size_distribution'] },
+      brand: { keys: ['brands', 'brand_counts', 'brand_distribution'] }
+    };
+    const apiBase = () => (window.DASHBOARD_API || '').replace(/\/$/, '');
+    const endpoint = (path) => (apiBase() ? apiBase() : '') + path;
+    let session = SuffaiSession.getSession() || {};
+    let lockedBrand = (session.role === 'brand' && session.brand_name) ? String(session.brand_name) : '';
+
+    function applyBrandLock() {
+      const el = $('filterBrand');
+      if (!el || !lockedBrand) return;
+      el.value = lockedBrand;
+      el.readOnly = true;
+      el.setAttribute('aria-readonly', 'true');
+      el.title = 'Locked to your brand session';
+      el.classList.add('opacity-80', 'cursor-not-allowed');
+      updateBrandUploadLabel();
+    }
+
+    /** Collapse other brands → Competitors for brand-role taste panels */
+    function maskBrandDistribution(dist) {
+      if (!lockedBrand || !dist || typeof dist !== 'object') return dist || {};
+      const own = lockedBrand.toLowerCase();
+      const out = {};
+      for (const [name, count] of Object.entries(dist)) {
+        const key = String(name || '').toLowerCase() === own ? lockedBrand : 'Competitors';
+        out[key] = (out[key] || 0) + Number(count || 0);
+      }
+      return out;
+    }
+
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+    }
+    function normal(value) { return String(value ?? '').trim().toLowerCase().replace(/[_-]+/g, ' ').replace(/\s+/g, ' '); }
+    function normalizedGender(value) {
+      const g = normal(value);
+      if (['f','female','woman','women'].includes(g)) return 'f';
+      if (['m','male','man','men'].includes(g)) return 'm';
+      if (g === 'u' || g === 'unisex') return 'u';
+      return g;
+    }
+    function normalizedValue(key, value) {
+      if (key === 'gender') return normalizedGender(value);
+      if (key === 'pin_code') return String(value ?? '').replace(/\.0$/, '').trim();
+      return normal(value);
+    }
+    function selectedPinCodes() {
+      const el = $('filterArea');
+      return Array.from(el.selectedOptions || []).map(o => o.value).filter(Boolean);
+    }
+    /* Selected audience values as "a, b"; none or all selected means any. */
+    function audienceChoice(id) {
+      const opts = Array.from($(id).options).filter(o => o.value);
+      const chosen = opts.filter(o => o.selected).map(o => o.value);
+      return chosen.length && chosen.length < opts.length ? chosen.join(', ') : '';
+    }
+    const splitChoice = (v) => (Array.isArray(v) ? v : String(v ?? '').split(',')).map(s => String(s).trim()).filter(Boolean);
+    function setAudienceChoice(id, key, value) {
+      const wanted = new Set(splitChoice(value).map(v => normalizedValue(key, v)));
+      Array.from($(id).options).forEach(o => { o.selected = Boolean(o.value) && wanted.has(normalizedValue(key, o.value)); });
+    }
+    function currentFilters() {
+      const pins = selectedPinCodes();
+      return {
+        pin_codes: pins,
+        pin_code: pins.join(','),
+        age_group: audienceChoice('filterAge'),
+        gender: audienceChoice('filterGender'),
+        rfm_segment: audienceChoice('filterRfm'),
+        brand_name: ($('filterBrand').value || '').trim()
+      };
+    }
+    function displayGender(value) {
+      const parts = splitChoice(value);
+      if (!parts.length) return 'All genders';
+      return parts.map(v => {
+        const g = normalizedGender(v);
+        return g === 'f' ? 'Female' : g === 'm' ? 'Male' : g === 'u' ? 'Unisex' : v;
+      }).join(', ');
+    }
+
+    /* Audience dropdowns: checkbox lists with "Select all", backed by hidden multi-selects (the source of truth). */
+    const FILTER_DROPDOWNS = [
+      ['filterArea', 'msArea', 'Select PIN codes', 'PIN Codes'],
+      ['filterAge', 'msAge', 'All age groups', 'Age Bucket'],
+      ['filterGender', 'msGender', 'All genders', 'Gender'],
+      ['filterRfm', 'msRfm', 'All RFM segments', 'RFM Segment'],
+    ];
+    function syncFilterDropdown(selId, msId, emptyText, label) {
+      const opts = Array.from($(selId).options).filter(o => o.value);
+      const el = $(msId);
+      const sig = opts.map(o => o.value).join('\u0001');
+      if (el.dataset.sig !== sig || !el.querySelector('.ms-pop')) {
+        el.dataset.sig = sig;
+        el.innerHTML = '<summary></summary><div class="ms-pop">' + (opts.length
+          ? (opts.length > 1 ? '<label class="opt all"><input type="checkbox" data-all="1" /> Select all</label>' : '')
+            + opts.map((o, i) => `<label class="opt"><input type="checkbox" data-i="${i}" /> ${esc(o.textContent)}</label>`).join('')
+          : '<div class="ms-empty">No options</div>') + '</div>';
+      }
+      el.querySelectorAll('input[data-i]').forEach(b => { b.checked = opts[Number(b.dataset.i)].selected; });
+      const picked = opts.filter(o => o.selected);
+      const all = el.querySelector('input[data-all]');
+      if (all) { all.checked = picked.length > 0 && picked.length === opts.length; all.indeterminate = picked.length > 0 && picked.length < opts.length; }
+      const sum = el.querySelector('summary');
+      sum.textContent = !picked.length ? emptyText
+        : (opts.length > 1 && picked.length === opts.length) ? `All selected (${picked.length})`
+        : picked.length <= 2 ? picked.map(o => o.textContent).join(', ') : `${picked.length} selected`;
+      if (label) sum.setAttribute('aria-label', `${label}: ${sum.textContent}`);
+    }
+    function syncFilterDropdowns() { FILTER_DROPDOWNS.forEach(([sel, ms, empty, label]) => syncFilterDropdown(sel, ms, empty, label)); }
+    FILTER_DROPDOWNS.forEach(([selId, msId, emptyText, label]) => {
+      $(msId).addEventListener('change', (e) => {
+        const opts = Array.from($(selId).options).filter(o => o.value);
+        if (e.target.dataset.all) opts.forEach(o => { o.selected = e.target.checked; });
+        else if (e.target.dataset.i != null) opts[Number(e.target.dataset.i)].selected = e.target.checked;
+        else return;
+        syncFilterDropdown(selId, msId, emptyText, label);
+        $(selId).dispatchEvent(new Event('change'));
+      });
+    });
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('details.ms[open]').forEach(d => { if (!d.contains(e.target)) d.removeAttribute('open'); });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('details.ms[open]').forEach(d => { d.removeAttribute('open'); if (d.contains(document.activeElement)) d.querySelector('summary').focus(); });
+    });
+    function labelForPin(pin) {
+      const obj = state.metrics?.pin_geo?.[String(pin)];
+      return obj?.area_label ? `${obj.area_label} (${pin})` : (pin ? String(pin) : 'All areas');
+    }
+    function filtersLabel(f = currentFilters()) {
+      const pins = f.pin_codes || (f.pin_code ? [f.pin_code] : []);
+      const pinLabel = !pins.length
+        ? 'No PIN selected'
+        : (pins.length <= 2 ? pins.map(labelForPin).join(', ') : pins.length + ' PINs');
+      return [
+        f.brand_name || 'No brand',
+        pinLabel,
+        f.age_group || 'All ages',
+        displayGender(f.gender),
+        f.rfm_segment || 'All RFM segments'
+      ].join(' × ');
+    }
+    function setSidebar(open, remember = true) {
+      $('sidebar').classList.toggle('collapsed', !open);
+      const b = $('btnToggle');
+      b.setAttribute('aria-expanded', String(open));
+      b.setAttribute('aria-label', open ? 'Hide brand and upload panel' : 'Show brand and upload panel');
+      b.title = open ? 'Hide brand & upload panel' : 'Show brand & upload panel';
+      if (remember) try { localStorage.setItem('suffai_ads_sidebar', open ? 'open' : 'closed'); } catch (_) {}
+    }
+    function showRunError(msg, kind = '') {
+      if (msg && $('sidebar').classList.contains('collapsed')) setSidebar(true); // errors point at sidebar fields
+      const el = $('runError');
+      el.textContent = msg || '';
+      el.dataset.kind = msg ? kind : '';
+      el.classList.toggle('hidden', !msg);
+    }
+    let runChecked = false; // after a blocked run, re-check the required fields as the user fills them in
+    /** Flags missing required fields inline and in the run error; returns the first missing one ('' when complete). */
+    function pickCount() { return Object.keys(state.catalogPicks).length; }
+    function checkRequired() {
+      const brand = lockedBrand || ($('filterBrand').value || '').trim();
+      const hasSkus = state.skuMode === 'catalog' ? pickCount() > 0 : state.assets.length > 0;
+      const errs = {
+        brand: brand ? '' : 'Brand name is required.',
+        pins: selectedPinCodes().length ? '' : 'Select at least one PIN code.',
+        skus: hasSkus ? '' : (state.skuMode === 'catalog' ? 'Select at least one catalog SKU.' : 'Upload at least one SKU image.'),
+      };
+      $('brandErr').textContent = errs.brand;
+      $('filterBrand').setAttribute('aria-invalid', String(!!errs.brand));
+      $('pinErr').textContent = errs.pins;
+      $('msArea').classList.toggle('invalid', !!errs.pins);
+      $('skuErr').textContent = errs.skus;
+      if ($('dropzone')) $('dropzone').classList.toggle('invalid', !!errs.skus && state.skuMode === 'upload');
+      if ($('catGrid')) $('catGrid').classList.toggle('invalid', !!errs.skus && state.skuMode === 'catalog');
+      const missing = [errs.brand && 'Brand Name', errs.pins && 'PIN Codes', errs.skus && 'SKUs'].filter(Boolean);
+      if (missing.length) showRunError(`Please fill in the required fields: ${missing.join(', ')}.`, 'required');
+      else if ($('runError').dataset.kind === 'required') showRunError('');
+      return Object.keys(errs).find(k => errs[k]) || '';
+    }
+    function updatePinCount() {
+      const n = selectedPinCodes().length;
+      const total = Array.from($('filterArea').options).filter(o => o.value).length;
+      $('pinCount').textContent = n ? (total > 1 && n === total ? `· all ${n} selected` : `· ${n} selected`) : '';
+      syncFilterDropdowns();
+    }
+    function setApiStatus(ok, msg) {
+      $('apiStatus').innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${ok ? 'bg-emerald-600' : 'bg-red-600'}"></span>${esc(msg)}`;
+    }
+    function setLoading(show, text = 'Working…') {
+      state.loading = show; $('loadingText').textContent = text;
+      $('loadingOverlay').classList.toggle('hidden', !show); $('loadingOverlay').classList.toggle('flex', show);$('runButton').disabled = show;
+      const hasSel = state.skuMode === 'catalog' ? pickCount() > 0 : state.assets.length > 0;
+      $('clearSkus').disabled = show || !hasSel;
+    }
+    function selectOptions(el, firstLabel, rows, selected = '') {
+      const isMulti = el.multiple;
+      el.innerHTML = (isMulti ? '' : `<option value="">${esc(firstLabel)}</option>`) + rows.map((row) => {
+        const value = typeof row === 'object' ? row.value : row;
+        const label = typeof row === 'object' ? row.label : row;
+        const sel = isMulti
+          ? (Array.isArray(selected) ? selected.map(String).includes(String(value)) : String(value) === String(selected))
+          : String(value) === String(selected);
+        return `<option value="${esc(value)}" ${sel ? 'selected' : ''}>${esc(label)}</option>`;
+      }).join('');
+    }
+    /* On first load, bring `target` to the top of the scroll `container`. Content above it may still grow
+       (late data), so keep it aligned until the user scrolls/clicks/types, or 30 s pass. */
+    function autoScrollTo(container, target, offset = 12) {
+      if (!container || !target) return;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const userEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+      let active = true, first = true;
+      const go = (smooth) => {
+        if (!active || !target.offsetParent) return;
+        const top = container.scrollTop + target.getBoundingClientRect().top - container.getBoundingClientRect().top - offset;
+        container.scrollTo({ top: Math.max(0, top), behavior: smooth && !reduce ? 'smooth' : 'auto' });
+      };
+      const ro = new ResizeObserver(() => { if (first) { first = false; return; } go(false); });
+      const stop = () => { active = false; ro.disconnect(); userEvents.forEach(ev => window.removeEventListener(ev, stop, true)); };
+      userEvents.forEach(ev => window.addEventListener(ev, stop, { capture: true, passive: true }));
+      Array.from(container.children).forEach(c => ro.observe(c));
+      setTimeout(stop, 30000);
+      go(false);
+    }
+    let didAutoScroll = false;
+    function scrollToRanking() {
+      if (didAutoScroll) return;
+      didAutoScroll = true;
+      // The ranking section: its title, then the live demo (or the ranked deck)
+      // offset clears the sticky campaign-steps bar
+      const pad = parseFloat(getComputedStyle($('mainScroll')).paddingTop) || 0; // the sticky bar sits below the scroll padding
+      autoScrollTo($('mainScroll'), $('emptyState').parentElement, $('wizardSteps').offsetHeight + pad + 14);
+    }
+    async function loadMetrics() {
+      try {
+        const res = await fetch(endpoint('/v1/metrics'), {
+          cache: 'no-store',
+          headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(apiError(data, `Metrics API returned HTTP ${res.status}`));
+        state.metrics = data;
+        const f = data.filters || {};
+        const pins = (f.pin_codes || Object.keys(data.pin_geo || {})).map(String);
+        selectOptions($('filterArea'), 'All areas', pins.map(pin => ({value:pin, label:labelForPin(pin)})), pins.slice(0, 1));
+        selectOptions($('filterAge'), 'All age groups', f.age_groups || []);
+        selectOptions($('filterGender'), 'All genders', (f.genders || []).map(g => ({value:g, label:displayGender(g)})));
+        selectOptions($('filterRfm'), 'All RFM segments', f.rfm_segments || []);
+        applyBrandLock();
+        setApiStatus(true, 'Audience data loaded');
+        updatePinCount();
+        loadCatalogSkus();
+        if (state.pendingDraft) {
+          const draft = state.pendingDraft;
+          state.pendingDraft = null;
+          applyCampaignDraft(draft);
+        }
+        if (state.pendingCampaignId) {
+          const pendingId = state.pendingCampaignId, pendingOpts = state.pendingCampaignOpts;
+          state.pendingCampaignId = null; state.pendingCampaignOpts = null;
+          loadCampaignById(pendingId, pendingOpts).then((status) => {
+            if (status === 'launched' && pendingOpts && pendingOpts.skipLaunched) startNewCampaign({ keepAudience: true, quiet: true });
+          });
+        }
+        refreshForFilters();
+      } catch (e) {
+        console.error('[ads_lab] unable to load metrics', e);
+        setApiStatus(false, 'Audience data unavailable');
+        $('segmentTitle').innerHTML = '<span class="tchip warn"><i class="fa-solid fa-triangle-exclamation"></i>Audience data unavailable</span>';
+        $('targetWarn').textContent = 'Refresh the page to retry.';
+        $('targetWarn').classList.remove('hidden');
+        const ms = $('msArea').querySelector('summary'); if (ms) ms.textContent = 'Areas unavailable';
+      }
+    }
+
+    function rowValue(row, key) {
+      const aliases = {
+        pin_code: ['pin_code','pin','geo_key','pincode'],
+        age_group: ['age_group','age_bucket','age_band'],
+        gender: ['gender','sex'],
+        rfm_segment: ['rfm_segment','rfm','segment']
+      }[key] || [key];
+      for (const k of aliases) if (row && row[k] !== undefined && row[k] !== null && row[k] !== '') return row[k];
+      return undefined;
+    }
+    function matches(row, filters, keepKeys) {
+      for (const key of keepKeys) {
+        const wanted = splitChoice(filters[key]).map(v => normalizedValue(key, v));
+        if (!wanted.length) continue;
+        const actual = rowValue(row, key);
+        if (actual === undefined || !wanted.includes(normalizedValue(key, actual))) return false;
+      }
+      return true;
+    }
+    function isKnownObservation(value) {
+      return !['', 'unknown', 'n/a', 'na', 'null', 'none', 'not specified', 'not available'].includes(normal(value));
+    }
+    function asDistribution(raw) {
+      const output = {};
+      if (Array.isArray(raw)) {
+        for (const item of raw) {
+          if (item == null) continue;
+          if (typeof item === 'string' || typeof item === 'number') {
+            const v = String(item); if (!isKnownObservation(v)) continue;
+            output[v] = (output[v] || 0) + 1; continue;
+          }
+          const value = item.value ?? item.name ?? item.label ?? item.key ?? item.brand ?? item.color ?? item.pattern ?? item.size ?? item.material ?? item.commodity_type;
+          const count = Number(item.count ?? item.n ?? item.quantity ?? item.total ?? 1);
+          if (value !== undefined && isKnownObservation(value) && Number.isFinite(count)) output[String(value)] = (output[String(value)] || 0) + Math.max(0, count);
+        }
+      } else if (raw && typeof raw === 'object') {
+        for (const [key, v] of Object.entries(raw)) {
+          if (!isKnownObservation(key)) continue;
+          const count = Number(typeof v === 'object' ? (v.count ?? v.n ?? v.quantity ?? 1) : v);
+          if (Number.isFinite(count)) output[key] = Math.max(0, count);
+        }
+      } else if (typeof raw === 'string' && raw.trim() && isKnownObservation(raw)) output[raw.trim()] = 1;
+      return output;
+    }
+    function categoryDistribution(cell, config) {
+      for (const key of config.keys) {
+        if (cell && cell[key] !== undefined) {
+          const parsed = asDistribution(cell[key]);
+          if (Object.keys(parsed).length) return parsed;
+        }
+      }
+      const singulars = {
+        colors: ['color','primary_color'], patterns: ['pattern'], sizes: ['size','size_normalized'],
+        materials: ['material','material_type'], brands: ['brand','brand_name'], commodities: ['commodity','commodity_type','name']
+      };
+      for (const [plural, candidates] of Object.entries(singulars)) {
+        if (config.keys.includes(plural)) {
+          for (const k of candidates) if (cell?.[k] !== undefined && cell[k] !== null && cell[k] !== '') {
+            const count = k === 'brand' || k === 'brand_name'
+              ? Number(cell.garments ?? cell.brand_count ?? 1)
+              : Number(cell[`${k}_count`] || 1);
+            return { [String(cell[k])]: Number.isFinite(count) && count > 0 ? count : 1 };
+          }
+        }
+      }
+      return {};
+    }
+    function metricCellRows() {
+      const m = state.metrics || {};
+      const rows = m.garment_segment_cells || m.garment_cells || m.garmentCells || m.garment_profiles || m.segment_garment_cells || [];
+      return Array.isArray(rows) ? rows : [];
+    }
+    /* Exact selection first, then relax RFM → gender → age → geo until garment observations exist. */
+    function filterTiers(filters) {
+      let keep = FILTER_KEYS.filter(k => filters[k]);
+      const tiers = [keep];
+      for (const key of ['rfm_segment', 'gender', 'age_group', 'pin_code']) {
+        if (keep.includes(key)) { keep = keep.filter(k => k !== key); tiers.push(keep); }
+      }
+      return tiers;
+    }
+    function createProfile(filters) {
+      const cells = metricCellRows();
+      const tiers = filterTiers(filters);
+      for (const keep of tiers) {
+        const picked = cells.filter(c => matches(c, filters, keep));
+        const dist = {};
+        for (const [group, config] of Object.entries(GROUPS)) {
+          dist[group] = {};
+          for (const cell of picked) {
+            const values = categoryDistribution(cell, config);
+            for (const [value, count] of Object.entries(values)) dist[group][value] = (dist[group][value] || 0) + count;
+          }
+        }
+        const available = Object.values(dist).some(d => Object.keys(d).length > 0);
+        if (available) return { distributions: dist, cellCount: picked.length };
+      }
+      return { distributions: Object.fromEntries(Object.keys(GROUPS).map(k => [k, {}])), cellCount: 0 };
+    }
+    function topN(distribution, limit = 8) {
+      return Object.entries(distribution || {}).filter(([, n]) => Number(n) > 0).sort((a,b) => b[1]-a[1]).slice(0, limit);
+    }
+    
+    function renderTastePercentages(id, distribution) {
+      const node = $(id); 
+      const rows = topN(distribution, 10);
+      if (!rows.length) {
+        node.innerHTML = '<span class="text-[11px] text-[#8A7480]">No observations for this profile</span>';
+        return;
+      }
+      const total = rows.reduce((sum, [, count]) => sum + Number(count), 0) || 1;
+      node.innerHTML = rows.map(([name, count]) => {
+        const pct = Math.round((Number(count) / total) * 100);
+        return `<div class="text-[11px] mb-2">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-[#3B2733] truncate max-w-[140px]" title="${esc(name)}">${esc(name)}</span>
+            <span class="font-mono text-[#6B3A55] text-[10px] font-semibold">${pct}% <span class="text-[#8A7480]">(${count})</span></span>
+          </div>
+          <div class="w-full bg-[#F6EEF0] rounded-full h-1 overflow-hidden border border-[#EAD9E0]">
+            <div class="bg-[#6B3A55] h-full rounded-full" style="width: ${pct}%"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function metricRowsForAudience() {
+      const m = state.metrics || {};
+      for (const key of ['customer_cells','demographic_cells','segment_cells','audience_cells','customer_segments']) {
+        if (Array.isArray(m[key])) return m[key];
+      }
+      return [];
+    }
+    function audienceStats(filters) {
+      const rows = metricRowsForAudience();
+      if (!rows.length) return { customers: null, empty: false }; // metrics payload has no customer cells
+      const selectedKeys = FILTER_KEYS.filter(k => Boolean(filters[k]));
+      const matched = rows.filter(r => matches(r, filters, selectedKeys)); // unselected dimensions are rolled up
+      return {
+        customers: matched.reduce((acc, r) => acc + (Number(r.customers ?? 0) || 0), 0),
+        empty: selectedKeys.length > 0 && matched.length === 0
+      };
+    }
+
+    function fmtNumber(n) { return n === null || n === undefined || !Number.isFinite(Number(n)) ? '—' : Number(n).toLocaleString('en-IN', {maximumFractionDigits:0}); }
+    
+    function renderTargetChips(f) {
+      const pins = f.pin_codes || [];
+      const chips = [
+        f.brand_name ? ['fa-tag', f.brand_name] : ['fa-tag', 'No brand', 'muted'],
+        ['fa-location-dot', !pins.length ? 'No PIN' : (pins.length <= 2 ? pins.map(labelForPin).join(', ') : pins.length + ' PINs'), pins.length ? '' : 'muted'],
+        ['fa-cake-candles', f.age_group || 'All ages'],
+        ['fa-venus-mars', displayGender(f.gender)],
+        ['fa-gem', f.rfm_segment || 'All RFM'],
+      ];
+      $('segmentTitle').innerHTML = chips.map(([ic, t, cls]) => `<span class="tchip ${cls || ''}"><i class="fa-solid ${ic}"></i>${esc(t)}</span>`).join('');
+    }
+    try { if (localStorage.getItem('suffai_ads_target') === 'closed') $('stepOpportunity').open = false; } catch (_) {}
+    $('stepOpportunity').addEventListener('toggle', () => { try { localStorage.setItem('suffai_ads_target', $('stepOpportunity').open ? 'open' : 'closed'); } catch (_) {} });
+
+    function updateBrandUploadLabel() {
+      const name = ($('filterBrand').value || '').trim();
+      const el = $('brandUploadLabel');
+      if (el) el.textContent = name || '(enter brand name above)';
+    }
+
+    function refreshForFilters() {
+      updateBrandUploadLabel();
+      if (runChecked && !checkRequired()) runChecked = false;
+      if (!state.metrics) return;
+      const filters = currentFilters();
+      state.profile = createProfile(filters);
+      renderTargetChips(filters);
+      $('staleNote').classList.toggle('hidden', !state.rankedKey || state.rankedKey === JSON.stringify(filters));
+      const stats = audienceStats(filters);
+      $('audienceCustomers').textContent = fmtNumber(stats.customers);
+      const warn = stats.empty ? 'No customers for this combination'
+        : (!state.profile.cellCount ? 'No garment data for this audience' : '');
+      $('targetWarn').textContent = warn;
+      $('targetWarn').classList.toggle('hidden', !warn);
+
+      renderTastePercentages('insightColors', state.profile.distributions.color);
+      renderTastePercentages('insightPatterns', state.profile.distributions.pattern);
+      renderTastePercentages('insightSizes', state.profile.distributions.size);
+      renderTastePercentages('insightCommodities', state.profile.distributions.commodity);
+      renderTastePercentages('insightMaterials', state.profile.distributions.material);
+      renderTastePercentages('insightBrands', maskBrandDistribution(state.profile.distributions.brand));
+      
+      renderCreatives();
+      publishAdsContext();
+      updateWizard();
+    }
+
+    function publishAdsContext() {
+      if (!window.parent || window.parent === window) return;
+      try {
+        const filters = currentFilters();
+        const ranked = (rankingReady() ? makeRankedAssets() : []).slice(0, 20).map(row => ({
+          filename: row.asset?.file?.name || '',
+          rank: row.rank,
+          score: row.fit?.score ?? null,
+          attrs: row.attrs || {},
+          reason: row.fit?.reason || '',
+          ok: !!(row.item && row.item.ok)
+        }));
+        const job = state.job;
+        window.parent.postMessage({
+          type: 'cc-context',
+          source: 'ads',
+          filters,
+          filters_label: filtersLabel(filters),
+          ranked,
+          campaign_id: state.campaign?.campaign_id || null,
+          job: job && job.job_id ? { job_id: job.job_id, status: job.status || null, progress_pct: job.progress_pct ?? null } : null
+        }, '*');
+      } catch (e) {
+        console.error('[ads_lab] postMessage failed', e);
+      }
+    }
+
+    let agentAutoRunAfterFiles = false;
+
+    function applyAgentAdsFilters(filters) {
+      if (!filters || typeof filters !== 'object') return;
+      const area = $('filterArea');
+      if (area && Array.isArray(filters.pin_codes)) {
+        const wanted = new Set(filters.pin_codes.map(String));
+        Array.from(area.options || []).forEach((opt) => {
+          opt.selected = wanted.has(String(opt.value));
+        });
+      }
+      if ('age_group' in filters) setAudienceChoice('filterAge', 'age_group', filters.age_group);
+      if ('gender' in filters) setAudienceChoice('filterGender', 'gender', filters.gender);
+      if ('rfm_segment' in filters) setAudienceChoice('filterRfm', 'rfm_segment', filters.rfm_segment);
+      updatePinCount();
+      applyBrandLock();
+      if (state.metrics) refreshForFilters();
+      else publishAdsContext();
+    }
+
+    function resetAgentAdsFilters() {
+      const area = $('filterArea');
+      if (area) Array.from(area.options || []).forEach((opt) => { opt.selected = false; });
+      setAudienceChoice('filterAge', 'age_group', '');
+      setAudienceChoice('filterGender', 'gender', '');
+      setAudienceChoice('filterRfm', 'rfm_segment', '');
+      updatePinCount();
+      applyBrandLock();
+      if (state.metrics) refreshForFilters();
+      else publishAdsContext();
+    }
+
+    function runAgentCampaign() {
+      applyBrandLock();
+      if (!state.assets.length) {
+        agentAutoRunAfterFiles = true;
+        $('uploadSummary').textContent = 'AURA: select SKU images to extract and rank…';
+        if ($('fileInput')) $('fileInput').click();
+        return;
+      }
+      runAnalysis();
+    }
+
+    // Returns the campaign status, or null when it could not be loaded.
+    // skipLaunched: a launched campaign lives on the Campaigns tab, so Ads Lab stays on a fresh campaign.
+    async function loadCampaignById(campaignId, opts) {
+      if (!campaignId) return null;
+      if (!state.metrics) { state.pendingCampaignId = campaignId; state.pendingCampaignOpts = opts || null; return null; }
+      try {
+        const res = await fetch(endpoint('/v1/ads-lab/campaigns/' + encodeURIComponent(campaignId)), {
+          headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error('Campaign could not be loaded.');
+        const c = data.campaign || {};
+        if (opts && opts.skipLaunched && c.status === 'launched') return c.status;
+        const skus = Array.isArray(data.skus) ? data.skus : [];
+        state.campaign = {
+          campaign_id: c.campaign_id,
+          brand_name: c.brand_name,
+          filters: { pin_codes: c.pin_codes || [], age_group: c.age_group, gender: c.gender, rfm_segment: c.rfm_segment },
+        };
+        state.campaignItems = skus.map(s => ({
+          sku_uuid: s.sku_uuid,
+          filename: s.original_filename,
+          image_url: s.image_url || '',
+          ok: !!s.extract_ok && s.process_status !== 'failed',
+          extract_ok: !!s.extract_ok,
+          attributes: s.attributes || {},
+          rank: s.rank,
+          rank_score: s.rank_score != null ? Number(s.rank_score) : (s.pin_fit != null ? Math.round(Number(s.pin_fit) * 100) : null),
+          sim_fit: s.sim_fit, attr_fit: s.attr_fit, freq_coverage: s.freq_coverage, pin_fit: s.pin_fit,
+          error: s.process_status === 'failed' || !s.extract_ok ? (s.compare_error || s.extract_error || 'Could not be ranked') : null,
+        }));
+        if (c.source_context && typeof c.source_context === 'object') {
+          state.sourceContext = c.source_context;
+          renderGeoContext(c.source_context);
+        }
+        applyAgentAdsFilters({
+          pin_codes: c.pin_codes || [],
+          age_group: c.age_group || null,
+          gender: c.gender || null,
+          rfm_segment: c.rfm_segment || null,
+        });
+        state.campaign.status = c.status;
+        state.campaign.campaign_name = c.campaign_name;
+        renderCreatives();
+        publishAdsContext();
+        $('uploadSummary').textContent = c.status === 'processing'
+          ? 'Ranking job is still running for this campaign.'
+          : `Loaded ${state.campaignItems.filter(r => r.ok).length} ranked SKU(s).`;
+        updateWizard();
+        scrollToStep('stepRunMode');
+        return c.status || null;
+      } catch (e) {
+        console.error('[ads_lab] load campaign failed', e);
+        $('uploadSummary').textContent = 'Campaign could not be loaded. Please refresh and try again.';
+        return null;
+      }
+    }
+
+    // Fresh campaign: drop the ranked / launched one from this page. Saved campaigns stay on the Campaigns tab
+    // and a running ranking job keeps running on the server.
+    function startNewCampaign(opts) {
+      const o = opts || {};
+      if (state.loading) return false;
+      clearTimeout(jobTimer); pollSeq++; clearInterval(etaTimer);
+      hideCreatedModal();
+      state.campaign = null; state.campaignItems = []; state.job = null; state.assets = [];
+      state.catalogPicks = {};
+      state.sourceContext = null; state.pendingDraft = null; state.pendingCampaignId = null; state.pendingCampaignOpts = null;
+      state.rankedKey = null;
+      if (typeof renderCatalogGrid === 'function') renderCatalogGrid();
+      syncSkuSummary();
+      agentAutoRunAfterFiles = false;
+      try {
+        localStorage.removeItem(JOB_KEY);
+        localStorage.removeItem(QUIET_JOBS_KEY);
+        localStorage.removeItem('suffai_1p_handoff');
+        // the shell clears its draft before a reset it sends and may already have saved the next one
+        if (!o.keepDraft) sessionStorage.removeItem(CAMPAIGN_DRAFT_KEY);
+      } catch (_) { /* ignore */ }
+      $('jobCard').classList.add('hidden');
+      $('jobStatusTag').classList.add('hidden');
+      $('thumbs').classList.remove('scanning');
+      setDemoRanking(false);
+      renderGeoContext(null);
+      showRunError('');
+      runChecked = false;
+      if (!o.keepAudience) resetAgentAdsFilters();
+      assetsChanged(); // clears the thumbnails and deck, re-renders for the filters and publishes cc-context
+      publishAdsContext();
+      $('uploadSummary').textContent = 'New campaign: choose the audience, add SKU images and run Extract & Rank.';
+      $('stepOpportunity').open = true;
+      updateWizard();
+      if (!o.quiet) scrollToStep('stepOpportunity');
+      return true;
+    }
+
+    function handleAgentCommand(cmd) {
+      if (!cmd || typeof cmd !== 'object') return;
+      const t = String(cmd.type || '');
+      if (t === 'set_filters') {
+        applyAgentAdsFilters(cmd.filters || {});
+      } else if (t === 'reset_filters') {
+        resetAgentAdsFilters();
+      } else if (t === 'run_campaign') {
+        runAgentCampaign();
+      } else if (t === 'export_csv') {
+        run3p();
+      } else if (t === 'open_file_picker') {
+        if ($('fileInput')) $('fileInput').click();
+      } else if (t === 'prefill_campaign') {
+        applyCampaignDraft(cmd.context || {});
+      } else if (t === 'new_campaign') {
+        startNewCampaign({ keepAudience: !!cmd.keep_audience, quiet: !!cmd.quiet, keepDraft: true });
+      } else if (t === 'load_campaign') {
+        loadCampaignById(String(cmd.campaign_id || ''));
+      } else if (t === 'export_campaign') {
+        const id = String(cmd.campaign_id || '');
+        if (id) {
+          if (!state.campaign || state.campaign.campaign_id !== id) state.campaign = { campaign_id: id, status: 'exported' };
+          run3p();
+          loadCampaignById(id);
+        }
+      } else if (t === 'track_job') {
+        const jobId = String(cmd.job_id || '');
+        if (jobId) { if (cmd.quiet) markQuietJob(jobId, true); rememberJob(jobId); pollJob(jobId); scrollToStep('stepJob'); }
+      } else {
+        return;
+      }
+      notifyParent({ type: 'cc-agent-ack', source: 'ads', command: t, ok: true });
+    }
+
+    window.addEventListener('message', (ev) => {
+      const data = ev.data;
+      if (ev.source !== window.parent || window.parent === window) return; // only the AURA shell (parent frame) talks to us
+      if (!data || typeof data !== 'object') return;
+      if (data.type === 'cc-context-request') {
+        if (state.metrics) refreshForFilters();
+        else publishAdsContext();
+        return;
+      }
+      if (data.type === 'cc-agent-command') {
+        handleAgentCommand(data.command || data);
+      }
+    });
+
+    const r2 = (v) => v === null || v === undefined || !Number.isFinite(Number(v)) ? '—' : String(Math.round(Number(v) * 100) / 100);
+    function makeRankedAssets() {
+      const campaignByName = {};
+      (state.campaignItems || []).forEach(row => {
+        if (row && row.filename) campaignByName[normal(row.filename)] = row;
+      });
+      const assets = state.assets.length
+        ? state.assets
+        : (state.campaignItems || []).map(r => ({ file: { name: r.filename || 'SKU' }, src: r.image_url || '' }));
+      const ranked = assets.map((asset, index) => {
+        const camp = campaignByName[normal(asset.file.name)];
+        const a = camp?.attributes || {};
+        const attrs = {
+          color: a.color || '', pattern: a.pattern || '', commodity: a.name || a.commodity || '',
+          material: a.material || '', size: a.size || '', brand: a.brand || '', confidence: a.confidence || ''
+        };
+        const fit = camp && camp.rank_score != null
+          ? {
+              score: Math.round(Number(camp.rank_score)),
+              reason: camp.sim_fit != null
+                ? `Campaign rank · similarity ${r2(camp.sim_fit)} · attribute fit ${r2(camp.attr_fit)} · frequency coverage ${r2(camp.freq_coverage)}`
+                : 'Rank from the Extract & Rank job'
+            }
+          : { score: null, reason: camp?.error || 'Run Extract & Rank to score' };
+        return { asset, item: camp, camp, attrs, fit, originalIndex: index, campaignRank: camp?.rank };
+      });
+      ranked.sort((a,b) => {
+        if (a.campaignRank != null && b.campaignRank != null && a.campaignRank !== b.campaignRank) return a.campaignRank - b.campaignRank;
+        if (a.fit.score === null && b.fit.score !== null) return 1;
+        if (a.fit.score !== null && b.fit.score === null) return -1;
+        if (a.fit.score !== null && b.fit.score !== null && b.fit.score !== a.fit.score) return b.fit.score - a.fit.score;
+        return a.originalIndex - b.originalIndex;
+      });
+      return ranked.map((item, i) => ({...item, rank: item.campaignRank || (i + 1)}));
+    }
+    function extractedTags(attrs) {
+      return [attrs.color && `Colour: ${attrs.color}`, attrs.pattern && `Pattern: ${attrs.pattern}`, attrs.commodity && `Type: ${attrs.commodity}`, attrs.material && `Material: ${attrs.material}`, attrs.size && `Size: ${attrs.size}`, attrs.brand && `Brand: ${attrs.brand}`].filter(Boolean);
+    }
+    /* ---------- Ranking deck (shared by real results and the demo) ---------- */
+    function cardHTML(c) {
+      c = { ...c, rank: esc(c.rank) };
+      const p = c.score ?? 0;
+      const band = c.score == null ? '' : c.score >= 75 ? 'fit-hi' : c.score >= 50 ? 'fit-mid' : 'fit-lo';
+      return `<article class="cr-card ${c.top ? 'top' : ''} ${band} ${c.rank <= 3 ? 'r' + c.rank : ''}" role="listitem" aria-label="Rank ${c.rank}: ${esc(c.name)}, fit ${c.score === null ? 'not scored' : c.score + ' of 100'}">
+          <div class="cr-media">${c.media}
+            <span class="cr-rank"><b>#${c.rank}</b>${c.top ? '<em>Top Fit</em>' : ''}</span>
+            <span class="cr-status ${c.bad ? 'bad' : ''}">${esc(c.status)}</span>
+            <span class="cr-ring ${c.score === null ? 'na' : ''}" style="--p:${p}"><b>${c.score === null ? 'N/A' : c.score}</b></span>
+          </div>
+          <div class="cr-body">
+            <div><h4 class="cr-name" title="${esc(c.name)}">${esc(c.name)}</h4><p class="cr-sub">Rank #${c.rank}${c.of ? ` of ${c.of}` : ''} · Segment fit${c.score === null ? '' : ` ${c.score}/100`}</p></div>
+            <div class="cr-bar" style="--p:${p}"><i></i></div>
+            <div class="cr-tags">${c.tags.length ? c.tags.map(t => `<span class="tag tg-${esc(String(t).split(':')[0].trim().toLowerCase())}">${esc(t)}</span>`).join('') : '<span class="text-xs text-[#8A7480]">No normalised attributes returned</span>'}</div>
+            <p class="cr-scroll-hint">Scroll for details <i class="fa-solid fa-arrow-down"></i></p>
+            <div class="cr-sec"><h5>Why This Rank</h5><p>${esc(c.reason)}</p></div>
+            ${c.breakdown && c.breakdown.length ? `<div class="cr-sec"><h5>Audience Match by Attribute</h5>${c.breakdown.map(b => `<div class="cr-row"><span>${esc(b.label)}</span><b title="${esc(b.value)}">${esc(b.value)}</b><em class="${b.rank && b.rank <= 3 ? 'hit' : ''}">${b.rank ? `#${b.rank} · ${b.share}%` : 'not seen'}</em><u style="--p:${b.fill}"></u>${b.rank !== 1 && b.top ? `<small>Audience favours ${esc(b.top)}</small>` : ''}</div>`).join('')}</div>` : ''}
+            ${c.signals && c.signals.length ? `<div class="cr-sec"><h5>Ranking Signals</h5><div class="cr-kv">${c.signals.map(([k, v]) => `<div><span>${esc(k)}</span><b title="${esc(v)}">${esc(v)}</b></div>`).join('')}</div></div>` : ''}
+            ${c.rankedFor ? `<div class="cr-sec"><h5>Ranked For</h5><p>${esc(c.rankedFor)}</p></div>` : ''}
+            ${c.file && c.file.length ? `<div class="cr-sec"><h5>File</h5><div class="cr-kv">${c.file.map(([k, v]) => `<div><span>${esc(k)}</span><b title="${esc(v)}">${esc(v)}</b></div>`).join('')}</div></div>` : ''}
+          </div>
+        </article>`;
+    }
+
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    // Pose by distance from the centre card: x offset (% of card width), scale, opacity, z-index.
+    const POSES = [[0, 1, 1, 50], [64, .84, 1, 40], [112, .7, .92, 30], [150, .58, .6, 20], [176, .5, 0, 10]];
+    function makeDeck(root, { loop = false, autoplay = 0, label = 'creatives' } = {}) {
+      root.classList.add('deck');
+      root.tabIndex = 0;
+      root.setAttribute('role', 'region');
+      root.setAttribute('aria-roledescription', 'carousel');
+      root.setAttribute('aria-label', label);
+      root.innerHTML = `<div class="deck-glow" aria-hidden="true"></div><div class="deck-stage" role="list"></div>
+        <button type="button" class="deck-nav prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+        <button type="button" class="deck-nav next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="deck-dots" aria-hidden="true"></div>`;
+      const stage = root.querySelector('.deck-stage'), dots = root.querySelector('.deck-dots');
+      const prevBtn = root.querySelector('.prev'), nextBtn = root.querySelector('.next');
+      const st = { cards: [], i: 0, timer: 0, hoverT: 0, px: 0, py: 0, lock: null, inside: false };
+
+      function layout() {
+        const n = st.cards.length;
+        st.cards.forEach((c, k) => {
+          let d = k - st.i;
+          if (loop && n > 2) { d = ((d % n) + n) % n; if (d > n / 2) d -= n; }
+          const [x, s, o, z] = POSES[Math.min(Math.abs(d), POSES.length - 1)];
+          c.style.setProperty('--x', `${Math.sign(d) * x}%`);
+          c.style.setProperty('--y', d ? '0px' : '-8px');
+          c.style.setProperty('--s', s);
+          c.style.setProperty('--o', o);
+          c.style.setProperty('--z', z);
+          c.classList.toggle('is-active', d === 0);
+          c.classList.toggle('is-gone', o === 0);
+          c.setAttribute('aria-current', d === 0 ? 'true' : 'false');
+        });
+        prevBtn.disabled = n < 2 || (!loop && st.i === 0);
+        nextBtn.disabled = n < 2 || (!loop && st.i === n - 1);
+        dots.innerHTML = n > 1 && n <= 20 ? st.cards.map((_, k) => `<i class="${k === st.i ? 'on' : ''}"></i>`).join('') : '';
+      }
+      function go(k, fromPointer = false) {
+        const n = st.cards.length;
+        if (!n) return;
+        st.i = loop ? ((k % n) + n) % n : Math.max(0, Math.min(n - 1, k));
+        // After a pointer-driven move the cards shift under the cursor: ignore hover until it really moves again.
+        st.lock = fromPointer ? { x: st.px, y: st.py } : null;
+        layout();
+      }
+      function play() {
+        clearInterval(st.timer); st.timer = 0;
+        if (autoplay && !st.inside && !reduceMotion.matches && st.cards.length > 1 && root.offsetParent) st.timer = setInterval(() => go(st.i + 1), autoplay);
+      }
+      function set(html) {
+        stage.innerHTML = html;
+        st.cards = Array.from(stage.children);
+        st.i = 0; st.lock = null;
+        layout(); play();
+      }
+
+      root.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        st.px = e.clientX; st.py = e.clientY;
+        if (st.lock && Math.hypot(st.px - st.lock.x, st.py - st.lock.y) < 40) return;
+        st.lock = null;
+        const card = e.target.closest('.cr-card');
+        clearTimeout(st.hoverT);
+        if (!card || card.classList.contains('is-active')) return;
+        // Hover intent: the pointer has to rest on a side card briefly before it comes to the centre.
+        st.hoverT = setTimeout(() => {
+          const under = document.elementFromPoint(st.px, st.py)?.closest('.cr-card');
+          if (under === card) go(st.cards.indexOf(card), true);
+        }, 170);
+      });
+      root.addEventListener('pointerenter', () => { st.inside = true; play(); });
+      root.addEventListener('pointerleave', () => { st.inside = false; clearTimeout(st.hoverT); play(); });
+      root.addEventListener('focusin', () => { st.inside = true; play(); });
+      root.addEventListener('focusout', (e) => { if (!root.contains(e.relatedTarget)) { st.inside = root.matches(':hover'); play(); } });
+      stage.addEventListener('click', (e) => {
+        const card = e.target.closest('.cr-card');
+        if (card && !card.classList.contains('is-active')) { clearTimeout(st.hoverT); go(st.cards.indexOf(card), true); }
+      });
+      prevBtn.addEventListener('click', () => go(st.i - 1));
+      nextBtn.addEventListener('click', () => go(st.i + 1));
+      root.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); go(st.i + (e.key === 'ArrowRight' ? 1 : -1)); }
+        if (e.key === 'Home') { e.preventDefault(); go(0); }
+        if (e.key === 'End') { e.preventDefault(); go(st.cards.length - 1); }
+      });
+      let swipeX = null;
+      root.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') swipeX = e.clientX; });
+      root.addEventListener('pointerup', (e) => {
+        if (swipeX === null) return;
+        const dx = e.clientX - swipeX; swipeX = null;
+        if (Math.abs(dx) > 40) go(st.i + (dx < 0 ? 1 : -1));
+      });
+      return { set, play };
+    }
+
+    function renderRankStats(list) {
+      const scored = list.filter(r => r.fit.score !== null);
+      const el = $('rankStats');
+      el.classList.toggle('hidden', !list.length);
+      if (!list.length) return;
+      const best = scored[0];
+      const avg = scored.length ? Math.round(scored.reduce((a, r) => a + r.fit.score, 0) / scored.length) : null;
+      const stat = (ic, label, value) => `<div class="rank-stat"><i class="ic fa-solid ${ic}"></i><div class="min-w-0"><p>${label}</p><b title="${esc(value)}">${esc(value)}</b></div></div>`;
+      el.innerHTML = [
+        stat('fa-trophy', 'Best Fit', best ? `${best.fit.score} · ${best.asset.file.name}` : 'Run ranking'),
+        stat('fa-chart-simple', 'Average Fit', avg === null ? '—' : `${avg}/100`),
+        stat('fa-circle-check', 'Scored', `${scored.length} of ${list.length}`),
+        stat('fa-users', 'Audience', `${$('audienceCustomers').textContent} customers`),
+      ].join('');
+    }
+
+    // Per-attribute comparison with the audience profile: where this SKU's value ranks among what the audience wears.
+    function attrBreakdown(attrs, profile) {
+      const dist = profile?.distributions || {};
+      return [['color', 'Colour'], ['pattern', 'Pattern'], ['commodity', 'Type'], ['material', 'Material'], ['size', 'Size'], ['brand', 'Brand']].map(([k, label]) => {
+        const pairs = topN(k === 'brand' ? maskBrandDistribution(dist[k]) : dist[k], 100);
+        const v = attrs[k];
+        if (!v) return null;
+        const total = pairs.reduce((a, [, n]) => a + Number(n), 0) || 1;
+        const idx = pairs.findIndex(([n]) => normal(n) === normal(v));
+        const hit = idx >= 0 ? pairs[idx] : null;
+        return { label, value: v, rank: hit ? idx + 1 : null, share: hit ? Math.round(hit[1] / total * 100) : 0,
+          fill: hit ? Math.round(hit[1] / pairs[0][1] * 100) : 0, top: pairs[0]?.[0] || '' };
+      }).filter(Boolean);
+    }
+    function fileInfo(a) {
+      if (!a?.file?.size) return []; // campaign loaded from the server: no local file details
+      const kb = a.file.size / 1024;
+      return [['Size', kb >= 1024 ? `${(kb / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(kb))} KB`],
+        ['Dimensions', a.w ? `${a.w} × ${a.h}px` : '—'], ['Format', (a.file.type || '').replace('image/', '').toUpperCase() || '—']];
+    }
+    function cardSignals(row) {
+      const c = row.camp || {}, fmt = (v) => v === null || v === undefined || v === '' ? '—' : (Number.isFinite(Number(v)) ? String(Math.round(Number(v) * 100) / 100) : String(v));
+      const out = [];
+      if (row.camp) out.push(['Similarity Fit', fmt(c.sim_fit)], ['Attribute Fit', fmt(c.attr_fit)], ['Freq. Coverage', fmt(c.freq_coverage)], ['PIN Fit', fmt(c.pin_fit)], ['Rank Score', fmt(c.rank_score)]);
+      if (row.attrs.confidence) out.push(['Extraction Conf.', fmt(row.attrs.confidence)]);
+      return out.filter(([, v]) => v !== '—'); // the detail API may omit some signals; don't show empty tiles
+    }
+
+    const deck = makeDeck($('creativeGrid'), { loop: true, autoplay: 3200, label: 'Ranked creative cards' });
+    const NO_IMAGE = '<div class="w-full h-full grid place-items-center"><i class="fa-solid fa-shirt text-5xl text-[#DCC3CE]"></i></div>';
+    // signed image URLs expire: show the placeholder rather than a broken image
+    $('creativeGrid').addEventListener('error', (e) => { if (e.target.tagName === 'IMG') e.target.outerHTML = NO_IMAGE; }, true);
+    // The deck + matrix show results only once Extract & Rank has produced scores.
+    function rankingReady() { return state.campaignItems.length > 0; }
+    function renderCreatives() {
+      const list = rankingReady() ? makeRankedAssets() : [];
+      $('rankCount').textContent = `${list.length} creative${list.length === 1 ? '' : 's'}`;
+      $('emptyState').classList.toggle('hidden', list.length > 0);
+      $('creativeGrid').classList.toggle('hidden', !list.length);
+      demoDeck.play();
+      const ranked = filtersLabel();
+      deck.set(list.map((row) => {
+        const { asset, item, attrs, fit, rank } = row;
+        return cardHTML({
+          media: asset.src ? `<img src="${esc(asset.src)}" alt="${esc(asset.file.name)}" loading="lazy">` : NO_IMAGE,
+          rank, top: rank === 1 && fit.score !== null, score: fit.score, name: asset.file.name,
+          status: item ? (item.ok ? (item.status || 'Extracted') : 'Extraction failed') : 'Awaiting extraction',
+          bad: item && !item.ok, tags: extractedTags(attrs), of: list.length, rankedFor: ranked,
+          breakdown: attrBreakdown(attrs, state.profile), signals: cardSignals(row), file: fileInfo(asset),
+          reason: fit.score === null ? (fit.reason || 'No comparable segment profile') : `${fit.reason}. Relative preference score.`
+        });
+      }).join(''));
+      renderRankStats(list);
+      renderMatrix(list);
+      const scored = list.filter(r => r.fit.score !== null).length;
+      $('launchMeta').innerHTML = `<span>${esc($('audienceCustomers').textContent)} customers</span><span>${scored} creative${scored === 1 ? '' : 's'} ranked</span>`;
+    }
+
+    /* Hand the current audience + ranked creatives to the 1P campaign page (same origin → localStorage). */
+    function thumbOf(src, max = 320) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const k = Math.min(1, max / Math.max(img.width, img.height));
+          const cv = document.createElement('canvas'); cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+          const ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); ctx.drawImage(img, 0, 0, cv.width, cv.height);
+          try { resolve(cv.toDataURL('image/jpeg', .82)); } catch (_) { resolve(''); }
+        };
+        img.onerror = () => resolve('');
+        // campaign loaded from the server: Campaigns fetches its own signed image URLs (a cross-origin image would taint the canvas)
+        if (!src || !src.startsWith('data:')) { resolve(''); return; }
+        img.src = src;
+      });
+    }
+    async function stashCampaignThumbs() {
+      const f = currentFilters();
+      if (lockedBrand) f.brand_name = lockedBrand;
+      const list = makeRankedAssets().slice(0, 30); // every uploaded SKU (rank order) for the phone preview
+      const thumbs = await Promise.all(list.map(r => thumbOf(r.asset.src)));
+      const draft = {
+        v: 1, created_at: new Date().toISOString(), campaign_id: state.campaign?.campaign_id || null,
+        brand: f.brand_name || '', filters: f, filters_label: filtersLabel(f),
+        customers: audienceStats(f).customers,
+        creatives: list.map((r, i) => ({ name: r.asset.file.name, rank: r.rank, score: r.fit.score, attrs: r.attrs, reason: r.fit.reason || '', thumb: thumbs[i] }))
+      };
+      try { localStorage.setItem('suffai_1p_handoff', JSON.stringify(draft)); }
+      catch (_) { // storage full: hand off without images
+        try { localStorage.setItem('suffai_1p_handoff', JSON.stringify({ ...draft, creatives: draft.creatives.map(c => ({ ...c, thumb: '' })) })); } catch (__) { /* page still opens */ }
+      }
+    }
+
+    /* ---------- Demo deck: illustrated garments on wooden hangers, looping until real SKUs arrive ---------- */
+    const GARMENTS = {
+      shirt: { c: ['#F6EAD7', '#E0C9A8', '#8C7052'],
+        body: 'M72 50L48 62L34 150L50 155L62 98V206H138V98L150 155L166 150L152 62L128 50L112 50L100 70L88 50Z',
+        extra: (o) => `<path d="M86 46L100 70L114 46L121 53L100 80L79 53Z" fill="#FFF8EE" stroke="${o}" stroke-width="1.4"/><path d="M100 72V206" stroke="${o}" stroke-opacity=".5"/>${[94, 118, 142, 166, 190].map(y => `<circle cx="104" cy="${y}" r="2.3" fill="${o}"/>`).join('')}<path d="M110 96h18v20h-18z" fill="none" stroke="${o}" stroke-opacity=".55"/><path d="M37 140l14 4M163 140l-14 4" stroke="${o}" stroke-opacity=".6" stroke-width="1.6"/>` },
+      skirt: { c: ['#E8BC5A', '#B9852A', '#6E4C10'],
+        body: 'M70 70H130L164 206Q100 222 36 206Z',
+        extra: (o) => `<path d="M70 58H130V70H70Z" fill="#C9962F" stroke="${o}" stroke-width="1.4"/><path d="M84 70L64 210M100 70V216M116 70L136 210M92 70L82 214M108 70L118 214" stroke="${o}" stroke-opacity=".35"/><rect x="74" y="46" width="8" height="14" rx="2" fill="#9C8B94"/><rect x="118" y="46" width="8" height="14" rx="2" fill="#9C8B94"/>` },
+      tee: { c: ['#EDC3CF', '#C98FA2', '#8E5368'],
+        body: 'M76 50L44 66L56 98L70 90V202H130V90L144 98L156 66L124 50Q100 68 76 50Z',
+        extra: (o) => `<path d="M76 50Q100 68 124 50" fill="none" stroke="#F8DCE4" stroke-width="5"/><path d="M76 50Q100 68 124 50" fill="none" stroke="${o}" stroke-width="1.2"/><path d="M70 194H130M48 88l10-4M152 88l-10-4" stroke="${o}" stroke-opacity=".5" stroke-dasharray="3 3"/><circle cx="100" cy="128" r="16" fill="none" stroke="#FFF" stroke-opacity=".7" stroke-width="3"/><path d="M93 128l5 5 9-10" fill="none" stroke="#FFF" stroke-opacity=".8" stroke-width="3"/>` },
+      dress: { c: ['#9A3657', '#5E1A33', '#3D0F21'],
+        body: 'M82 50Q100 62 118 50L124 104L160 210Q100 224 40 210L76 104Z',
+        extra: (o) => `<path d="M82 50L78 38M118 50L122 38" stroke="${o}" stroke-width="2"/><path d="M76 104Q100 113 124 104" fill="none" stroke="#E0B654" stroke-width="4"/><path d="M88 120L72 208M112 120L128 208M100 118V216" stroke="#000" stroke-opacity=".18"/>` },
+      hoodie: { c: ['#A9C0A5', '#6F8C6C', '#435940'],
+        body: 'M72 54Q100 30 128 54L154 68L166 160L150 164L140 108V204H60V108L50 164L34 160L46 68Z',
+        extra: (o) => `<path d="M80 54Q100 80 120 54" fill="#58714F" stroke="${o}" stroke-width="1.4"/><path d="M94 70V100M106 70V100" stroke="#F4F1E6" stroke-width="2" stroke-linecap="round"/><path d="M74 150H126L120 182H80Z" fill="none" stroke="${o}" stroke-opacity=".6"/><path d="M60 196H140M36 152l14 4M164 152l-14 4" stroke="${o}" stroke-opacity=".6" stroke-width="2"/>` },
+      jacket: { c: ['#7797C6', '#45628E', '#2C4166'],
+        body: 'M72 50L46 62L32 160L48 165L60 104V206H140V104L152 165L168 160L154 62L128 50Z',
+        extra: (o) => `<path d="M72 50H88L96 70L82 78ZM128 50H112L104 70L118 78Z" fill="#5A7AAA" stroke="${o}" stroke-width="1.3"/><path d="M100 76V206M60 100Q100 110 140 100M70 114h22v18h-22zM108 114h22v18h-22zM60 194H140" fill="none" stroke="#E8C27A" stroke-dasharray="3 3" stroke-width="1.3"/>${[120, 150, 180].map(y => `<circle cx="104" cy="${y}" r="2.6" fill="#C9A24A"/>`).join('')}` },
+      sweater: { c: ['#CDBBE6', '#9C86C2', '#5E4A85'],
+        body: 'M74 52L46 64L36 170L54 174L62 104V204H138V104L146 174L164 170L154 64L126 52Q100 68 74 52Z',
+        extra: (o) => `<path d="M74 52Q100 68 126 52" fill="none" stroke="#E6DCF4" stroke-width="6"/><path d="M62 196H138M38 162l16 4M162 162l-16 4" stroke="${o}" stroke-width="3" stroke-opacity=".5"/>${[84, 116].map(x => `<path d="M${x} 86q7 9 0 18q-7 9 0 18q7 9 0 18q-7 9 0 18q7 9 0 18" fill="none" stroke="${o}" stroke-opacity=".55" stroke-width="1.6"/>`).join('')}<path d="M100 84V190" stroke="${o}" stroke-opacity=".35" stroke-dasharray="1 4" stroke-width="2" stroke-linecap="round"/>` },
+      trousers: { c: ['#4A4246', '#1F1B1D', '#0F0D0E'],
+        body: 'M66 66H134L140 212H108L100 104L92 212H60Z',
+        extra: (o) => `<path d="M66 54H134V66H66Z" fill="#2E282B" stroke="${o}"/><path d="M80 66V54M100 66V54M120 66V54" stroke="#6B6266"/><path d="M80 74L76 210M120 74L124 210" stroke="#FFF" stroke-opacity=".12"/><path d="M70 68Q78 88 90 76M130 68Q122 88 110 76" fill="none" stroke="#FFF" stroke-opacity=".2"/><rect x="73" y="44" width="8" height="12" rx="2" fill="#9C8B94"/><rect x="119" y="44" width="8" height="12" rx="2" fill="#9C8B94"/>` },
+    };
+    function garmentSVG(key, uid) {
+      const g = GARMENTS[key], [c1, c2, o] = g.c, id = `gm${uid}`;
+      return `<svg viewBox="0 0 200 230" aria-hidden="true">
+        <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>
+          <linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient></defs>
+        <path d="M100 40v-9a8 8 0 1 1 8-8" fill="none" stroke="#9C8B94" stroke-width="3" stroke-linecap="round"/>
+        <path d="M56 56Q100 34 144 56" fill="none" stroke="#9A6534" stroke-width="7" stroke-linecap="round"/>
+        <path d="M60 54Q100 35 140 54" fill="none" stroke="#D9A86C" stroke-width="2" stroke-linecap="round"/>
+        <g stroke-linejoin="round" stroke-linecap="round">
+          <path d="${g.body}" fill="url(#${id})" stroke="${o}" stroke-width="1.6"/>
+          <path d="${g.body}" fill="url(#${id}h)"/>
+          ${g.extra(o)}
+        </g></svg>`;
+    }
+    const DEMO = [
+      ['shirt', 'linen-shirt-beige.jpg', 94, ['Colour: Beige', 'Pattern: Striped', 'Type: Shirt', 'Material: Linen'], 'Matches the top colour, pattern and garment type for this audience.'],
+      ['skirt', 'pleated-skirt-mustard.jpg', 90, ['Colour: Mustard', 'Pattern: Pleated', 'Type: Skirt', 'Material: Polyester'], 'Trending colour with a strong garment-type match.'],
+      ['tee', 'graphic-tee-rose.jpg', 86, ['Colour: Rose', 'Pattern: Graphic Print', 'Type: T-Shirt', 'Material: Cotton'], 'Strong pattern and material match; colour is a secondary preference.'],
+      ['dress', 'wrap-dress-burgundy.jpg', 81, ['Colour: Burgundy', 'Pattern: Solid', 'Type: Dress', 'Material: Silk'], 'Colour is a top-3 preference; garment type is less common here.'],
+      ['hoodie', 'hoodie-sage.jpg', 76, ['Colour: Sage', 'Pattern: Solid', 'Type: Hoodie', 'Material: Fleece'], 'Popular silhouette, but the colour is rarely seen in this audience.'],
+      ['jacket', 'denim-jacket.jpg', 71, ['Colour: Blue', 'Pattern: Plain', 'Type: Denim Jacket', 'Material: Denim'], 'Garment type matches; material is a weaker preference.'],
+      ['sweater', 'cable-sweater-lilac.jpg', 66, ['Colour: Lilac', 'Pattern: Cable Knit', 'Type: Sweater', 'Material: Wool'], 'Seasonal piece — fewer matching observations in this segment.'],
+      ['trousers', 'slim-trousers-black.jpg', 60, ['Colour: Black', 'Pattern: Solid', 'Type: Trousers', 'Material: Polyester'], 'Few attribute overlaps with this audience’s wardrobe.'],
+    ];
+    const demoDeck = makeDeck($('demoRail'), { loop: true, autoplay: 2800, label: 'Demo ranking' });
+    demoDeck.set(DEMO.map(([g, name, score, tags, reason], i) => cardHTML({
+      media: garmentSVG(g, i), rank: i + 1, of: DEMO.length, top: i === 0, score, name, status: 'Demo', tags, reason,
+      rankedFor: 'Your brand × your PINs × age × gender × RFM',
+      breakdown: tags.map((t, j) => {
+        const [label, value] = t.split(': '), seen = score - j * 9 > 55;
+        const rank = seen ? 1 + j + Math.round((94 - score) / 12) : null, share = seen ? Math.max(4, Math.round(score / 5) - j * 3) : 0;
+        return { label, value, rank, share, fill: seen ? Math.max(12, score - j * 14) : 0, top: ['Beige', 'Striped', 'Shirt', 'Cotton'][j] };
+      }),
+      signals: [['Similarity Fit', (score / 100 - .04).toFixed(2)], ['Attribute Fit', (score / 100 - .09).toFixed(2)], ['Freq. Coverage', (score / 100 - .15).toFixed(2)], ['Rank Score', String(score)]]
+    })).join(''));
+    function renderMatrix(list) {
+      const f = currentFilters();
+      $('matrixBody').innerHTML = list.length ? list.map(row => {
+        const a = row.attrs; const taste = extractedTags(a).join(' · ') || '—';
+        const pins = f.pin_codes || (f.pin_code ? [f.pin_code] : []);
+        const pinLabel = !pins.length ? 'No PIN' : (pins.length <= 2 ? pins.map(labelForPin).join(', ') : pins.length + ' PINs');
+        return `<tr><td class="px-4 py-3 font-mono ${row.rank === 1 ? 'text-[#6B3A55] font-bold' : 'text-[#8A7480]'}">#${esc(row.rank)}</td><td class="px-4 py-3 text-[#3B2733] font-medium">${esc(row.asset.file.name)}</td><td class="px-4 py-3">${esc(pinLabel)}</td><td class="px-4 py-3">${esc(f.age_group || 'All ages')}</td><td class="px-4 py-3">${esc(displayGender(f.gender))}</td><td class="px-4 py-3">${esc(f.rfm_segment || 'All RFM')}</td><td class="px-4 py-3 whitespace-normal min-w-[220px]">${esc(taste)}</td><td class="px-4 py-3 text-right font-mono ${row.fit.score === null ? 'text-[#8A7480]' : 'text-[#6B3A55] font-bold'}">${row.fit.score === null ? 'N/A' : row.fit.score + '/100'}</td></tr>`;
+      }).join('') : '<tr><td colspan="8" class="px-4 py-8 text-center text-[#8A7480]">Run Extract &amp; Rank to see the ranking.</td></tr>';
+    }
+
+    function readAsDataUrl(file) {
+      return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => { const img = new Image(); img.onload = () => resolve({file, src:reader.result, w:img.naturalWidth, h:img.naturalHeight}); img.onerror = () => resolve({file, src:reader.result}); img.src = reader.result; }; reader.onerror = () => reject(new Error(`Could not read ${file.name}`)); reader.readAsDataURL(file); });
+    }
+    function pickKey(it) { return (it.style_code || '').toUpperCase() + '|' + (it.color_key || it.color); }
+    function setSkuMode(mode) {
+      state.skuMode = mode === 'upload' ? 'upload' : 'catalog';
+      $('panelCatalog').classList.toggle('hidden', state.skuMode !== 'catalog');
+      $('panelUpload').classList.toggle('hidden', state.skuMode !== 'upload');
+      $('tabCatalog').setAttribute('aria-selected', String(state.skuMode === 'catalog'));
+      $('tabUpload').setAttribute('aria-selected', String(state.skuMode === 'upload'));
+      $('tabCatalog').className = 'sku-tab flex-1 py-1.5 rounded-md text-[11px] ' + (state.skuMode === 'catalog' ? 'font-bold text-[#3B2733] bg-white shadow-sm' : 'font-semibold text-[#8A7480]');
+      $('tabUpload').className = 'sku-tab flex-1 py-1.5 rounded-md text-[11px] ' + (state.skuMode === 'upload' ? 'font-bold text-[#3B2733] bg-white shadow-sm' : 'font-semibold text-[#8A7480]');
+      updateRunLabel();
+      if (state.skuMode === 'catalog' && !state.catalogLoaded) loadCatalogSkus();
+      else syncSkuSummary();
+    }
+    function updateRunLabel() {
+      const n = state.skuMode === 'catalog' ? pickCount() : state.assets.length;
+      const span = $('runButton').querySelector('span');
+      if (span) span.textContent = n ? `Rank ${n} SKU${n === 1 ? '' : 's'}` : 'Rank SKUs';
+    }
+    function syncSkuSummary() {
+      updateRunLabel();
+      const nPick = pickCount();
+      $('catPickCount').textContent = `${nPick} / ${state.catalogMax} selected · style × colour, sizes ignored`;
+      if (state.skuMode === 'catalog') {
+        $('uploadSummary').textContent = nPick
+          ? `${nPick} catalog SKU${nPick === 1 ? '' : 's'} selected · Rank to score ${nPick === 1 ? 'it' : 'them'} for this audience.`
+          : (state.catalogItems.length ? 'Select up to 15 style × colour SKUs from your catalog.' : 'No catalog styles yet — use Upload photos, or add styles in Inventory › Catalog.');
+        $('clearSkus').disabled = state.loading || !nPick;
+      } else {
+        const n = state.assets.length;
+        $('uploadSummary').textContent = n ? `${n} SKU image${n === 1 ? '' : 's'} selected · Rank to score ${n === 1 ? 'it' : 'them'}.` : 'No creatives uploaded.';
+        $('clearSkus').disabled = state.loading || !n;
+      }
+      $('runButton').disabled = state.loading;
+    }
+    function renderCatalogGrid() {
+      const q = ($('catQ').value || '').trim().toLowerCase();
+      const cat = ($('catCat').value || '').toLowerCase();
+      const rows = state.catalogItems.filter((it) => {
+        if (cat && String(it.category || '').toLowerCase() !== cat) return false;
+        if (!q) return true;
+        const hay = [it.style_code, it.name, it.color, it.category].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+      $('catEmpty').classList.toggle('hidden', state.catalogItems.length > 0);
+      $('catGrid').innerHTML = rows.map((it) => {
+        const key = pickKey(it);
+        const on = !!state.catalogPicks[key];
+        const disabled = !it.has_image && !on;
+        const sizes = (it.sizes || []).join(' ') || '—';
+        const thumb = it.image_url
+          ? `<img src="${esc(it.image_url)}" alt="" class="w-12 h-12 rounded-lg object-cover bg-[#F3EEE6]">`
+          : `<div class="w-12 h-12 rounded-lg bg-[#F3EEE6] flex items-center justify-center text-[#9a8b7a]"><i class="fa-solid fa-image"></i></div>`;
+        return `<button type="button" data-pick="${esc(key)}" ${disabled ? 'disabled' : ''}
+          class="w-full text-left flex gap-2.5 items-start p-2 rounded-xl border ${on ? 'border-[#6B3A55] bg-[#F7EAF0]' : 'border-[#EAD9E0] bg-white'} ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#C59FB0]'}">
+          ${thumb}
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5"><b class="text-xs text-[#3B2733] truncate">${esc(it.style_code)}</b>
+              <span class="text-[10px] text-[#8A7480] truncate">${esc(it.color)}</span>
+              ${on ? '<i class="fa-solid fa-circle-check text-[#6B3A55] text-[11px] ml-auto"></i>' : ''}
+            </div>
+            <div class="text-[10px] text-[#8A7480] truncate">${esc(it.name)} · ${esc(it.category || '')}</div>
+            <div class="text-[10px] text-[#6B3A55] mt-0.5">${esc(sizes)} · ${Number(it.units || 0)} in stock
+              ${disabled ? ' · <a class="underline" href="./inventory.html#catalog" target="_top">Add photo</a>' : ''}</div>
+          </div></button>`;
+      }).join('');
+      syncSkuSummary();
+    }
+    async function loadCatalogSkus() {
+      const brand = lockedBrand || ($('filterBrand').value || '').trim();
+      if (!brand) { state.catalogItems = []; state.catalogLoaded = false; renderCatalogGrid(); return; }
+      try {
+        const url = new URL(endpoint('/v1/ads-lab/catalog-skus'), location.href);
+        url.searchParams.set('brand_name', brand);
+        const res = await fetch(url.toString(), { headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() } });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(apiError(data, 'Catalog could not be loaded'));
+        state.catalogItems = data.items || [];
+        state.catalogMax = data.max_skus || 15;
+        state.catalogLoaded = true;
+        const cats = data.categories || [];
+        $('catCat').innerHTML = '<option value="">All</option>' + cats.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+        if (data.has_catalog) setSkuMode('catalog');
+        else if (!state.assets.length) setSkuMode('upload');
+        renderCatalogGrid();
+      } catch (e) {
+        console.warn('[ads_lab] catalog-skus', e);
+        state.catalogItems = [];
+        state.catalogLoaded = true;
+        renderCatalogGrid();
+        if (state.skuMode === 'catalog') setSkuMode('upload');
+      }
+    }
+    function assetsChanged() {
+      state.campaignItems = []; state.campaign = null; state.rankedKey = null; // old ranks don't apply to a changed set
+      const n = state.assets.length;
+      $('thumbs').innerHTML = state.assets.map((x, i) => `<div class="thumb"><div class="ph"><img src="${esc(x.src)}" alt="${esc(x.file.name)}"></div>
+        <small title="${esc(x.file.name)}">${esc(x.file.name)}</small>
+        <button type="button" class="rm" data-rm="${i}" aria-label="Remove ${esc(x.file.name)}"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
+      syncSkuSummary();
+      refreshForFilters();
+      if (!state.metrics) renderCreatives();
+    }
+    async function processFiles(fileList) {
+      const chosen = Array.from(fileList || []).filter(f => f.type && f.type.startsWith('image/'));
+      if (!chosen.length) { showRunError('Please choose image files (JPG or PNG).'); return; }
+      try {
+        const known = new Set(state.assets.map(a => a.file.name + '|' + a.file.size));
+        const fresh = chosen.filter(f => !known.has(f.name + '|' + f.size));
+        state.assets = state.assets.concat(await Promise.all(fresh.map(readAsDataUrl))); // add to the set, skip duplicates
+        showRunError(fresh.length < chosen.length ? `${chosen.length - fresh.length} duplicate image(s) skipped.` : '');
+        if (fresh.length) assetsChanged(); // all duplicates: keep the current ranking
+        if (agentAutoRunAfterFiles && state.assets.length) {
+          agentAutoRunAfterFiles = false;
+          await runAnalysis();
+        }
+      } catch (e) { showRunError(e.message); }
+    }
+    $('thumbs').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-rm]'); if (!b || state.loading) return;
+      state.assets.splice(Number(b.dataset.rm), 1);
+      showRunError('');
+      assetsChanged();
+    });
+    $('tabCatalog').addEventListener('click', () => setSkuMode('catalog'));
+    $('tabUpload').addEventListener('click', () => setSkuMode('upload'));
+    $('catQ').addEventListener('input', () => renderCatalogGrid());
+    $('catCat').addEventListener('change', () => renderCatalogGrid());
+    $('catGrid').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-pick]'); if (!b || state.loading || b.disabled) return;
+      const key = b.dataset.pick;
+      if (state.catalogPicks[key]) delete state.catalogPicks[key];
+      else {
+        if (pickCount() >= state.catalogMax) { showRunError(`Select at most ${state.catalogMax} SKUs.`); return; }
+        const it = state.catalogItems.find((x) => pickKey(x) === key);
+        if (!it || !it.has_image) return;
+        state.catalogPicks[key] = { style_code: it.style_code, color: it.color };
+      }
+      showRunError('');
+      state.campaignItems = []; state.campaign = null; state.rankedKey = null;
+      renderCatalogGrid();
+      if (runChecked) checkRequired();
+    });
+    $('filterBrand').addEventListener('change', () => { state.catalogLoaded = false; state.catalogPicks = {}; if (state.skuMode === 'catalog') loadCatalogSkus(); });
+    $('clearSkus').addEventListener('click', () => {
+      if (state.loading) return;
+      if (state.skuMode === 'catalog') {
+        if (!pickCount()) return;
+        state.catalogPicks = {}; showRunError('');
+        renderCatalogGrid();
+        return;
+      }
+      if (!state.assets.length) return;
+      state.assets = []; showRunError('');
+      assetsChanged();
+    });
+    const dropzone = $('dropzone'); const fileInput =$('fileInput');
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+    dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('dragover'); processFiles(e.dataTransfer.files); });
+    fileInput.addEventListener('change', e => { processFiles(e.target.files); fileInput.value = ''; });
+    ['filterArea','filterAge','filterGender','filterRfm','filterBrand'].forEach(id => $(id).addEventListener('change', refreshForFilters));
+    $('filterBrand').addEventListener('input', refreshForFilters);
+    $('filterArea').addEventListener('change', updatePinCount);
+    $('runButton').addEventListener('click', runAnalysis);
+    $('cancelJobBtn').addEventListener('click', cancelJob);
+    $('cancelSubmitBtn').addEventListener('click', cancelSubmit);
+    applyBrandLock();
+    if (session.role === 'brand' && !lockedBrand) {
+      SuffaiSession.fetchMe().then((fresh) => {
+        if (!fresh || !fresh.brand_name) return;
+        session = fresh;
+        lockedBrand = String(fresh.brand_name);
+        applyBrandLock();
+        refreshForFilters();
+      }).catch(() => {});
+    }
+    $('btnToggle').addEventListener('click', () => setSidebar($('sidebar').classList.contains('collapsed')));
+    try { if (localStorage.getItem('suffai_ads_sidebar') === 'closed') setSidebar(false, false); } catch (_) {}
+
+    const JOB_KEY = 'suffai_rank_job';
+    const JOB_POLL_MS = 5000;
+    let jobTimer = null;
+    let submitAbort = null;
+    const isJobActive = (job) => !!job && (job.status === 'queued' || job.status === 'running');
+
+    function fmtDuration(sec) {
+      sec = Math.max(0, Math.round(Number(sec) || 0));
+      if (sec < 60) return sec + 's';
+      const m = Math.floor(sec / 60);
+      if (m < 60) return m + ' min';
+      const h = Math.floor(m / 60);
+      return h + 'h ' + String(m % 60).padStart(2, '0') + 'm';
+    }
+    function apiError(data, fallback) {
+      if (SuffaiSession.formatApiDetail) return SuffaiSession.formatApiDetail(data && data.detail, fallback);
+      return (data && typeof data.detail === 'string' && data.detail) || fallback;
+    }
+    function rememberJob(jobId) {
+      try { if (jobId) localStorage.setItem(JOB_KEY, jobId); else localStorage.removeItem(JOB_KEY); } catch (_) { /* ignore */ }
+    }
+    function rememberedJob() {
+      try { return localStorage.getItem(JOB_KEY) || ''; } catch (_) { return ''; }
+    }
+    // Jobs started from AURA: the chat posts the next step, so no popup here.
+    const QUIET_JOBS_KEY = 'suffai_rank_job_quiet';
+    function quietJobs() {
+      try { const v = JSON.parse(localStorage.getItem(QUIET_JOBS_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (_) { return []; }
+    }
+    function markQuietJob(jobId, on) {
+      const ids = quietJobs().filter(id => id !== jobId);
+      if (on) ids.push(jobId);
+      try { localStorage.setItem(QUIET_JOBS_KEY, JSON.stringify(ids.slice(-10))); } catch (_) { /* ignore */ }
+    }
+
+    async function runAnalysis() {
+      if (state.loading) return;
+      if (lockedBrand) applyBrandLock();
+      const f = currentFilters();
+      if (lockedBrand) f.brand_name = lockedBrand;
+      const missing = checkRequired();
+      runChecked = !!missing;
+      if (missing === 'brand') { $('filterBrand').focus(); return; }
+      if (missing === 'pins') { setTimeout(() => { $('msArea').open = true; $('msArea').querySelector('summary')?.focus(); }); return; }
+      if (missing === 'skus') {
+        if (state.skuMode === 'catalog') $('catGrid').focus?.();
+        else $('dropzone').focus();
+        return;
+      }
+      showRunError('');
+      const fromCatalog = state.skuMode === 'catalog';
+      setLoading(true, fromCatalog ? 'Queuing catalog SKUs · scheduling ranking job…' : 'Uploading SKU images · scheduling ranking job…');
+      submitAbort = new AbortController();
+      $('cancelSubmitBtn').classList.remove('hidden');
+      try {
+        let res, data;
+        if (fromCatalog) {
+          res = await fetch(endpoint('/v1/ads-lab/campaign-jobs/catalog'), {
+            method: 'POST',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...SuffaiSession.authHeaders() },
+            body: JSON.stringify({
+              brand_name: f.brand_name,
+              pin_codes: f.pin_codes,
+              age_group: f.age_group || '',
+              gender: f.gender || '',
+              rfm_segment: f.rfm_segment || '',
+              items: Object.values(state.catalogPicks),
+            }),
+            signal: submitAbort.signal,
+          });
+        } else {
+          const fd = new FormData();
+          fd.append('brand_name', f.brand_name);
+          fd.append('pin_codes', JSON.stringify(f.pin_codes));
+          fd.append('age_group', f.age_group || '');
+          fd.append('gender', f.gender || '');
+          fd.append('rfm_segment', f.rfm_segment || '');
+          state.assets.forEach(({file}) => fd.append('files', file, file.name));
+          res = await fetch(endpoint('/v1/ads-lab/campaign-jobs'), {
+            method: 'POST',
+            headers: { ...SuffaiSession.authHeaders() },
+            body: fd,
+            signal: submitAbort.signal,
+          });
+        }
+        data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(apiError(data, `Job could not be submitted (HTTP ${res.status})`));
+        state.campaign = null;
+        state.campaignItems = [];
+        state.rankedKey = JSON.stringify(f);
+        rememberJob(data.job.job_id);
+        renderJob(data.job);
+        $('uploadSummary').textContent = `Ranking job submitted for ${data.job.total_images} SKU(s).`;
+        scrollToStep('stepJob');
+        scheduleJobPoll(data.job.job_id);
+      } catch (e) {
+        if (e.name === 'AbortError') {
+          $('uploadSummary').textContent = 'Upload cancelled. No ranking job was started from this page.';
+          // the server may have accepted the upload just before the abort: surface that job so it can be cancelled
+          setTimeout(resumeJob, 1500);
+        } else {
+          console.error('[ads_lab] job submit failed', e);
+          $('uploadSummary').textContent = `Job not submitted: ${e.message}`;
+          showRunError(e.message);
+        }
+      } finally {
+        submitAbort = null;
+        $('cancelSubmitBtn').classList.add('hidden');
+        setLoading(false);
+      }
+    }
+
+    function cancelSubmit() {
+      if (submitAbort) submitAbort.abort();
+    }
+
+    function jobEnded(job) {
+      rememberJob('');
+      markQuietJob(job.job_id, false);
+      // AURA reads the real status, so a cancelled job is reported as cancelled, not as a failure
+      notifyParent({ type: 'cc-campaign-job-failed', campaign_id: job.campaign_id, job_id: job.job_id });
+    }
+
+    async function cancelJob() {
+      const job = state.job;
+      if (!isJobActive(job)) return;
+      if (!confirm('Cancel this Extract & Rank job? It stops after the image in progress, nothing is saved and the campaign is discarded.')) return;
+      const btn = $('cancelJobBtn');
+      btn.disabled = true;
+      btn.querySelector('span').textContent = 'Cancelling…';
+      clearTimeout(jobTimer); pollSeq++; // drop in-flight polls so they don't re-render the running state
+      try {
+        const res = await fetch(endpoint('/v1/ads-lab/campaign-jobs/' + encodeURIComponent(job.job_id) + '/cancel'), {
+          method: 'POST',
+          headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw Object.assign(new Error(apiError(data, `Job could not be cancelled (HTTP ${res.status})`)), { status: res.status });
+        renderJob(data.job);
+        jobEnded(data.job);
+        $('uploadSummary').textContent = 'Ranking job cancelled. Adjust the audience or images and run Extract & Rank again.';
+      } catch (e) {
+        console.error('[ads_lab] job cancel failed', e);
+        showRunError(e.status === 409 ? 'The job had already finished, so it was not cancelled.' : e.message);
+        pollJob(job.job_id); // re-sync with the server's state
+      } finally {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = 'Cancel Job';
+      }
+    }
+
+    function renderJob(job) {
+      state.job = job;
+      $('jobCard').classList.remove('hidden');
+      const tag = $('jobStatusTag');
+      const labels = { queued: 'Queued', running: 'Running', succeeded: 'Completed', failed: 'Failed', cancelled: 'Cancelled' };
+      tag.textContent = labels[job.status] || job.status;
+      tag.classList.remove('hidden');
+      tag.classList.toggle('sim-badge', job.status === 'succeeded');
+      $('cancelJobBtn').classList.toggle('hidden', !isJobActive(job));
+      $('jobCustomers').textContent = fmtNumber(job.total_customers);
+      $('jobCustomersSub').textContent = job.eligible_customers == null
+        ? 'in target audience'
+        : `in target audience · ${fmtNumber(job.eligible_customers)} with a wardrobe get picks`;
+      $('jobImages').textContent = fmtNumber(job.total_images);
+      $('jobImagesSub').textContent = job.skipped_images ? `${job.skipped_images} skipped (upload failed)` : 'SKUs to rank';
+      $('jobGarments').textContent = fmtNumber(job.total_garments);
+      $('jobComparisons').textContent = fmtNumber(job.comparisons);
+      const cancelled = job.status === 'cancelled';
+      const done = !isJobActive(job);
+      renderJobStages(job);
+      $('jobHourglass').classList.toggle('hidden', done);
+      startEtaCountdown(done ? null : job.eta_seconds, !done ? 'Estimating…' : job.status === 'failed' ? 'Failed' : cancelled ? 'Cancelled' : 'Done');
+      $('jobEtaSub').textContent = done
+        ? (job.finished_at ? 'Finished ' + String(job.finished_at).replace('T', ' ').slice(0, 16) : '')
+        : 'Initial estimate ' + fmtDuration(job.est_seconds);
+      const pct = Math.max(0, Math.min(100, Number(job.progress_pct) || 0));
+      $('jobProgressBar').style.width = (job.status === 'failed' ? Math.max(pct, 100) : pct) + '%';
+      $('jobProgressBar').className = 'job-bar h-full transition-all ' + (job.status === 'succeeded' ? 'succeeded' : job.status === 'failed' ? 'failed' : cancelled ? 'cancelled' : 'running');
+      $('jobProgressPct').textContent = Math.round(pct) + '%';
+      $('jobProgressLabel').textContent = job.stage === 'personalising'
+        ? `All images ranked · saving Style Assistant picks for ${fmtNumber(job.eligible_customers ?? job.total_customers)} customer(s)`
+        : `${job.processed_images || 0} of ${job.total_images} image(s) processed`
+          + (job.failed_images ? ` · ${job.failed_images} failed` : '');
+      $('jobNote').textContent = cancelled
+        ? 'Job cancelled. Nothing was saved; run Extract & Rank again when you are ready.'
+        : done
+          ? 'Job finished.'
+          : 'Your job is running. You can leave this page; it keeps running and progress resumes here when you return. Use Cancel Job to stop it.';
+      const err = $('jobError');
+      err.textContent = job.status === 'failed' ? (job.error || 'The job did not complete.') : '';
+      err.classList.toggle('hidden', job.status !== 'failed');
+      updateWizard();
+      publishAdsContext();
+    }
+
+    const DEMO_COPY = { badge: $('demoBadge').textContent, title: $('demoTitle').innerHTML, sub: $('demoSub').innerHTML };
+    function setDemoRanking(on, total) {
+      $('emptyState').classList.toggle('ranking', on);
+      $('demoBadge').textContent = on ? 'Ranking in progress' : DEMO_COPY.badge;
+      $('demoTitle').innerHTML = on ? '<i class="fa-solid fa-circle-notch spin"></i>Ranking your SKUs…' : DEMO_COPY.title;
+      $('demoSub').innerHTML = on
+        ? `Comparing ${total || 'your'} SKU image${total === 1 ? '' : 's'} with what this audience wears. Your ranked cards will appear here.`
+        : DEMO_COPY.sub;
+    }
+
+    function renderJobStages(job) {
+      const total = Number(job.total_images) || 0, processed = Number(job.processed_images) || 0;
+      // 0 upload/queued → 1 extracting + comparing images → 2 final ranking → 3 all done
+      const stage = job.status === 'succeeded' ? 3 : job.status === 'queued' ? 0 : (total && processed >= total ? 2 : 1);
+      const failed = job.status === 'failed', cancelled = job.status === 'cancelled';
+      const stopped = failed || cancelled;
+      const failAt = stopped ? Math.min(2, total && processed >= total ? 2 : 1) : -1;
+      const stopCls = cancelled ? 'stopped' : 'fail';
+      document.querySelectorAll('#jobStages li[data-stage]').forEach(li => {
+        const k = Number(li.dataset.stage);
+        li.className = stopped ? (k < failAt ? 'done' : k === failAt ? stopCls : '') : (k < stage ? 'done' : k === stage ? 'active' : '');
+      });
+      document.querySelectorAll('#jobStages .js-line').forEach((line, i) => {
+        const cur = stopped ? failAt : stage;
+        line.className = 'js-line ' + (i < cur ? 'done' : i === cur && !stopped ? 'active' : '');
+      });
+      const live = $('jobLive');
+      live.className = 'job-live' + (failed ? ' bad' : cancelled ? ' stopped' : stage === 3 ? ' ok' : '');
+      live.innerHTML = failed ? '<i class="fa-solid fa-circle-xmark"></i> The job stopped — see the error below.'
+        : cancelled ? `<i class="fa-solid fa-circle-stop"></i> Job cancelled after ${processed} of ${total} image(s). Nothing was saved.`
+        : stage === 3 ? '<i class="fa-solid fa-circle-check"></i> Ranking ready.'
+        : stage === 0 ? '<span class="dots">Uploading your SKUs and queueing the job</span>'
+        : stage === 1 ? `<span class="dots">Extracting attributes and comparing image ${Math.min(processed + 1, total)} of ${total} against the audience</span>`
+        : '<span class="dots">Ranking SKUs for this audience</span>';
+      $('jobStatusTag').classList.toggle('live', !(stopped || stage === 3));
+      $('thumbs').classList.toggle('scanning', !(stopped || stage === 3));
+      setDemoRanking(!(stopped || stage === 3), total);
+    }
+
+    // Remaining time ticks every second between polls (each poll re-syncs it to the server's ETA).
+    let etaTimer = null;
+    function startEtaCountdown(seconds, doneLabel) {
+      clearInterval(etaTimer);
+      if (seconds == null) { $('jobEta').textContent = doneLabel; return; }
+      const end = Date.now() + Math.max(0, Number(seconds) || 0) * 1000;
+      const tick = () => {
+        const left = Math.round((end - Date.now()) / 1000);
+        const m = Math.floor(left / 60), sec = String(left % 60).padStart(2, '0');
+        $('jobEta').textContent = left > 0 ? (m ? `${m}m ${sec}s` : `${left}s`) + ' left' : 'Finishing…';
+      };
+      tick();
+      etaTimer = setInterval(tick, 1000);
+    }
+
+    let pollSeq = 0; // bumped by every new poll/schedule; an in-flight response with an old seq is ignored
+    function scheduleJobPoll(jobId, delay = JOB_POLL_MS) {
+      clearTimeout(jobTimer); pollSeq++;
+      jobTimer = setTimeout(() => pollJob(jobId), delay);
+    }
+
+    async function pollJob(jobId) {
+      if (!jobId) return;
+      clearTimeout(jobTimer);
+      const seq = ++pollSeq;
+      try {
+        const res = await fetch(endpoint('/v1/ads-lab/campaign-jobs/' + encodeURIComponent(jobId)), {
+          headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (seq !== pollSeq) return;
+        if (res.status === 404 || res.status === 401 || res.status === 403) {
+          rememberJob(''); clearInterval(etaTimer);
+          if (state.job) { $('jobEta').textContent = '—'; $('jobHourglass').classList.add('hidden'); }
+          return;
+        }
+        if (!res.ok) throw new Error(apiError(data, 'HTTP ' + res.status));
+        const job = data.job;
+        renderJob(job);
+        if (job.status === 'succeeded') {
+          rememberJob('');
+          const quiet = quietJobs().indexOf(job.job_id) >= 0;
+          markQuietJob(job.job_id, false);
+          // A job remembered from an earlier visit whose campaign has since launched: start fresh instead
+          if (await loadCampaignById(job.campaign_id, { skipLaunched: true }) === 'launched') {
+            startNewCampaign({ keepAudience: true, quiet: true });
+            return;
+          }
+          if (!quiet) showCreatedModal(job);
+          notifyParent({ type: 'cc-campaign-created', campaign_id: job.campaign_id, job_id: job.job_id });
+          return;
+        }
+        if (job.status === 'failed' || job.status === 'cancelled') {
+          jobEnded(job);
+          return;
+        }
+        scheduleJobPoll(jobId);
+      } catch (e) {
+        console.error('[ads_lab] job poll failed', e);
+        if (seq === pollSeq) scheduleJobPoll(jobId, JOB_POLL_MS * 2);
+      }
+    }
+
+    async function resumeJob() {
+      let jobId = rememberedJob();
+      if (!jobId) {
+        try {
+          const res = await fetch(endpoint('/v1/ads-lab/campaign-jobs?active=true&limit=1'), {
+            headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && Array.isArray(data.jobs) && data.jobs.length) jobId = data.jobs[0].job_id;
+        } catch (_) { /* ignore */ }
+      }
+      if (jobId) pollJob(jobId);
+    }
+
+    function notifyParent(msg) {
+      if (!window.parent || window.parent === window) return;
+      try { window.parent.postMessage(msg, '*'); } catch (_) { /* ignore */ }
+    }
+
+    function showCreatedModal(job) {
+      const c = state.campaign || {};
+      const okCount = Math.max(0, (job.processed_images || 0) - (job.failed_images || 0));
+      $('createdSummary').textContent = `${okCount} of ${job.total_images} SKU(s) ranked for ${fmtNumber(job.total_customers)} customers`
+        + `${c.filters ? ' in ' + filtersLabel({ ...currentFilters(), ...c.filters }) : ''}. Choose how to run it.`;
+      const m = $('createdModal');
+      if (m.classList.contains('hidden')) modalReturnFocus = document.activeElement;
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+      $('created1pBtn').focus();
+    }
+    let modalReturnFocus = null;
+    function hideCreatedModal() {
+      const m = $('createdModal');
+      if (m.classList.contains('hidden')) return;
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+      if (modalReturnFocus && modalReturnFocus.isConnected) modalReturnFocus.focus();
+      modalReturnFocus = null;
+    }
+
+    function scrollToStep(id) {
+      const el = $(id);
+      if (el) el.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start' });
+    }
+
+    function campaignReady() {
+      const c = state.campaign;
+      return !!(c && c.campaign_id && ['ranked', 'configured', 'exported'].includes(c.status));
+    }
+
+    function stepStatus() {
+      return {
+        opportunity: selectedPinCodes().length > 0,
+        job: !!(state.job && state.job.status === 'succeeded') || campaignReady(),
+        runmode: !!(state.campaign && ['configured', 'exported', 'launched'].includes(state.campaign.status)),
+      };
+    }
+    function updateWizard() {
+      const s = stepStatus();
+      const order = ['opportunity', 'job', 'runmode'];
+      const current = order.find(k => !s[k]) || 'runmode';
+      document.querySelectorAll('.wiz-step').forEach((btn) => {
+        const k = btn.dataset.step;
+        btn.classList.toggle('done', !!s[k]);
+        btn.classList.toggle('current', k === current);
+        const num = btn.querySelector('.wiz-num');
+        if (num) num.innerHTML = s[k] ? '<i class="fa-solid fa-check text-[9px]"></i>' : String(order.indexOf(k) + 1);
+      });
+      const ready = campaignReady();
+      $('run1pBtn').disabled = !(ready || (state.campaign && state.campaign.status === 'launched'));
+      const c = state.campaign;
+      $('runModeNote').textContent = !c
+        ? 'Available once the ranking job completes.'
+        : c.status === 'launched'
+          ? 'This campaign is already running on SuffAI (simulated). Track it on the Campaigns tab.'
+          : c.status === 'exported'
+            ? 'Exported for 3P. You can still choose to run it on SuffAI.'
+            : `Ranking ready: ${state.campaignItems.filter(r => r.ok).length} ranked SKU(s). Set up and confirm the 1P campaign on the Campaigns tab.`;
+    }
+
+    function applyCampaignDraft(ctx) {
+      if (!ctx || typeof ctx !== 'object') return;
+      if (!state.metrics) { state.pendingDraft = ctx; renderGeoContext(ctx); return; }
+      state.sourceContext = ctx;
+      const filters = {};
+      if (Array.isArray(ctx.pins)) filters.pin_codes = ctx.pins.map(String);
+      filters.age_group = ctx.age_group || null;
+      filters.gender = ctx.gender || null;
+      filters.rfm_segment = ctx.rfm_segment || null;
+      applyAgentAdsFilters(filters);
+      renderGeoContext(ctx);
+      scrollToStep('stepOpportunity');
+      updateWizard();
+    }
+    function renderGeoContext(ctx) {
+      const card = $('geoContextCard');
+      if (!ctx) { card.classList.add('hidden'); return; }
+      const pins = ctx.pins || [];
+      const chips = [
+        pins.length ? (pins.length <= 3 ? 'PIN ' + pins.join(', ') : pins.length + ' PINs') : null,
+        ctx.age_group ? 'Age ' + ctx.age_group : 'All ages',
+        displayGender(ctx.gender),
+        ctx.rfm_segment || 'All RFM',
+        ctx.summary && ctx.summary.customers != null ? Number(ctx.summary.customers).toLocaleString() + ' customers' : null,
+      ].filter(Boolean);
+      $('geoContextChips').innerHTML = chips.map(c => `<span class="tag">${esc(c)}</span>`).join('');
+      $('geoContextInsight').textContent = ctx.insight || 'Geography and audience carried over from Geo.';
+      card.classList.remove('hidden');
+    }
+    function clearGeoContext() {
+      state.sourceContext = null;
+      try { sessionStorage.removeItem(CAMPAIGN_DRAFT_KEY); } catch (_) { /* ignore */ }
+      renderGeoContext(null);
+    }
+
+    function openCampaigns(campaignId) {
+      if (!campaignId) return;
+      hideCreatedModal();
+      const msg = { type: 'cc-open-campaigns', campaign_id: campaignId, source_context: state.sourceContext || null };
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(msg, '*');
+      } else {
+        try { if (state.sourceContext) sessionStorage.setItem('suffai_campaign_source_' + campaignId, JSON.stringify(state.sourceContext)); } catch (_) { /* ignore */ }
+        location.href = './campaigns.html?campaign_id=' + encodeURIComponent(campaignId);
+      }
+    }
+    async function run1p() {
+      const id = state.campaign && state.campaign.campaign_id;
+      if (!id) return;
+      await stashCampaignThumbs();
+      openCampaigns(id);
+    }
+
+    function csvDownload(rows, filename) {
+      const csv = rows.map(row => row.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+      const url = URL.createObjectURL(new Blob([csv], {type: 'text/csv;charset=utf-8;'}));
+      const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
+    }
+
+    async function run3p() {
+      const id = state.campaign && state.campaign.campaign_id;
+      if (!id) { downloadCSV(); return; }
+      hideCreatedModal();
+      setLoading(true, 'Preparing 3P export…');
+      try {
+        const res = await fetch(endpoint('/v1/ads-lab/campaigns/' + encodeURIComponent(id) + '/export'), {
+          method: 'POST',
+          headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(apiError(data, 'Export failed (HTTP ' + res.status + ')'));
+        const c = data.campaign || {};
+        const aud = data.audience || {};
+        const rows = [['rank', 'brand', 'geo_pins', 'age_bucket', 'gender', 'rfm_segment', 'filename', 'garment', 'color', 'pattern', 'material', 'size', 'rank_score', 'pin_fit']];
+        (data.items || []).forEach(r => rows.push([
+          r.rank, c.brand_name, (aud.pin_codes || []).join('|'), aud.age_group || 'All ages', displayGender(aud.gender),
+          aud.rfm_segment || 'All RFM', r.filename, r.name, r.color, r.pattern, r.material, r.size,
+          r.rank_score == null ? '' : Number(r.rank_score).toFixed(1), r.pin_fit == null ? '' : r.pin_fit,
+        ]));
+        csvDownload(rows, `suffai_ranking_${(c.brand_name || 'brand').replace(/\W+/g, '_').toLowerCase()}.csv`);
+        if (state.campaign) state.campaign.status = c.status || 'exported';
+        $('uploadSummary').textContent = 'Ranking exported for 3P platforms.';
+        updateWizard();
+        notifyParent({ type: 'cc-campaign-created', campaign_id: id });
+      } catch (e) {
+        alert(e.message || String(e));
+      } finally { setLoading(false); }
+    }
+
+    function downloadCSV() {
+      const list = makeRankedAssets(); const f = currentFilters();
+      const rows = [['rank','brand','geo_pins','age_bucket','gender','rfm_segment','filename','color','pattern','commodity','material','size','sku_brand','rank_score']];
+      list.forEach(r => rows.push([r.rank, f.brand_name, (f.pin_codes || []).join('|'), f.age_group || 'All ages', displayGender(f.gender), f.rfm_segment || 'All RFM', r.asset.file.name, r.attrs.color, r.attrs.pattern, r.attrs.commodity, r.attrs.material, r.attrs.size, r.attrs.brand, r.fit.score ?? '']));
+      csvDownload(rows, 'ads_lab_segment_ranking.csv');
+    }
+
+    document.querySelectorAll('.wiz-step').forEach(btn => btn.addEventListener('click', () => scrollToStep(btn.dataset.target)));
+    $('clearGeoContextBtn').addEventListener('click', clearGeoContext);
+    $('run1pBtn').addEventListener('click', run1p);
+    $('created3pBtn').addEventListener('click', run3p);
+    $('created1pBtn').addEventListener('click', run1p);
+    $('createdCloseBtn').addEventListener('click', () => { hideCreatedModal(); scrollToStep('stepRunMode'); });
+    $('createdModal').addEventListener('click', (e) => { if (e.target === $('createdModal')) hideCreatedModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideCreatedModal(); });
+    $('newCampaignBtn').addEventListener('click', () => {
+      if (state.loading) return;
+      if (isJobActive(state.job) && !confirm('A ranking job is still running. Start a new campaign anyway? The job keeps running and its campaign appears on the Campaigns tab.')) return;
+      if (startNewCampaign()) notifyParent({ type: 'cc-new-campaign', source: 'ads' });
+    });
+    // campaigns.html outside the shell opens ads_lab.html?new=1 after a launch
+    const freshBoot = new URLSearchParams(location.search).get('new') === '1';
+    if (freshBoot) {
+      startNewCampaign({ quiet: true });
+      try { history.replaceState(null, '', location.pathname); } catch (_) { /* ignore */ }
+    } else {
+      try {
+        const raw = sessionStorage.getItem(CAMPAIGN_DRAFT_KEY);
+        if (raw) applyCampaignDraft(JSON.parse(raw));
+      } catch (e) {
+        console.error('[ads_lab] draft restore failed', e);
+      }
+    }
+    $('downloadButton').addEventListener('click', run3p);
+    updateWizard();
+    scrollToRanking(); // now, not after the data fetch
+    loadMetrics();
+    if (!freshBoot) resumeJob();
+  </script>
+</body>
+</html>

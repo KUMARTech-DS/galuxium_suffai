@@ -1,0 +1,45 @@
+# Builds every Cloud Run image in one upload. Used by deploy/deploy_all.sh:
+#   gcloud builds submit --config=deploy/cloudbuild-all.yaml \
+#     --substitutions=_REGION=asia-south1,_TAG=20261023-1200,_BUILD_API=false .
+substitutions:
+  _REGION: asia-south1
+  _TAG: latest
+  _BUILD_API: "false"
+
+steps:
+  - id: similarity
+    name: gcr.io/cloud-builders/docker
+    waitFor: ["-"]
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-similarity:${_TAG}", "-f", "Dockerfile.similarity", "."]
+
+  - id: extraction
+    name: gcr.io/cloud-builders/docker
+    waitFor: ["-"]
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-extraction:${_TAG}", "-f", "Dockerfile.worker", "."]
+
+  - id: command-center
+    name: gcr.io/cloud-builders/docker
+    waitFor: ["-"]
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-command-center:${_TAG}", "-f", "Dockerfile.command_center", "."]
+
+  - id: api
+    name: gcr.io/cloud-builders/docker
+    waitFor: ["-"]
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        if [ "${_BUILD_API}" = "true" ]; then
+          docker build -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-api:${_TAG} -f Dockerfile.api . &&
+          docker push ${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-api:${_TAG}
+        fi
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-similarity:${_TAG}
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-extraction:${_TAG}
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/suffai/suffai-command-center:${_TAG}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: 2400s

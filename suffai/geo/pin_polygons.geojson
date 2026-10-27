@@ -1,0 +1,440 @@
+{
+  "type": "FeatureCollection",
+  "name": "suffai_bengaluru_pin_approx",
+  "crs": "EPSG:4326",
+  "disclaimer": "Approximate demo polygons for PIN hubs \u2014 replace with licensed boundary data before production mapping claims.",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560102",
+        "area": "HSR Layout",
+        "lat": 12.9121,
+        "lon": 77.6445
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.6325,
+              12.9001
+            ],
+            [
+              77.6565,
+              12.9001
+            ],
+            [
+              77.6565,
+              12.924100000000001
+            ],
+            [
+              77.6325,
+              12.924100000000001
+            ],
+            [
+              77.6325,
+              12.9001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560103",
+        "area": "Bellandur",
+        "lat": 12.9279,
+        "lon": 77.6841
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.6721,
+              12.915899999999999
+            ],
+            [
+              77.6961,
+              12.915899999999999
+            ],
+            [
+              77.6961,
+              12.9399
+            ],
+            [
+              77.6721,
+              12.9399
+            ],
+            [
+              77.6721,
+              12.915899999999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560034",
+        "area": "Koramangala",
+        "lat": 12.9352,
+        "lon": 77.6245
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.6125,
+              12.9232
+            ],
+            [
+              77.6365,
+              12.9232
+            ],
+            [
+              77.6365,
+              12.9472
+            ],
+            [
+              77.6125,
+              12.9472
+            ],
+            [
+              77.6125,
+              12.9232
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560068",
+        "area": "BTM Layout",
+        "lat": 12.9081,
+        "lon": 77.6476
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.6356,
+              12.896099999999999
+            ],
+            [
+              77.6596,
+              12.896099999999999
+            ],
+            [
+              77.6596,
+              12.9201
+            ],
+            [
+              77.6356,
+              12.9201
+            ],
+            [
+              77.6356,
+              12.896099999999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560035",
+        "area": "Sarjapur Road",
+        "lat": 12.9063,
+        "lon": 77.6822
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.6702,
+              12.8943
+            ],
+            [
+              77.6942,
+              12.8943
+            ],
+            [
+              77.6942,
+              12.9183
+            ],
+            [
+              77.6702,
+              12.9183
+            ],
+            [
+              77.6702,
+              12.8943
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560087",
+        "area": "Marathahalli",
+        "lat": 12.9562,
+        "lon": 77.7019
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.6899,
+              12.9442
+            ],
+            [
+              77.7139,
+              12.9442
+            ],
+            [
+              77.7139,
+              12.968200000000001
+            ],
+            [
+              77.6899,
+              12.968200000000001
+            ],
+            [
+              77.6899,
+              12.9442
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560037",
+        "area": "Brookefield",
+        "lat": 12.9698,
+        "lon": 77.7123
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.7003,
+              12.957799999999999
+            ],
+            [
+              77.7243,
+              12.957799999999999
+            ],
+            [
+              77.7243,
+              12.9818
+            ],
+            [
+              77.7003,
+              12.9818
+            ],
+            [
+              77.7003,
+              12.957799999999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560066",
+        "area": "Whitefield",
+        "lat": 12.9698,
+        "lon": 77.75
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.738,
+              12.957799999999999
+            ],
+            [
+              77.762,
+              12.957799999999999
+            ],
+            [
+              77.762,
+              12.9818
+            ],
+            [
+              77.738,
+              12.9818
+            ],
+            [
+              77.738,
+              12.957799999999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560048",
+        "area": "Mahadevapura",
+        "lat": 12.9925,
+        "lon": 77.6844
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.6724,
+              12.9805
+            ],
+            [
+              77.6964,
+              12.9805
+            ],
+            [
+              77.6964,
+              13.0045
+            ],
+            [
+              77.6724,
+              13.0045
+            ],
+            [
+              77.6724,
+              12.9805
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560078",
+        "area": "JP Nagar",
+        "lat": 12.901,
+        "lon": 77.58
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.568,
+              12.889
+            ],
+            [
+              77.592,
+              12.889
+            ],
+            [
+              77.592,
+              12.913
+            ],
+            [
+              77.568,
+              12.913
+            ],
+            [
+              77.568,
+              12.889
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560099",
+        "area": "Electronic City",
+        "lat": 12.839,
+        "lon": 77.677
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.665,
+              12.827
+            ],
+            [
+              77.68900000000001,
+              12.827
+            ],
+            [
+              77.68900000000001,
+              12.851
+            ],
+            [
+              77.665,
+              12.851
+            ],
+            [
+              77.665,
+              12.827
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "pin_code": "560119",
+        "area": "Bannerghatta Road",
+        "lat": 12.875,
+        "lon": 77.605
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.593,
+              12.863
+            ],
+            [
+              77.617,
+              12.863
+            ],
+            [
+              77.617,
+              12.887
+            ],
+            [
+              77.593,
+              12.887
+            ],
+            [
+              77.593,
+              12.863
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#FAF6EE] text-[#3B2733]">
+<head>
+  <meta name="color-scheme" content="light" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuffAI — Style Assistant</title>
+  <script src="./config.js"></script>
+  <script src="./session.js"></script>
+  <script src="./select.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #3B2733;
+      --muted: #8A7480;
+      --line: #EAD9E0;
+      --panel: #FAF6EE;
+      --sand: #F6EEF0;
+      --accent: #6B3A55;
+      --mauve: #C59FB0;
+      --sage: #9CB09D;
+    }
+    :focus-visible { outline: 3px solid rgba(197,159,176,0.7); outline-offset: 2px; }
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Outfit, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% 0%, rgba(107, 58, 85,0.12), transparent 55%),
+        linear-gradient(180deg, #FAF6EE 0%, #F6EEF0 100%);
+    }
+    h1, .display {
+      font-family: Outfit, system-ui, sans-serif;
+      font-weight: 700;
+    }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+    .glass {
+      background: rgba(250,248,244,0.92);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 12px 32px rgba(59, 39, 51,0.06);
+    }
+    .btn-buy {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      margin-top: 0.65rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid rgba(107, 58, 85,0.55);
+      background: rgba(107, 58, 85,0.12);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+    .btn-buy:hover { background: rgba(107, 58, 85,0.22); transform: translateY(-1px); }
+    .btn-buy.bought { background: #5E7A60; color: #fff; border-color: #5E7A60; }
+    .look-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      background: var(--sand);
+      display: block;
+    }
+    .img-ph {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--sand);
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+      padding: 0.5rem;
+    }
+    .section-kicker {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0;
+    }
+    .toast {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      z-index: 50;
+      background: #3B2733;
+      color: #FAF6EE;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-size: 13px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+      max-width: 280px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .err { display: flex; align-items: flex-start; gap: .55rem; line-height: 1.4; padding: .6rem .75rem; border-radius: 10px; background: rgba(180,60,60,.08); border: 1px solid rgba(180,60,60,.3); color: #a03a3a; font-size: 13px; }
+    .muted { color: var(--muted); font-size: 12px; }
+
+    /* ===== Two-phone stage: SuffAI app home → Style Yourself ===== */
+    .phones { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 36px; padding: 8px 0 24px; }
+    .ph-wrap { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .ph-cap { display: inline-flex; align-items: center; gap: .5rem; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+    .demo-pill { font-size: 8.5px; letter-spacing: .1em; padding: .12rem .45rem; border-radius: 999px; color: #8C6A22; background: #FBF1DC; border: 1px dashed #E8C27A; }
+    /* "This is a replica" note above the phones */
+    .demo-note {
+      position: relative; display: flex; align-items: center; gap: 14px; max-width: 760px; margin: 0 auto 22px; padding: 12px 16px; overflow: hidden;
+      border-radius: 16px; border: 1px solid #3E1729; color: #F7EAF0;
+      background: radial-gradient(70% 160% at 100% 0%, rgba(224,178,84,.25), transparent 60%), linear-gradient(110deg, #2A0F1F, #4A1A33 55%, #6B3A55);
+      box-shadow: 0 12px 28px rgba(43,15,31,.18); animation: noteIn .5s cubic-bezier(.22,.8,.24,1) both;
+    }
+    .demo-note::after { /* slow sheen so it reads as "live" without shouting */
+      content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; pointer-events: none;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.09), transparent); animation: noteSheen 6s ease-in-out infinite;
+    }
+    @keyframes noteIn { from { opacity: 0; transform: translateY(-6px); } }
+    @keyframes noteSheen { 0%, 60% { transform: translateX(0); } 100% { transform: translateX(520%); } }
+    .demo-note .dn-ic { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; font-size: 17px; color: #2A0F1F; background: linear-gradient(135deg, #F3D58A, #C9A24A); }
+    .demo-note .dn-txt { flex: 1; min-width: 0; }
+    .demo-note b { display: block; font-family: Outfit, system-ui, sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: .02em; color: #fff; }
+    .demo-note p { margin: 2px 0 0; font-size: 12px; line-height: 1.45; color: #E6CFDA; }
+    .demo-note em { font-style: normal; color: #F3D58A; font-weight: 600; }
+    .demo-note .dn-tag { flex: none; display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .7rem; border-radius: 999px; font-size: 11px; font-weight: 600; color: #F1DDE6; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); }
+    .demo-note .dn-tag .dot { width: 7px; height: 7px; border-radius: 50%; background: #5FBF6F; box-shadow: 0 0 0 3px rgba(95,191,111,.25); animation: livePulse 1.6s ease-in-out infinite; }
+    @keyframes livePulse { 50% { opacity: .4; } }
+    @media (max-width: 640px) {
+      .demo-note { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: start; gap: 10px 12px; padding: 12px 14px; }
+      .demo-note .dn-tag { grid-column: 2; justify-self: start; }
+    }
+    .ph-wrap.reveal { animation: phoneIn .6s cubic-bezier(.22,.8,.24,1) both; }
+    @keyframes phoneIn { from { opacity: 0; transform: translateX(-40px) scale(.96); } }
+    .iph { position: relative; width: 330px; height: 690px; border-radius: 52px; padding: 11px; flex: none;
+      background: linear-gradient(145deg, #3a3a3e, #121214 45%, #2a2a2d);
+      box-shadow: inset 0 0 0 1.5px #55555a, inset 0 0 0 5px #0c0c0d, 0 34px 60px rgba(43,15,31,.24), 0 10px 20px rgba(0,0,0,.16); }
+    .iph::before { content: ''; position: absolute; left: -3px; top: 140px; width: 3px; height: 64px; border-radius: 2px; background: #2a2a2d; }
+    .iph-screen { position: relative; height: 100%; border-radius: 42px; overflow: hidden; background: #F2F2F4; color: #1c1c1e; font-family: 'Quicksand', Outfit, system-ui, sans-serif; }
+    .iph-island { position: absolute; top: 11px; left: 50%; translate: -50% 0; width: 96px; height: 28px; border-radius: 20px; background: #000; z-index: 9; }
+    .iph-home { position: absolute; bottom: 8px; left: 50%; translate: -50% 0; width: 112px; height: 5px; border-radius: 3px; background: #111; z-index: 9; }
+    .iph-scroll { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; }
+    .iph-scroll::-webkit-scrollbar { display: none; }
+    .sb { position: relative; z-index: 8; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 14px Outfit, system-ui; color: #fff; }
+    .sb .r { display: inline-flex; gap: 5px; align-items: center; font-size: 11px; }
+    .sb .bat { font: 700 9px Outfit; padding: 1px 4px; border-radius: 4px; background: #F5C518; color: #111; }
+    /* SuffAI app (phone 1) */
+    .app { --app: #3A4A9C; --app-dk: #2C3982; }
+    .app-hd { background: linear-gradient(160deg, var(--app), var(--app-dk)); border-radius: 0 0 26px 26px; padding-bottom: 16px; margin-top: -46px; padding-top: 46px; position: relative; overflow: hidden; }
+    .app-hd::after { content: ''; position: absolute; right: -40px; bottom: -60px; width: 220px; height: 120px; border-radius: 50%; border: 1px solid rgba(255,255,255,.12); }
+    .app-row { display: flex; align-items: center; gap: 12px; padding: 6px 14px 0; color: #fff; position: relative; z-index: 1; }
+    .app-av { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.18); font: 600 17px Outfit; flex: none; }
+    .app-row b { display: block; font: 600 15px Outfit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .app-row > .min-w-0 { min-width: 0; flex: 1; }
+    .app-row small { font-size: 12px; opacity: .9; display: inline-flex; align-items: center; gap: 5px; }
+    .app-ico { margin-left: auto; display: flex; gap: 5px; flex: none; }
+    .app-ico span { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,.16); font-size: 15px; }
+    .app-body { padding: 10px 12px 96px; display: flex; flex-direction: column; gap: 12px; }
+    /* Campaign hero ad: same layout as the Campaigns tab in-app preview */
+    .ad-banner { position: relative; display: grid; grid-template-columns: 1fr 44%; align-items: center; gap: 6px; padding: 12px; min-height: 116px; border-radius: 16px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.07); overflow: hidden; animation: adIn .35s ease; }
+    @keyframes adIn { from { opacity: 0; transform: translateY(6px); } }
+    .ad-banner .ad-tag { position: absolute; top: 8px; right: 10px; z-index: 1; font-size: 7.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: .1rem .35rem; border-radius: 4px; background: rgba(255,255,255,.85); color: var(--muted); }
+    .ad-banner .ad-brand { font-size: 8.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+    .ad-banner h4 { font: 700 14px/1.15 Outfit, system-ui; color: #4A1A33; text-transform: uppercase; letter-spacing: .01em; margin: 3px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .ad-banner p { font-size: 9.5px; color: #666; margin: 4px 0 0; }
+    .ad-banner .code { display: inline-block; margin-top: 6px; font: 600 10px 'IBM Plex Mono', monospace; padding: .15rem .45rem; border-radius: 5px; background: #FBF1DC; color: #8C6A22; border: 1px dashed #E8C27A; }
+    .ad-banner .ad-cta { display: inline-block; margin-top: 8px; padding: .38rem .7rem; border-radius: 8px; background: var(--accent); color: #fff; font-weight: 600; font-size: 10.5px; text-decoration: none; }
+    .ad-banner .ad-cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .ad-banner .ad-img { width: 100%; aspect-ratio: 1; border-radius: 12px; object-fit: contain; background: radial-gradient(circle at 50% 40%, #FFFFFF, #F3E3EA); display: grid; place-items: center; color: var(--mauve); font-size: 28px; }
+    .ad-banner.empty { grid-template-columns: 1fr; text-align: center; background: linear-gradient(135deg, #FFF, #F6EEF0); border: 1px dashed var(--line); box-shadow: none; }
+    .ad-banner.empty i { font-size: 18px; color: var(--mauve); }
+    .ad-banner.empty p { font-size: 10px; color: var(--muted); }
+    /* Style Yourself banner + toggle */
+    .style-cta { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer; border: 0;
+      padding: 12px 12px 12px 14px; border-radius: 16px; color: #fff; overflow: hidden;
+      background: linear-gradient(115deg, #6B3A55 0%, #A24D7A 55%, #E0B654 120%); box-shadow: 0 10px 22px rgba(107,58,85,.3); }
+    .style-cta::before { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.28) 50%, transparent 70%); background-size: 250% 100%; animation: ctaShine 2.8s ease-in-out infinite; }
+    @keyframes ctaShine { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+    .style-cta .ic { position: relative; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: rgba(255,255,255,.2); font-size: 16px; flex: none; }
+    .style-cta b { position: relative; display: block; font: 700 14px Outfit; }
+    .style-cta small { position: relative; display: block; font-size: 10.5px; opacity: .92; }
+    .tgl { position: relative; margin-left: auto; width: 46px; height: 26px; border-radius: 999px; background: rgba(255,255,255,.35); flex: none; transition: background .3s; }
+    .tgl::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.25); transition: transform .35s cubic-bezier(.22,.8,.24,1); }
+    .style-cta[aria-pressed="true"] .tgl { background: #34C759; }
+    .style-cta[aria-pressed="true"] .tgl::after { transform: translateX(20px); }
+    .tgl .ring { position: absolute; inset: -6px; border-radius: 999px; border: 2px solid #fff; opacity: 0; animation: tglPulse 1.6s ease-out infinite; }
+    .style-cta[aria-pressed="true"] .tgl .ring, .style-cta.busy .tgl .ring { display: none; }
+    @keyframes tglPulse { 0% { opacity: .85; transform: scale(.9); } 100% { opacity: 0; transform: scale(1.35); } }
+    .tap-hand { position: absolute; right: 4px; bottom: 2px; font-size: 24px; color: #fff; filter: drop-shadow(0 3px 4px rgba(0,0,0,.35)); pointer-events: none; animation: tapHint 1.6s ease-in-out infinite; z-index: 2; }
+    .style-cta[aria-pressed="true"] .tap-hand, .style-cta.busy .tap-hand { display: none; }
+    @keyframes tapHint { 0%, 100% { transform: translate(6px, 6px) rotate(-12deg); } 45% { transform: translate(-6px, -10px) rotate(-12deg); } 55% { transform: translate(-6px, -8px) rotate(-12deg) scale(.88); } }
+    .style-cta .ripple { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.7); transform: translate(-50%, -50%) scale(0); animation: ripple .6s ease-out forwards; pointer-events: none; }
+    @keyframes ripple { to { transform: translate(-50%, -50%) scale(18); opacity: 0; } }
+    .style-cta.busy .tgl::after { animation: tglBusy .8s linear infinite; }
+    @keyframes tglBusy { 50% { transform: translateX(20px); } }
+    .auto-note { margin: -6px 2px 0; font-size: 10px; color: #6B7280; display: flex; align-items: center; gap: 6px; }
+    .auto-note i { color: #A24D7A; }
+    .chips2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .chips2 span { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 14px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.05); font-size: 12px; font-weight: 500; }
+    .chips2 i.b { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: #3A4A9C; color: #fff; font-style: normal; font-size: 12px; font-weight: 700; flex: none; }
+    .chips2 .fa-chevron-right { margin-left: auto; color: #777; font-size: 10px; }
+    .sec { font: 600 15px Outfit; margin: 4px 2px -4px; color: #111; }
+    .hs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin: 0 -12px; padding: 2px 12px 4px; scroll-snap-type: x mandatory; }
+    .hs::-webkit-scrollbar { display: none; }
+    .iron { flex: 0 0 82%; scroll-snap-align: start; border-radius: 14px; background: #fff; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+    .iron .im { position: relative; height: 92px; background: linear-gradient(135deg, #F7D9D2, #EFC1B6 55%, #B8BEC9); display: grid; place-items: center; }
+    .iron .im i { font-size: 44px; color: #4B5563; transform: rotate(-12deg); }
+    .iron .im b { position: absolute; top: 6px; right: 8px; font: italic 900 13px Outfit; color: #2C3982; letter-spacing: .02em; }
+    .iron .im small { position: absolute; top: 24px; right: 8px; font-size: 7px; background: #FBD5DD; color: #A0213B; padding: 1px 4px; border-radius: 3px; }
+    .iron .bd { padding: 8px 10px 10px; }
+    .iron .bd b { display: block; font: 600 13px Outfit; }
+    .iron .bd span { display: flex; justify-content: space-between; font-size: 11px; color: #444; margin-top: 4px; }
+    .iron .bd .fa-star { color: #F5A623; }
+    .store { position: relative; height: 118px; border-radius: 16px; overflow: hidden; background: linear-gradient(180deg, #9CA3AF, #4B5563 60%, #A16207); }
+    .store::before { content: 'Bumblebee Premium Laundry'; position: absolute; left: 10px; top: 10px; font: italic 700 14px Outfit; color: rgba(255,255,255,.85); }
+    .store::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 48px; background: repeating-linear-gradient(90deg, #F59E0B 0 18px, #78350F 18px 22px); opacity: .55; }
+    .pickup { position: absolute; left: 50%; bottom: 74px; translate: -50% 0; z-index: 6; width: 75%; padding: 9px 14px; border-radius: 999px; color: #fff;
+      background: #5A63A8; box-shadow: 0 -5px 0 -2px #6E77BA, 0 -10px 0 -4px #8189C6, 0 8px 18px rgba(0,0,0,.25); display: flex; align-items: center; }
+    .pickup b { display: block; font: 700 13px Outfit; } .pickup small { font-size: 11px; opacity: .9; } .pickup i { margin-left: auto; font-size: 11px; }
+    .app-foot { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; align-items: center; gap: 8px; padding: 10px 10px 22px; background: rgba(242,242,244,.96); }
+    .app-foot .stat { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 0 16px 16px 0; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); margin-left: -10px; }
+    .app-foot .stat i { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #E8EEF9; color: #3A6FD8; }
+    .app-foot .stat b { display: block; font: 700 14px Outfit; color: #14532D; line-height: 1; } .app-foot .stat small { font-size: 9px; color: #3A4A9C; }
+    .app-foot .cmp { margin-left: auto; display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); font-size: 12px; color: #6B7280; }
+    /* Style Yourself (phone 2) */
+    .sy-hd { background: linear-gradient(160deg, #6B3A55, #3B2733); border-radius: 0 0 24px 24px; margin-top: -46px; padding: 46px 0 14px; color: #fff; }
+    .sy-row { display: flex; align-items: center; gap: 10px; padding: 4px 14px 0; }
+    .sy-row button { width: 32px; height: 32px; border-radius: 10px; border: 0; background: rgba(255,255,255,.16); color: #fff; cursor: pointer; }
+    .sy-row b { display: block; font: 700 16px Outfit; } .sy-row small { font-size: 11px; opacity: .85; }
+    .sy-body { padding: 12px 0 40px; display: flex; flex-direction: column; gap: 16px; }
+    .sy-sec { padding: 0 12px; }
+    .sy-k { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #A24D7A; }
+    .sy-t { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 2px 0 8px; }
+    .sy-t h3 { font: 700 14px/1.2 Outfit; margin: 0; color: #1c1c1e; }
+    .sy-t span { font: 500 9.5px 'IBM Plex Mono', monospace; color: #8A7480; white-space: nowrap; }
+    .p-rail { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -12px; padding: 2px 12px 6px; scrollbar-width: none; }
+    .p-rail::-webkit-scrollbar { display: none; }
+    .p-rail .muted { font-size: 11px; color: #8A7480; padding: 8px 2px; }
+    .pc { flex: 0 0 218px; scroll-snap-align: start; border-radius: 16px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.07); overflow: hidden; display: flex; flex-direction: column; animation: rise .45s ease both; }
+    .pc.top { box-shadow: 0 0 0 2px #E0B654, 0 6px 16px rgba(224,182,84,.25); }
+    .pc-pair { position: relative; display: grid; grid-template-columns: 1fr 18px 1fr; align-items: center; gap: 4px; padding: 8px; background: linear-gradient(180deg, #FBF4F7, #F3E6EC); }
+    .pc-pair .lbl { display: block; font-size: 8px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #A24D7A; margin-bottom: 3px; }
+    .pc-pair .look-img, .pc-pair .img-ph, .cl .look-img, .cl .img-ph, .cl img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; background: #fff; display: grid; place-items: center; font-size: 9px; color: #8A7480; text-align: center; padding: 2px; }
+    .pc-pair .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+    .pc-plus { font: 700 16px Outfit; color: #A24D7A; text-align: center; padding-top: 12px; }
+    .pc-rank { position: absolute; bottom: 12px; left: 50%; translate: -50% 0; z-index: 1; font: 600 9px 'IBM Plex Mono', monospace; padding: .15rem .45rem; border-radius: 999px; background: rgba(20,6,13,.65); color: #fff; }
+    .pc.top .pc-rank { background: linear-gradient(135deg, #F3D58A, #C9A24A); color: #2A0F1F; }
+    .pc-bd { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .pc-bd b { font: 700 12.5px/1.25 Outfit; color: #1c1c1e; }
+    .pc-bd p { margin: 0; font-size: 10.5px; line-height: 1.4; color: #555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .pc-bd .br { font: 500 9px 'IBM Plex Mono', monospace; color: #A24D7A; }
+    .pc-bd .btn-buy { margin-top: auto; width: 100%; justify-content: center; padding: .45rem .6rem; font-size: 11px; }
+    .cl { flex: 0 0 104px; scroll-snap-align: start; border-radius: 12px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.06); overflow: hidden; padding: 5px; animation: rise .45s ease both; }
+    .cl b { display: block; font-size: 10px; font-weight: 600; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cl small { display: block; font-size: 9px; color: #8A7480; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cl em { display: block; font: normal 500 8.5px 'IBM Plex Mono', monospace; color: #A24D7A; }
+    .closet { position: relative; margin: 0 -12px; border-radius: 16px; padding: 14px 0 10px; background: linear-gradient(180deg, #f4f1ee 0%, #fff 72%); overflow: hidden; }
+    .closet-bar { height: 5px; margin: 0 12px; border-radius: 999px; background: linear-gradient(#f7f7f7, #b9b4af); box-shadow: 0 1px 0 #fff inset, 0 6px 10px rgba(59,39,51,.12); }
+    .closet-row { display: flex; align-items: flex-start; gap: 4px; min-height: 210px; overflow-x: auto; padding: 0 12px 8px; perspective: 900px; scrollbar-width: none; }
+    .closet-row::-webkit-scrollbar { display: none; }
+    .closet-row .muted { font-size: 11px; color: #8A7480; padding: 8px 2px; }
+    .hang { flex: 0 0 46px; width: 46px; border: 0; background: transparent; padding: 0; cursor: pointer; position: relative; transition: flex-basis .35s ease, width .35s ease; }
+    .hang .hook { display: block; width: 12px; height: 12px; margin: -6px auto 0; border: 2px solid #c9a27a; border-bottom: 0; border-radius: 10px 10px 0 0; }
+    .hang .wood { display: block; width: 40px; height: 6px; margin: 0 auto; border-radius: 2px 2px 6px 6px; background: linear-gradient(#f0d2b0, #a87449); }
+    .hang .spin { display: block; margin-top: 2px; transform: rotateY(80deg); transform-origin: center top; transition: transform .45s ease; }
+    .hang .spin img, .hang .spin .img-ph { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 4px 4px 8px 8px; background: #fff; box-shadow: 0 8px 14px rgba(59,39,51,.12); display: grid; place-items: center; font-size: 9px; color: #8A7480; }
+    .hang:hover, .hang:focus-visible, .hang.open { flex-basis: 132px; width: 132px; z-index: 2; }
+    .hang:hover .spin, .hang:focus-visible .spin, .hang.open .spin { transform: rotateY(0deg); }
+    .closet-cap { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 52px; text-align: center; }
+    .closet-cap p { margin: 0; font-size: 11px; font-weight: 600; }
+    .closet-pill { border: 1px solid #cfc8c2; background: #fff; border-radius: 999px; padding: .3rem .8rem; font-size: 10.5px; font-weight: 700; cursor: pointer; }
+    @media (prefers-reduced-motion: reduce) {
+      .hang, .hang .spin { transition: none; }
+      .hang { flex-basis: 110px; width: 110px; }
+      .hang .spin, .hang:hover .spin, .hang.open .spin { transform: none; }
+    }
+    .sy-load { position: absolute; inset: 0; z-index: 7; display: grid; place-items: center; background: rgba(250,246,238,.82); backdrop-filter: blur(3px); text-align: center; font-size: 12px; color: #6B3A55; }
+    .sy-load i { font-size: 28px; margin-bottom: 8px; }
+    .ph-empty { width: 330px; height: 690px; border-radius: 52px; border: 2px dashed #DCC3CE; display: grid; place-items: center; text-align: center; padding: 30px; color: #8A7480; font-size: 13px; }
+    .ph-empty i { display: block; font-size: 30px; color: #C59FB0; margin-bottom: 10px; }
+
+    /* Styling Studio panel */
+    .style-side { background: linear-gradient(180deg, #F6EEF0 0%, #FBF4F7 60%, #F3E6EC 100%); }
+    /* Brand filter pill in the Style Yourself header */
+    .sy-brand { margin-left: auto; flex: none; }
+    .sy-row .csel-btn.sy-brand-sel { width: auto; max-width: 128px; padding: .28rem .6rem; gap: .3rem; font-size: 10.5px; font-weight: 700; border-radius: 999px;
+      background: rgba(224,182,84,.22); color: #F3D58A; border: 1px solid rgba(243,213,138,.55); box-shadow: none; }
+    .sy-row .csel-btn.sy-brand-sel svg { color: #F3D58A; width: 13px; height: 13px; }
+    .sy-row .csel-btn.sy-brand-sel[aria-expanded="true"] { box-shadow: 0 0 0 3px rgba(243,213,138,.3); border-color: #F3D58A !important; }
+
+    /* ===== Styling Studio: editorial story of what this tab does ===== */
+    .story { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; scrollbar-width: none; }
+    .story-h { font-family: Outfit, system-ui, sans-serif; font-size: 2rem; font-weight: 700; line-height: 1.05; margin: 2px 0 0; color: #3B2733; letter-spacing: -.01em; }
+    .story-h em { font-style: italic; background: linear-gradient(90deg, #6B3A55, #A24D7A 55%, #C9A24A); -webkit-background-clip: text; background-clip: text; color: transparent;
+      background-size: 200% 100%; animation: inkShift 6s ease-in-out infinite alternate; }
+    @keyframes inkShift { to { background-position: 100% 0; } }
+    .story-lead { margin: 0; font-size: 13px; line-height: 1.55; color: #552C43; }
+    .chapters { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; counter-reset: ch; }
+    .chapters li { position: relative; display: flex; gap: 12px; padding: 10px 12px 10px 14px; border-radius: 14px;
+      opacity: 0; animation: chIn .6s cubic-bezier(.22,.8,.24,1) forwards, chOn 12s ease-in-out infinite; }
+    .chapters li::before { content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; border-radius: 3px; background: #EAD9E0; transition: background .3s; }
+    .chapters li:nth-child(1) { animation-delay: .15s, 1s; } .chapters li:nth-child(2) { animation-delay: .35s, 4s; }
+    .chapters li:nth-child(3) { animation-delay: .55s, 7s; } .chapters li:nth-child(4) { animation-delay: .75s, 10s; }
+    @keyframes chIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    /* the story's spotlight walks 01 → 04 and loops */
+    @keyframes chOn { 0%, 30%, 100% { background: transparent; box-shadow: none; } 3%, 25% { background: #fff; box-shadow: 0 10px 24px rgba(107,58,85,.12); } }
+    .ch-n { flex: none; font: 600 22px/1 Outfit, system-ui, sans-serif; color: #C59FB0; min-width: 28px; }
+    .chapters b { display: block; font-size: 13.5px; color: #3B2733; }
+    .chapters p { margin: 2px 0 0; font-size: 12px; line-height: 1.45; color: #8A7480; }
+    .chapters i { color: #A24D7A; font-style: italic; }
+    .story-quote { margin: auto 0 0; padding-top: 10px; border-top: 1px solid #EAD9E0; font: 600 1.1rem/1.3 Outfit, system-ui, sans-serif; color: #6B3A55; }
+    @media (prefers-reduced-motion: reduce) {
+      .chapters li { opacity: 1; animation: none; } .story-h em { animation: none; }
+      .style-cta::before, .tgl .ring, .tap-hand, .ph-wrap.reveal, .style-cta .ripple, .demo-note, .demo-note::after, .demo-note .dot,
+      .ad-banner, .pc, .cl, .style-cta.busy .tgl::after, .toast { animation: none !important; transition: none !important; }
+    }
+    /* Error state with a retry action */
+    .err.hidden { display: none; }
+    .err .err-ic { margin-top: 2px; }
+    .err .err-msg { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .err .retry { flex: none; display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .65rem; border-radius: 999px; border: 1px solid rgba(160,58,58,.45);
+      background: #fff; color: #a03a3a; font: 600 11.5px Outfit, system-ui, sans-serif; cursor: pointer; }
+    .err .retry:hover { background: #FBEDED; }
+    .err .retry:disabled { opacity: .6; cursor: wait; }
+    /* Phones: one scroll for the whole page, studio story stays compact */
+    @media (max-width: 767px) {
+      #assistantMain { overflow-y: auto; }
+      #assistantMain > aside, #assistantMain > section, #assistantMain > section > .overflow-y-auto, .story { overflow: visible; flex: none; }
+      .story-h { font-size: 1.9rem; }
+      .chapters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+      .chapters li { padding: 8px 10px; }
+      .story-quote { display: none; }
+    }
+    /* Scale the iPhone mockups down rather than overflow narrow screens (330px frame + gutters) */
+    @media (max-width: 374px) { .iph, .ph-empty { zoom: .9; } }
+    @media (max-width: 340px) { .iph, .ph-empty { zoom: .8; } }
+  </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+  <script>
+    (function () {
+      const s = SuffaiSession.requireAuth('style');
+      if (s && s.role !== 'customer') location.replace('./index.html');
+      window.STYLE_OK = !!(s && s.role === 'customer'); // redirecting → don't fire the feed
+    })();
+  </script>
+
+  <header class="glass z-20 border-b border-[#EAD9E0] px-4 py-3 flex-none flex items-center justify-between gap-4">
+    <div class="min-w-0">
+      <h1 id="pageTitle" class="display text-2xl m-0 tracking-wide">Your Style Assistant</h1>
+      <p id="pageSubtitle" class="muted m-0 mt-0.5">Complete Your Outfit · Recommended for You · Your Wardrobe</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <div id="apiStatus" aria-live="polite" class="mono text-[11px] px-2 py-1 rounded-full border border-[#EAD9E0] bg-[#F6EEF0] text-[#552C43]">Loading…</div>
+    </div>
+  </header>
+
+  <main id="assistantMain" class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
+    <aside class="style-side w-full md:w-80 md:max-w-[45vw] flex-none border-b md:border-b-0 md:border-r border-[#EAD9E0] flex flex-col p-4 gap-3 overflow-hidden" aria-label="Styling Studio">
+      <div class="story">
+        <p class="section-kicker m-0">Styling Studio</p>
+        <h2 class="story-h">Your closet,<br><em>reimagined.</em></h2>
+        <p class="story-lead">We read what this customer already owns — then style it with the brand’s pieces, right inside their SuffAI app.</p>
+        <ol class="chapters">
+          <li><span class="ch-n">01</span><div><b>The Wardrobe</b><p>Every piece they own, read by AI — colour, fabric, fit and the categories they live in.</p></div></li>
+          <li><span class="ch-n">02</span><div><b>The Missing Piece</b><p>Brand items that finish an outfit they already love. <i>You have this + add that.</i></p></div></li>
+          <li><span class="ch-n">03</span><div><b>More of What They Love</b><p>Similar picks in the styles they wear most — familiar, but new.</p></div></li>
+          <li><span class="ch-n">04</span><div><b>One Tap</b><p>It all lands in the app as <i>Style Yourself</i> — swipe, love, buy.</p></div></li>
+        </ol>
+        <p class="story-quote">“Style isn’t bought —<br>it’s completed.”</p>
+      </div>
+      <p class="muted m-0 leading-relaxed">Picks are prepared when brands rank their products for your area, so they are ready as soon as you open this page.</p>
+      <p id="runHint" class="muted m-0" aria-live="polite"></p>
+      <p id="errorBox" class="err hidden m-0" role="alert"></p>
+      <!-- brand filter lives in the Style Yourself phone -->
+    </aside>
+
+    <section class="flex-1 min-w-0 relative flex flex-col overflow-hidden">
+      <div id="loadingOverlay" role="status" class="absolute inset-0 z-40 hidden items-center justify-center bg-[#FAF6EE]/85 backdrop-blur-sm">
+        <div class="text-center">
+          <i class="fa-solid fa-circle-notch text-4xl text-[#6B3A55] animate-spin motion-reduce:animate-none mb-4" aria-hidden="true"></i>
+          <p class="mono text-sm">Loading your picks…</p>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+        <div class="demo-note" role="note" aria-label="About This Preview">
+          <span class="dn-ic" aria-hidden="true"><i class="fa-solid fa-mobile-screen-button"></i></span>
+          <div class="dn-txt">
+            <b>In-App Experience · Live Replica</b>
+            <p>A working demo of how customers meet <em>Style Yourself</em> inside the SuffAI app. The phone and app home are a replica; the looks, picks and brand ad are real, drawn from brands’ ranked campaigns.</p>
+          </div>
+          <span class="dn-tag"><span class="dot" aria-hidden="true"></span>Demo Preview</span>
+        </div>
+        <div class="phones">
+          <!-- Phone 1: SuffAI app home -->
+          <figure class="ph-wrap">
+            <figcaption class="ph-cap">SuffAI App <span class="demo-pill">Replica</span></figcaption>
+            <div class="iph"><div class="iph-screen app">
+              <span class="iph-island" aria-hidden="true"></span>
+              <div class="iph-scroll">
+                <div class="sb"><span class="ph-time">4:21</span><span class="r"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><span class="bat">10⚡</span></span></div>
+                <div class="app-hd">
+                  <div class="app-row">
+                    <span class="app-av" id="appAv">RK</span>
+                    <div class="min-w-0"><b id="appName">Ritesh Kumar</b><small><i class="fa-solid fa-location-dot"></i><span id="appLoc">HSR Layout</span><i class="fa-solid fa-chevron-down" style="font-size:9px" aria-hidden="true"></i></small></div>
+                    <span class="app-ico"><span><i class="fa-brands fa-whatsapp"></i></span><span><i class="fa-regular fa-clock"></i></span><span><i class="fa-solid fa-bell"></i></span></span>
+                  </div>
+                </div>
+                <div class="app-body">
+                  <div id="appAd" aria-live="polite">
+                    <div class="ad-banner empty"><div><i class="fa-solid fa-tags" aria-hidden="true"></i><p>Loading offers…</p></div></div>
+                  </div>
+                  <button type="button" class="style-cta" id="styleCta" aria-pressed="false" aria-controls="phone2Wrap">
+                    <span class="ic" aria-hidden="true"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                    <span><b>Style Yourself</b><small>AI outfits from your own wardrobe</small></span>
+                    <span class="tgl" aria-hidden="true"><span class="ring"></span></span>
+                    <i class="fa-solid fa-hand-pointer tap-hand" aria-hidden="true"></i>
+                  </button>
+                  <p class="auto-note" id="autoNote" hidden></p>
+                  <div class="chips2"><span><i class="b">%</i>View Coupons<i class="fa-solid fa-chevron-right"></i></span><span><i class="b">%</i>Refer &amp; Earn<i class="fa-solid fa-chevron-right"></i></span></div>
+                  <p class="sec">Quick Ironing</p>
+                  <div class="hs">
+                    <div class="iron"><div class="im"><i class="fa-solid fa-shirt"></i><b>IRONING IN 2 HRS</b><small>Quick Service</small></div><div class="bd"><b>2 Hrs Ironing – HSR #1</b><span><span><i class="fa-regular fa-clock"></i> 2 hrs</span><span><i class="fa-solid fa-star"></i> 4.6 (18)</span></span></div></div>
+                    <div class="iron"><div class="im"><i class="fa-solid fa-shirt"></i><b>IRONING IN 2 HRS</b><small>Quick Service</small></div><div class="bd"><b>2 Hrs Ironing – HSR #2</b><span><span><i class="fa-regular fa-clock"></i> 2 hrs</span><span><i class="fa-solid fa-star"></i> 4.5 (11)</span></span></div></div>
+                  </div>
+                  <p class="sec">Stores Near You</p>
+                  <div class="store" role="img" aria-label="Store photo"></div>
+                </div>
+              </div>
+              <div class="pickup" aria-hidden="true"><span><b>7:00 PM – 8:00 PM</b><small>Modify Pickup</small></span><i class="fa-solid fa-chevron-right"></i></div>
+              <div class="app-foot" aria-hidden="true">
+                <span class="stat"><i class="fa-solid fa-shirt"></i><span><b>500K+</b><small>Clothes Cleaned</small></span></span>
+                <span class="cmp"><i class="fa-solid fa-tag"></i> Compare Price</span>
+              </div>
+              <span class="iph-home" aria-hidden="true"></span>
+            </div></div>
+          </figure>
+
+          <!-- Phone 2: Style Yourself (after the toggle) -->
+          <div class="ph-empty" id="phone2Empty"><div><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i>Tap <b>Style Yourself</b> in the app to open the styled looks.</div></div>
+          <figure class="ph-wrap" id="phone2Wrap" hidden>
+            <figcaption class="ph-cap">Style Yourself <span class="demo-pill">Replica</span></figcaption>
+            <div class="iph"><div class="iph-screen">
+              <span class="iph-island" aria-hidden="true"></span>
+              <div class="iph-scroll">
+                <div class="sb"><span class="ph-time">4:21</span><span class="r"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><span class="bat">10⚡</span></span></div>
+                <div class="sy-hd">
+                  <div class="sy-row">
+                    <button type="button" id="styleBack" aria-label="Back to the App Home"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+                    <div class="min-w-0"><b>Style Yourself</b><small id="syWho">Picked from your wardrobe</small></div>
+                    <label class="sy-brand"><span class="sr-only">Brand</span><select id="brandSelect" class="sy-brand-sel" disabled><option value="">All Brands</option></select></label>
+                  </div>
+                </div>
+                <div class="sy-body">
+                  <section class="sy-sec">
+                    <p class="sy-k">1 · Outfit Completion</p>
+                    <div class="sy-t"><h3>Complete Your Outfit</h3><span id="completeMeta"></span></div>
+                    <div id="completeRail" class="p-rail"><p class="muted">Complementary looks appear here.</p></div>
+                  </section>
+                  <section class="sy-sec">
+                    <p class="sy-k">2 · Recommended</p>
+                    <div class="sy-t"><h3>Since You Have This, You May Like This</h3><span id="recommendedMeta"></span></div>
+                    <div id="recommendedRail" class="p-rail"><p class="muted">Recommended picks appear here.</p></div>
+                  </section>
+                  <section class="sy-sec">
+                    <p class="sy-k">3 · Closet</p>
+                    <div class="sy-t"><h3 id="wardrobeTitle">Here Is Your Current Wardrobe</h3><span id="wardrobeMeta"></span></div>
+                    <div class="closet" id="closetStage">
+                      <div class="closet-bar" aria-hidden="true"></div>
+                      <div id="wardrobeRail" class="closet-row"><p class="muted">Wardrobe pieces appear here.</p></div>
+                      <div id="wardrobeCaption" class="closet-cap" hidden></div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div class="sy-load" id="syLoad" hidden><div><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i><br>Styling your looks…</div></div>
+              <span class="iph-home" aria-hidden="true"></span>
+            </div></div>
+          </figure>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const endpoint = (path) => SuffaiSession.apiBase() + path;
+    const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+    const state = { loading: false, result: null };
+    const session = SuffaiSession.getSession() || {};
+    const EMPTY_PICKS = 'No picks yet. They appear after a brand ranks products for your area.';
+
+    function setError(msg) {
+      const el = $('errorBox');
+      if (!msg) { el.classList.add('hidden'); el.textContent = ''; return; }
+      el.innerHTML = '<i class="fa-solid fa-circle-exclamation err-ic" aria-hidden="true"></i><span class="err-msg"></span>'
+        + '<button type="button" class="retry"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Retry</button>';
+      el.querySelector('.err-msg').textContent = msg;
+      el.querySelector('.retry').addEventListener('click', (e) => { e.currentTarget.disabled = true; loadFeed(); });
+      el.classList.remove('hidden');
+    }
+
+    function showToast(msg) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    function setLoading(on) {
+      state.loading = on;
+      const ov = $('loadingOverlay');
+      ov.classList.toggle('hidden', !on);
+      ov.classList.toggle('flex', on);
+    }
+
+    // Only http(s) links may open; images may also be same-origin paths or inline data images.
+    const httpUrl = (u) => (/^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '');
+    const imgUrl = (u) => { const v = String(u || '').trim(); return /^(https?:\/\/|\/(?!\/)|data:image\/)/i.test(v) ? v : ''; };
+
+    function imgOrPh(url, label) {
+      url = imgUrl(url);
+      if (url) return `<img class="look-img" src="${escapeHtml(url)}" alt="${escapeHtml(label || '')}" loading="lazy" />`;
+      return `<div class="img-ph">${escapeHtml(label || 'No image')}</div>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[c]);
+    }
+
+    function buyButton(buy, source) {
+      if (!buy || !buy.sku_uuid) return '';
+      const label = escapeHtml(buy.label || 'item');
+      const brand = escapeHtml(buy.brand_name || '');
+      const url = escapeHtml(httpUrl(buy.buy_url));
+      return `<button type="button" class="btn-buy" data-buy="1"
+        data-sku="${escapeHtml(buy.sku_uuid)}"
+        data-label="${label}"
+        data-brand="${brand}"
+        data-url="${url}"
+        data-source="${escapeHtml(source || '')}">
+        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Buy This Item
+      </button>`;
+    }
+
+    // In-app hero ad from the best-fit launched campaign (same banner as the Campaigns in-app preview)
+    function renderAd(ad) {
+      const box = $('appAd');
+      if (!ad || !ad.headline) {
+        box.innerHTML = '<div class="ad-banner empty"><div><i class="fa-solid fa-tags" aria-hidden="true"></i><p>Offers from your brands will show here.</p></div></div>';
+        return;
+      }
+      const brand = escapeHtml(ad.brand_name || '');
+      const cta = escapeHtml(ad.cta || 'Shop Now');
+      const landing = httpUrl(ad.landing_url), adImg = imgUrl(ad.image_url);
+      const ctaEl = landing
+        ? `<a class="ad-cta" href="${escapeHtml(landing)}" target="_blank" rel="noopener noreferrer">${cta}</a>`
+        : `<span class="ad-cta">${cta}</span>`;
+      const img = adImg
+        ? `<img class="ad-img" src="${escapeHtml(adImg)}" alt="${escapeHtml(ad.label || ad.brand_name || '')}" loading="lazy" />`
+        : '<div class="ad-img"><i class="fa-solid fa-shirt" aria-hidden="true"></i></div>';
+      box.innerHTML = `<div class="ad-banner"><span class="ad-tag">Ad</span><div>
+          <span class="ad-brand">${brand}</span><h4>${escapeHtml(ad.headline)}</h4><p>${brand ? `Styles picked for you by ${brand}.` : 'Styles picked for you.'}</p>
+          ${ad.offer_code ? `<span class="code">${escapeHtml(ad.offer_code)}</span><br>` : ''}${ctaEl}</div>${img}</div>`;
+    }
+
+    function showWardrobeCaption(el) {
+      const cap = $('wardrobeCaption');
+      if (!el) { cap.hidden = true; cap.innerHTML = ''; return; }
+      const name = [el.dataset.label || 'Piece', el.dataset.color].filter(Boolean).join(' — ');
+      cap.hidden = false;
+      cap.innerHTML = `<p>${escapeHtml(name)}</p><button type="button" class="closet-pill" data-closet="1">In your closet</button>`;
+    }
+
+    function renderWardrobe(items) {
+      const rail = $('wardrobeRail');
+      showWardrobeCaption(null);
+      if (!items || !items.length) { rail.innerHTML = '<p class="muted">No wardrobe items yet.</p>'; return; }
+      rail.innerHTML = items.map((w) => `
+        <button type="button" class="hang" data-hang="1" aria-pressed="false"
+          aria-label="${escapeHtml(w.label || 'Piece')}"
+          data-label="${escapeHtml(w.label || 'Piece')}" data-color="${escapeHtml(w.color || '')}">
+          <span class="hook" aria-hidden="true"></span>
+          <span class="wood" aria-hidden="true"></span>
+          <span class="spin">${imgOrPh(w.image_url, w.label)}</span>
+        </button>`).join('');
+    }
+
+    const OUTFIT_LAYER = { outer: 0, top: 1, dress: 2, bottom: 3, footwear: 4, accessory: 5 };
+    const layerOf = (item) => OUTFIT_LAYER[(item || {}).category_bucket] ?? 9;
+
+    function pairCard(look, i, leftLabel, left, sign, rightLabel, source, right) {
+      const buy = look.buy || {};
+      return `
+        <article class="pc ${look.rank === 1 ? 'top' : ''}" style="animation-delay:${i * 60}ms">
+          <div class="pc-pair">
+            <div><span class="lbl">${leftLabel}</span>${left}</div>
+            <span class="pc-plus">${sign}</span>
+            <div><span class="lbl">${rightLabel}</span>${right ?? imgOrPh(buy.image_url, buy.label)}</div>
+            <span class="pc-rank">#${escapeHtml(look.rank)} · ${escapeHtml(look.score ?? '—')}</span>
+          </div>
+          <div class="pc-bd">
+            <b>${escapeHtml(look.title || '')}</b>
+            <p>${escapeHtml(look.why_it_works || look.description || '')}</p>
+            <span class="br">${escapeHtml(buy.brand_name || '')}${buy.category_bucket ? ' · ' + escapeHtml(buy.category_bucket) : ''}</span>
+            ${buyButton(buy, source)}
+          </div>
+        </article>`;
+    }
+
+    function renderCompleteLooks(looks) {
+      const rail = $('completeRail');
+      if (!looks || !looks.length) { rail.innerHTML = `<p class="muted">${EMPTY_PICKS}</p>`; return; }
+      rail.innerHTML = looks.map((look, i) => {
+        const own = (look.own || [])[0] || {}, own2 = (look.own || [])[1];
+        const buy = look.buy || {};
+        const ownHtml = own2 ? `<div class="grid2">${imgOrPh(own.image_url, own.label)}${imgOrPh(own2.image_url, own2.label)}</div>` : imgOrPh(own.image_url, own.label);
+        const buyHtml = imgOrPh(buy.image_url, buy.label);
+        const titled = { ...look, title: look.title || 'Complete Your Outfit' };
+        return layerOf(buy) < layerOf(own)
+          ? pairCard(titled, i, 'Add This', buyHtml, '+', 'You Have', 'complete_outfit', ownHtml)
+          : pairCard(titled, i, 'You Have', ownHtml, '+', 'Add This', 'complete_outfit', buyHtml);
+      }).join('');
+    }
+
+    function renderRecommended(picks) {
+      const rail = $('recommendedRail');
+      if (!picks || !picks.length) { rail.innerHTML = `<p class="muted">${EMPTY_PICKS}</p>`; return; }
+      rail.innerHTML = picks.map((pick, i) => {
+        const liked = pick.liked || {};
+        return pairCard({ ...pick, title: pick.title || 'You May Like' }, i, 'You Have', imgOrPh(liked.image_url, liked.label), '→', 'You May Like', 'recommended');
+      }).join('');
+    }
+
+    $('wardrobeRail').addEventListener('pointerover', (ev) => {
+      const hang = ev.target.closest('[data-hang]');
+      if (hang) showWardrobeCaption(hang);
+    });
+    $('wardrobeRail').addEventListener('pointerout', (ev) => {
+      const hang = ev.target.closest('[data-hang]');
+      if (!hang || hang.contains(ev.relatedTarget)) return;
+      showWardrobeCaption($('wardrobeRail').querySelector('.hang.open'));
+    });
+    $('wardrobeRail').addEventListener('focusin', (ev) => {
+      const hang = ev.target.closest('[data-hang]');
+      if (hang) showWardrobeCaption(hang);
+    });
+    $('wardrobeRail').addEventListener('click', (ev) => {
+      const hang = ev.target.closest('[data-hang]');
+      if (!hang) return;
+      const opening = !hang.classList.contains('open');
+      $('wardrobeRail').querySelectorAll('.hang.open').forEach((el) => {
+        el.classList.remove('open');
+        el.setAttribute('aria-pressed', 'false');
+      });
+      if (opening) {
+        hang.classList.add('open');
+        hang.setAttribute('aria-pressed', 'true');
+      }
+      showWardrobeCaption(opening ? hang : null);
+    });
+
+    document.body.addEventListener('click', (ev) => {
+      if (ev.target.closest('[data-closet]')) {
+        showToast('This piece is already in your closet.');
+        return;
+      }
+      const btn = ev.target.closest('[data-buy="1"]');
+      if (!btn) return;
+      const sku = btn.dataset.sku || '';
+      const label = btn.dataset.label || 'item';
+      const brand = btn.dataset.brand || '';
+      const url = httpUrl(btn.dataset.url);
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        showToast(`Opening buy page for ${label}`);
+      } else {
+        showToast(`Saved ${label}${brand ? ' · ' + brand : ''} to your picks`);
+      }
+      btn.classList.add('bought');
+      btn.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> Added';
+      console.info('[style_assistant] buy', { sku, label, brand, url, source: btn.dataset.source });
+    });
+
+    function fillBrandFilter(brands, selected) {
+      const sel = $('brandSelect');
+      sel.innerHTML = '<option value="">All Brands</option>'
+        + brands.map((b) => `<option value="${escapeHtml(b)}" ${b === selected ? 'selected' : ''}>${escapeHtml(b)}</option>`).join('');
+      sel.disabled = !brands.length;
+    }
+
+    let feedSeq = 0; // only the newest request may paint (brand switches can overlap)
+    async function loadFeed() {
+      const seq = ++feedSeq;
+      const brand = $('brandSelect').value;
+      const qs = new URLSearchParams();
+      if (brand) qs.set('brand', brand);
+      setError('');
+      setLoading(true);
+      try {
+        const res = await fetch(endpoint('/v1/style-assistant/feed' + (qs.toString() ? '?' + qs : '')), {
+          headers: { Accept: 'application/json', ...SuffaiSession.authHeaders() },
+          signal: AbortSignal.timeout ? AbortSignal.timeout(30000) : undefined, // never leave the overlay spinning forever
+        });
+        const data = await res.json().catch(() => ({}));
+        if (seq !== feedSeq) return;
+        if (res.status === 401) {
+          // stale/expired token: drop it and send the whole shell (we live in its iframe) back to sign-in
+          SuffaiSession.clearSession();
+          try { window.top.location.replace('./login.html'); } catch (_) { location.replace('./login.html'); }
+          return;
+        }
+        if (!res.ok) throw new Error(SuffaiSession.formatApiDetail(data.detail || data.message, 'Could not load your picks.'));
+        state.result = data;
+        const complete = data.complete_outfit || [];
+        const recommended = data.recommended || [];
+        const wardrobe = data.wardrobe || [];
+        fillBrandFilter((data.brands || []).filter(Boolean), data.brand || '');
+        $('completeMeta').textContent = complete.length ? `${plural(complete.length, 'look')}${data.brand ? ' · ' + data.brand : ''}` : '';
+        $('recommendedMeta').textContent = recommended.length ? plural(recommended.length, 'pick') : '';
+        $('wardrobeMeta').textContent = wardrobe.length ? plural(wardrobe.length, 'piece') : '';
+        renderCompleteLooks(complete);
+        renderRecommended(recommended);
+        renderWardrobe(wardrobe);
+        renderAd(data.ad);
+        $('runHint').textContent = complete.length || recommended.length
+          ? `${plural(complete.length + recommended.length, 'pick')}${data.brand ? ' from ' + data.brand : ''}.`
+          : EMPTY_PICKS;
+        $('apiStatus').textContent = (data.brands || []).length ? plural(data.brands.length, 'brand') : 'No picks yet';
+        paintAppUser();
+        armAutoTap();
+      } catch (e) {
+        if (seq !== feedSeq) return;
+        console.error('[style_assistant] feed', e);
+        setError(e && e.name === 'TimeoutError'
+          ? 'The server is taking too long to respond. Try again in a moment.'
+          : (e.message || String(e)));
+        if (!state.result) renderAd(null); // keep the ad that matches the picks still on screen
+        $('runHint').textContent = 'Could not load picks.';
+        $('apiStatus').textContent = 'Unavailable';
+        // keep the filter in step with what is still on screen
+        if (state.result) $('brandSelect').value = state.result.brand || '';
+      } finally {
+        if (seq === feedSeq) setLoading(false);
+      }
+    }
+
+    /* ---------- Phones: SuffAI app → Style Yourself ---------- */
+    const AUTO_TAP_SEC = 10;
+    let autoTimer = null, autoLeft = 0;
+    function phoneTime() {
+      const t = new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }).replace(/\s?[ap]m/i, '');
+      document.querySelectorAll('.ph-time').forEach(el => { el.textContent = t; });
+    }
+    function customerLabel() {
+      return session.display_name || session.username || 'You';
+    }
+    function paintAppUser() {
+      const name = customerLabel();
+      const ini = name.split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'SU';
+      $('appName').textContent = name;
+      $('appAv').textContent = ini;
+      $('syWho').textContent = 'For ' + name;
+    }
+    const styleReady = () => !!state.result;
+    function stopAutoTap() { clearInterval(autoTimer); autoTimer = null; $('autoNote').hidden = true; }
+    function armAutoTap() {
+      stopAutoTap();
+      if ($('styleCta').getAttribute('aria-pressed') === 'true' || !styleReady()) return;
+      autoLeft = AUTO_TAP_SEC;
+      const note = () => { $('autoNote').hidden = false; $('autoNote').innerHTML = `<i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Opening your looks in ${autoLeft}s…`; };
+      note();
+      autoTimer = setInterval(() => { autoLeft -= 1; if (autoLeft <= 0) { stopAutoTap(); openStyle(true); } else note(); }, 1000);
+    }
+    function ripple(btn, x, y) {
+      const r = btn.getBoundingClientRect(), dot = document.createElement('span');
+      dot.className = 'ripple';
+      dot.style.left = (x == null ? r.width - 34 : x - r.left) + 'px';
+      dot.style.top = (y == null ? r.height / 2 : y - r.top) + 'px';
+      btn.appendChild(dot);
+      setTimeout(() => dot.remove(), 650);
+    }
+    async function openStyle(auto, ev) {
+      const btn = $('styleCta');
+      if (btn.classList.contains('busy')) return;
+      stopAutoTap();
+      ripple(btn, ev && ev.clientX, ev && ev.clientY);
+      if (!state.result) {
+        if (state.loading) {
+          showToast('Still loading your picks — try again in a moment.');
+          return;
+        }
+        btn.classList.add('busy');
+        $('phone2Empty').hidden = true;
+        $('phone2Wrap').hidden = false;
+        $('syLoad').hidden = false;
+        await loadFeed();
+        btn.classList.remove('busy');
+        $('syLoad').hidden = true;
+        if (!state.result) { $('phone2Wrap').hidden = true; $('phone2Empty').hidden = false; return; }
+      }
+      btn.setAttribute('aria-pressed', 'true');
+      paintAppUser();
+      $('phone2Empty').hidden = true;
+      const wrap = $('phone2Wrap');
+      wrap.hidden = false;
+      wrap.classList.remove('reveal'); void wrap.offsetWidth; wrap.classList.add('reveal');
+      wrap.querySelector('.iph-scroll').scrollTop = 0; // always open at the top of Style Yourself
+      const stage = document.querySelector('.phones').parentElement;
+      if (stage.scrollTop) stage.scrollTo({ top: 0, behavior: 'smooth' });
+      if (auto) showToast('Opened Style Yourself for you');
+    }
+    function closeStyle(ev) {
+      $('styleCta').setAttribute('aria-pressed', 'false');
+      if (ev && ev.currentTarget === $('styleBack')) $('styleCta').focus(); // focus was on a now-hidden button
+      $('phone2Wrap').hidden = true;
+      $('phone2Empty').hidden = false;
+      armAutoTap();
+    }
+    $('styleCta').addEventListener('click', (e) => {
+      if ($('styleCta').getAttribute('aria-pressed') === 'true') closeStyle(e); else openStyle(false, e);
+    });
+    $('styleBack').addEventListener('click', closeStyle);
+    phoneTime(); setInterval(phoneTime, 30000);
+    paintAppUser();
+
+    $('brandSelect').addEventListener('change', async () => {
+      // MAIN: re-query the feed for the chosen brand; keep the phone open if it already is
+      const open = $('styleCta').getAttribute('aria-pressed') === 'true';
+      if (open) $('syLoad').hidden = false;
+      await loadFeed();
+      if (!state.loading) $('syLoad').hidden = true; // a newer brand request may still be running
+    });
+    if (window.STYLE_OK) loadFeed();
+  </script>
+
+</body>
+</html>

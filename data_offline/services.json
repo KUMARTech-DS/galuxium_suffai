@@ -1,0 +1,106 @@
+[
+  {
+    "_id":{
+      "$oid":"66a5e801fe3ebaeacf85c5fe"
+    },
+    "service_name":"Dry Clean",
+    "created_at":{
+      "$date":"2024-08-04T18:29:37.185Z"
+    },
+    "updated_at":{
+      "$date":"2024-08-04T18:29:37.217Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"66abe04e5b33e94548eabb59"
+    },
+    "service_name":"Wash & Iron",
+    "created_at":{
+      "$date":"2024-09-06T13:40:52.919Z"
+    },
+    "updated_at":{
+      "$date":"2024-09-06T13:40:52.961Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"66afc92d9d8afaf9f51ab44b"
+    },
+    "service_name":"Wash & Fold",
+    "created_at":{
+      "$date":"2024-09-04T10:56:33.887Z"
+    },
+    "updated_at":{
+      "$date":"2024-09-04T10:56:34.194Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"66d5f20904b428598cd1af43"
+    },
+    "service_name":"Shoe Clean",
+    "created_at":{
+      "$date":"2024-09-02T17:12:41.027Z"
+    },
+    "updated_at":{
+      "$date":"2024-09-02T17:12:41.027Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"66d83ced6eeb751a0736401f"
+    },
+    "service_name":"Ironing",
+    "created_at":{
+      "$date":"2024-09-04T10:56:45.618Z"
+    },
+    "updated_at":{
+      "$date":"2024-09-04T10:56:45.618Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"679d118c71b5939b427b296e"
+    },
+    "service_name":"Bedsheet\/Heavy Wash",
+    "created_at":{
+      "$date":"2025-12-23T14:36:35.618Z"
+    },
+    "updated_at":{
+      "$date":"2025-12-23T14:36:35.620Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a6aee951e06ed068037ea03"
+    },
+    "service_name":"HandWash & Fold",
+    "created_at":{
+      "$date":"2026-07-30T06:26:29.138Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:26:29.138Z"
+    },
+    "__v":0
+  },
+  {
+    "_id":{
+      "$oid":"6a6aeea91e06ed068037ea09"
+    },
+    "service_name":"HandWash & iron",
+    "created_at":{
+      "$date":"2026-07-30T06:26:49.427Z"
+    },
+    "updated_at":{
+      "$date":"2026-07-30T06:26:49.427Z"
+    },
+    "__v":0
+  }
+]

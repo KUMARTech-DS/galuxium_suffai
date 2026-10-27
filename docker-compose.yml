@@ -1,0 +1,44 @@
+# Local GCP-parity stack
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      ENVIRONMENT: local
+      WEB_ORIGIN: http://localhost:8083
+      DEMO_AUTH_ENABLED: "true"
+      JWT_SECRET: local-dev-secret
+      DATA_DIR: /app/data_offline
+      DERIVED_DIR: /app/data_derived
+    volumes:
+      - ./data_derived:/app/data_derived
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    ports:
+      - "8082:8080"
+    environment:
+      PORT: "8080"
+      ENABLE_VERTEX: "false"
+
+  # web/ UI + /v1/metrics + /v1/ads-lab/extract
+  command_center:
+    build:
+      context: .
+      dockerfile: Dockerfile.command_center
+    ports:
+      - "8083:8080"
+    environment:
+      PORT: "8080"
+      USE_BQ: "true"
+      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT:-}
+      BQ_DATASET: ${BQ_DATASET:-suffai_ops}
+      GCS_IMAGE_BUCKET: ${GCS_IMAGE_BUCKET:-}
+      EXTRACTION_URL: ${EXTRACTION_URL:-}
+      CORS_ORIGINS: "*"
